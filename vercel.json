@@ -1,0 +1,32 @@
+{
+  "buildCommand": "echo 'Static site - no build needed'",
+  "outputDirectory": "client",
+  "devCommand": "npx serve client",
+  "installCommand": "echo 'No install needed for static client'",
+  "framework": "other",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
+}
