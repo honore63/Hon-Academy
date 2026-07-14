@@ -166,7 +166,6 @@
               '<li><a href="subjects.html"><i class="fa-solid fa-graduation-cap"></i> Upper Secondary (S4\u2013S6)</a></li>' +
               '<li><a href="subjects.html"><i class="fa-solid fa-wrench"></i> TVET Programmes</a></li>' +
               '<li><a href="books.html"><i class="fa-solid fa-book"></i> Digital Library</a></li>' +
-              '<li><a href="apply.html"><i class="fa-solid fa-paper-plane"></i> Apply Now</a></li>' +
             '</ul></div>' +
             // Col 4: Contact
             '<div class="nca-fcol"><h5>Contact</h5><ul class="nca-fcontact">' +
