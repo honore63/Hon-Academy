@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Photo Gallery - HON-ACADEMY</title>
+<meta name="description" content="Photo gallery showcasing HON-ACADEMY campus, events, and student activities." />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="animate-fade-in">
+<header class="site-header"></header>
+<section class="page-banner">
+<div class="container">
+<div class="breadcrumb-custom"><a href="index.html">Home</a><span>/</span><span class="current">Gallery</span></div>
+<h1>Photo Gallery</h1>
+<p id="page-intro">Explore moments from our school.</p>
+</div>
+</section>
+<main class="container my-5">
+<div class="d-flex flex-wrap gap-2 justify-content-center mb-5" id="gallery-filters"></div>
+<div class="row g-4" id="gallery-grid"></div>
+</main>
+<footer class="site-footer"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/components.js"></script>
+<script>
+(function() {
+var school = window.db.getSchoolInfo();
+var categories = window.db.getGalleryCategories ? window.db.getGalleryCategories() : ['Academics','Sports','Clubs','Graduation','School Trips'];
+document.getElementById('page-intro').textContent = school.galleryIntro || 'Explore moments from ' + school.name + ' \u2014 campus views, classroom activities, sports events, and celebrations.';
+var photos = [];
+try { photos = JSON.parse(localStorage.getItem('cms_gallery_photos')) || []; } catch(e) {}
+var defaultPhotos = categories.map(function(cat, idx) {
+return {
+id: idx + 1,
+title: cat + ' Photo',
+category: cat.toLowerCase(),
+url: 'https://images.unsplash.com/photo-' + (['1580582932707-520aed937b7b','1562774053-701939374585','1521587760476-6c12a4b040da','1571019614242-c5c5dee9f50b','1523580846011-d3a5bc25702b','1541339907198-e08756dedf3f','1516321318423-f06f85e504b3','1431324155629-1a6deb1dec8d','1504609773096-104ff2c73ba4','1546519638-68e109498ffc','1588072432836-e10032774350','1509062522246-3755977927d7'][idx % 12]) + '?w=600'
+};
+});
+if (!photos.length) { photos = defaultPhotos; }
+var activeFilter = "all";
+function renderFilterBtns() {
+var container = document.getElementById('gallery-filters');
+var allCats = ['all'].concat(categories.map(function(c){ return c.toLowerCase(); }));
+container.innerHTML = allCats.map(function(c, i) {
+var label = c === 'all' ? 'All Photos' : categories[i-1];
+var cls = i === 0 ? 'btn-primary active' : 'btn-outline-primary';
+return '<button class="btn rounded-pill px-4 gallery-filter ' + cls + '" data-cat="' + c + '">' + label + '</button>';
+}).join('');
+}
+function renderGallery() {
+var filtered = activeFilter === "all" ? photos : photos.filter(function(p){ return p.category === activeFilter; });
+var grid = document.getElementById('gallery-grid');
+grid.innerHTML = filtered.map(function(p) {
+return '<div class="col-sm-6 col-lg-4 col-xl-3"><div class="card border-0 overflow-hidden h-100" style="cursor:pointer;" onclick="openLightbox(\''+p.url+'\',\''+p.title.replace(/'/g,"\\'")+'\')"><div class="position-relative"><img src="'+p.url+'" alt="'+p.title+'" class="card-img-top" style="height:220px;object-fit:cover;transition:transform 0.3s ease;"><div class="position-absolute bottom-0 start-0 end-0 p-3" style="background:linear-gradient(transparent,rgba(0,0,0,0.7));"><p class="text-white font-bold small mb-0">'+p.title+'</p><span class="badge bg-white bg-opacity-25 text-white text-capitalize small mt-1">'+p.category+'</span></div></div></div></div>';
+}).join('');
+if (!filtered.length) {
+grid.innerHTML = '<div class="col-12 text-center py-5"><i class="fa-solid fa-images fs-1 text-muted mb-3"></i><p class="text-muted">No photos in this category yet.</p></div>';
+}
+}
+renderFilterBtns();
+renderGallery();
+document.getElementById('gallery-filters').addEventListener('click', function(e) {
+if (e.target.classList.contains('gallery-filter')) {
+document.querySelectorAll('.gallery-filter').forEach(function(b) {
+b.classList.remove('btn-primary','active');
+b.classList.add('btn-outline-primary');
+});
+e.target.classList.remove('btn-outline-primary');
+e.target.classList.add('btn-primary','active');
+activeFilter = e.target.dataset.cat;
+renderGallery();
+}
+});
+})();
+function openLightbox(url, title) {
+var lb = document.getElementById("gallery-lightbox");
+if (!lb) {
+lb = document.createElement("div");
+lb.id = "gallery-lightbox";
+lb.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;backdrop-filter:blur(4px);";
+lb.onclick = function(){ lb.remove(); };
+document.body.appendChild(lb);
+}
+lb.innerHTML = '<img src="'+url+'" alt="'+title+'" style="max-width:90%;max-height:80vh;border-radius:1rem;box-shadow:0 25px 50px rgba(0,0,0,0.5);"><p class="text-white font-bold mt-3">'+title+'</p><p class="text-muted small">Click anywhere to close</p>';
+}
+</script>
+</body>
+</html>

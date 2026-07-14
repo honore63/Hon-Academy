@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course Details - EduLearn</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              border: "oklch(var(--border) / <alpha-value>)",
+              background: "oklch(var(--background) / <alpha-value>)",
+              foreground: "oklch(var(--foreground) / <alpha-value>)",
+              primary: {
+                DEFAULT: "#1d4ed8",
+                foreground: "#eff6ff",
+              },
+              secondary: {
+                DEFAULT: "#f4f4f5",
+                foreground: "#18181b",
+              },
+              accent: {
+                DEFAULT: "#f4f4f5",
+                foreground: "#18181b",
+              },
+              muted: {
+                DEFAULT: "#f4f4f5",
+                foreground: "#71717a",
+              }
+            }
+          }
+        }
+      }
+    </script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Style CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="bg-white dark:bg-zinc-950 text-gray-900 dark:text-zinc-100 min-h-screen flex flex-col transition-colors duration-200">
+    <!-- Navigation Header -->
+    <header class="site-header"></header>
+
+    <!-- Main Content -->
+    <main class="flex-1 container mx-auto px-4 py-12 animate-fade-in" id="detail-container">
+      
+      <!-- Back button -->
+      <a href="courses.html" class="inline-flex items-center gap-2 text-xs font-semibold text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 mb-8 transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        <span>Back to Course Catalog</span>
+      </a>
+
+      <!-- Page Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-12" id="detail-layout">
+        
+        <!-- Left Side: Course Information -->
+        <div class="lg:col-span-2 space-y-10">
+          
+          <!-- Headings -->
+          <div class="space-y-4">
+            <div class="flex gap-2">
+              <span id="course-subject" class="inline-block px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-600 dark:bg-blue-950/80 dark:text-blue-400">
+                Subject
+              </span>
+              <span id="course-grade" class="inline-block px-2.5 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-600 dark:bg-zinc-850 dark:text-zinc-400">
+                Grade Level
+              </span>
+            </div>
+            <h1 id="course-title" class="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight">
+              Loading Course Details...
+            </h1>
+            <p id="course-desc" class="text-base text-gray-500 dark:text-zinc-400 leading-relaxed">
+              Analyzing course details...
+            </p>
+          </div>
+
+          <!-- Instructor Block -->
+          <div class="bg-gray-50/50 dark:bg-zinc-900/30 border border-gray-100 dark:border-zinc-900/60 rounded-2xl p-6 transition-colors">
+            <h3 class="font-bold text-gray-900 dark:text-white text-lg mb-4">Your Instructor</h3>
+            <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <img id="instructor-avatar" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=120" alt="Instructor" class="w-16 h-16 rounded-full border object-cover">
+              <div class="space-y-1 flex-1">
+                <h4 id="instructor-name" class="font-bold text-gray-900 dark:text-white text-base">TBD</h4>
+                <p id="instructor-specialty" class="text-xs font-semibold text-blue-600 dark:text-blue-400">Specialty</p>
+                <p id="instructor-bio" class="text-sm text-gray-500 dark:text-zinc-400 leading-relaxed">Instructor biography information.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Syllabus Syllabus List -->
+          <div class="space-y-6">
+            <div>
+              <h3 class="font-bold text-gray-900 dark:text-white text-xl">Course Syllabus</h3>
+              <p id="syllabus-count" class="text-xs font-medium text-gray-400 mt-1">0 Lessons</p>
+            </div>
+
+            <!-- Lessons feed -->
+            <div class="space-y-3.5" id="syllabus-list">
+              <!-- Dynamically loaded -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Side: Action Box / Metadata -->
+        <div>
+          <div class="sticky top-24 bg-white dark:bg-zinc-900 border border-gray-150 dark:border-zinc-850 shadow-lg rounded-3xl p-6 space-y-6 transition-colors">
+            
+            <h3 class="font-bold text-gray-900 dark:text-white text-lg">Course Snapshot</h3>
+            
+            <!-- Details list -->
+            <div class="space-y-4 text-sm font-medium text-gray-500 dark:text-zinc-400">
+              <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-zinc-800">
+                <span class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4"></i> Duration</span>
+                <span class="text-gray-900 dark:text-white font-bold" id="snap-duration">0 min</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-zinc-800">
+                <span class="flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4"></i> Lessons</span>
+                <span class="text-gray-900 dark:text-white font-bold" id="snap-lessons">0</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-gray-100 dark:border-zinc-800">
+                <span class="flex items-center gap-2"><i data-lucide="users" class="w-4 h-4"></i> Enrolled</span>
+                <span class="text-gray-900 dark:text-white font-bold" id="snap-enrollments">0 students</span>
+              </div>
+            </div>
+
+            <!-- Interactive enrollment buttons wrapper -->
+            <div id="enrollment-action-container" class="pt-4">
+              <!-- Dynamically rendered button/progress -->
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer"></footer>
+
+    <!-- Database and Component scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/components.js"></script>
+
+    <!-- Details logic script -->
+    <script>
+      let courseId = null;
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // Parse courseId from query param
+        const params = new URLSearchParams(window.location.search);
+        courseId = Number(params.get("id"));
+
+        if (!courseId) {
+          window.location.href = "courses.html";
+          return;
+        }
+
+        loadCourseDetails();
+        window.addEventListener("auth_change", loadCourseDetails);
+      });
+
+      function loadCourseDetails() {
+        const course = window.db.getCourse(courseId);
+        if (!course) {
+          showToast("Course not found!", "error");
+          setTimeout(() => { window.location.href = "courses.html"; }, 1500);
+          return;
+        }
+
+        // Fill course details
+        document.title = `${course.title} - EduLearn`;
+        document.getElementById("course-title").innerText = course.title;
+        document.getElementById("course-desc").innerText = course.description;
+        document.getElementById("course-subject").innerText = course.subject;
+        document.getElementById("course-grade").innerText = course.gradeLevel;
+
+        // Fill instructor
+        document.getElementById("instructor-avatar").src = course.instructorAvatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=120";
+        document.getElementById("instructor-name").innerText = course.instructorName;
+        document.getElementById("instructor-specialty").innerText = course.subjectSpecialty || "Primary Instructor";
+        document.getElementById("instructor-bio").innerText = course.instructorBio || "Dedicated teaching professional specializing in interactive curriculum planning.";
+
+        // Snapshots
+        const lessons = window.db.getLessons(courseId);
+        document.getElementById("snap-duration").innerText = `${course.duration || 0} min`;
+        document.getElementById("snap-lessons").innerText = lessons.length;
+        document.getElementById("snap-enrollments").innerText = `${course.enrollmentCount || 0} students`;
+        document.getElementById("syllabus-count").innerText = `${lessons.length} Lesson${lessons.length === 1 ? "" : "s"}`;
+
+        // Render syllabus list
+        const syllabusList = document.getElementById("syllabus-list");
+        if (lessons.length === 0) {
+          syllabusList.innerHTML = `
+            <p class="text-sm text-gray-400 italic py-4">No lessons have been published for this course yet.</p>
+          `;
+        } else {
+          syllabusList.innerHTML = lessons.map(l => `
+            <div class="flex items-start gap-4 p-4 border border-gray-100 dark:border-zinc-850 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm hover:border-blue-500/20 transition-all">
+              <div class="w-7 h-7 rounded-full bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 text-xs font-bold flex items-center justify-center flex-shrink-0">
+                ${l.order}
+              </div>
+              <div class="flex-1 space-y-1">
+                <div class="flex justify-between items-start">
+                  <h4 class="font-bold text-gray-900 dark:text-white text-sm sm:text-base">${l.title}</h4>
+                  <span class="text-xs text-gray-400 font-semibold flex items-center gap-1"><i data-lucide="clock" class="w-3.5 h-3.5"></i> ${l.duration}m</span>
+                </div>
+                <p class="text-xs text-gray-400 dark:text-zinc-500 line-clamp-2">${l.description || "No lesson description provided."}</p>
+              </div>
+            </div>
+          `).join("");
+        }
+
+        // Render Action Box buttons
+        renderActionBox(course, lessons);
+
+        lucide.createIcons();
+      }
+
+      function renderActionBox(course, lessons) {
+        const user = window.db.getCurrentUser();
+        const container = document.getElementById("enrollment-action-container");
+
+        if (!user) {
+          // Guest mode
+          container.innerHTML = `
+            <button onclick="openLoginModal()" class="w-full inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl shadow-md hover:shadow-lg transition-all">
+              Enroll in Course
+            </button>
+            <p class="text-[10px] text-center text-gray-400 mt-2.5">Sign in as a student to enroll and track progress.</p>
+          `;
+          return;
+        }
+
+        if (user.role !== "student") {
+          // Teacher or Admin can't enroll but can go to dashboards
+          let dashLink = user.role === "teacher" ? "teacher-dashboard.html" : "admin-dashboard.html";
+          container.innerHTML = `
+            <a href="${dashLink}" class="w-full inline-flex items-center justify-center bg-gray-100 hover:bg-gray-250 dark:bg-zinc-800 dark:hover:bg-zinc-750 text-gray-800 dark:text-zinc-200 font-bold py-3.5 rounded-2xl transition-all">
+              Go to Management Panel
+            </a>
+            <p class="text-[10px] text-center text-gray-400 mt-2.5">Logged in as a ${user.role}. Enrollment is only available for students.</p>
+          `;
+          return;
+        }
+
+        // Student mode
+        const enrollment = window.db.getEnrollment(user.id, course.id);
+        if (!enrollment) {
+          // Logged in but not enrolled
+          container.innerHTML = `
+            <button onclick="enroll()" class="w-full inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl shadow-md hover:shadow-lg transition-all hover:scale-102">
+              Enroll in Course
+            </button>
+            <p class="text-[10px] text-center text-gray-400 mt-2.5">Instant enrollment. Get immediate access to video syllabus.</p>
+          `;
+        } else {
+          // Enrolled!
+          const nextLessonId = lessons.length > 0 ? lessons[0].id : null;
+          let viewButtonHTML = "";
+
+          if (nextLessonId) {
+            viewButtonHTML = `
+              <a href="lesson-viewer.html?lessonId=${nextLessonId}" class="w-full inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-2xl shadow-md hover:shadow-lg transition-all hover:scale-102">
+                Continue Learning
+                <i data-lucide="arrow-right" class="w-4 h-4 ml-2"></i>
+              </a>
+            `;
+          } else {
+            viewButtonHTML = `
+              <button disabled class="w-full inline-flex items-center justify-center bg-gray-200 text-gray-400 dark:bg-zinc-800 dark:text-zinc-500 font-bold py-3.5 rounded-2xl cursor-not-allowed">
+                No Lessons Available
+              </button>
+            `;
+          }
+
+          container.innerHTML = `
+            <div class="space-y-4">
+              <div class="flex justify-between items-center text-xs font-bold text-gray-400">
+                <span>COURSE PROGRESS</span>
+                <span class="text-blue-600 dark:text-blue-400">${enrollment.progress}%</span>
+              </div>
+              <div class="w-full bg-gray-100 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-blue-600 h-full rounded-full transition-all duration-300" style="width: ${enrollment.progress}%"></div>
+              </div>
+              ${viewButtonHTML}
+            </div>
+          `;
+        }
+      }
+
+      function enroll() {
+        const user = window.db.getCurrentUser();
+        if (user && courseId) {
+          window.db.enrollInCourse(user.id, courseId);
+          showToast("Enrolled successfully! Enjoy the course.", "success");
+          loadCourseDetails();
+        }
+      }
+    </script>
+  </body>
+</html>

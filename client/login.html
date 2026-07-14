@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="login-title">Staff Login</title>
+    <meta name="description" content="Secure staff login portal. Administrators and teachers sign in to manage content, lessons, and student records." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      background: #0d1b3e;
+      overflow-x: hidden;
+    }
+
+    /* ── Animated background ── */
+    .login-bg {
+      position: fixed; inset: 0; z-index: 0;
+      background: linear-gradient(135deg, #0d1b3e 0%, #1e3a8a 40%, #0f3460 70%, #0f3023 100%);
+      overflow: hidden;
+    }
+    .login-bg::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(30,58,138,.35) 0%, transparent 70%);
+      top: -150px; right: -100px;
+      animation: floatBlob 12s ease-in-out infinite alternate;
+    }
+    .login-bg::after {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(21,128,61,.25) 0%, transparent 70%);
+      bottom: -100px; left: -80px;
+      animation: floatBlob 10s ease-in-out infinite alternate-reverse;
+    }
+    @keyframes floatBlob {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(40px,30px) scale(1.15); }
+    }
+
+    /* Grid dots overlay */
+    .grid-overlay {
+      position: fixed; inset: 0; z-index: 1;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,.07) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+    }
+
+    /* ── Layout ── */
+    .login-wrapper {
+      position: relative; z-index: 2;
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+    }
+
+    /* Left panel */
+    .login-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 4rem;
+      color: white;
+    }
+
+    .school-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 50px;
+      padding: 8px 18px 8px 8px;
+      margin-bottom: 2.5rem;
+      width: fit-content;
+    }
+    .school-badge-icon {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, #1d4ed8, #15803d);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+    }
+    .school-badge-text { font-size: .78rem; font-weight: 600; letter-spacing: .04em; }
+    .school-badge-sub  { font-size: .65rem; color: rgba(255,255,255,.5); display: block; }
+
+    .left-headline {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.2rem;
+    }
+    .left-headline span { color: #86efac; }
+
+    .left-desc {
+      font-size: .9rem;
+      color: rgba(255,255,255,.65);
+      line-height: 1.8;
+      max-width: 440px;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Feature bullets */
+    .feature-list { list-style: none; display: flex; flex-direction: column; gap: .75rem; }
+    .feature-list li {
+      display: flex; align-items: center; gap: 12px;
+      font-size: .82rem; color: rgba(255,255,255,.75);
+    }
+    .feature-dot {
+      width: 28px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; flex-shrink: 0;
+    }
+
+    /* Credential hint cards (bottom of left) */
+    .cred-cards {
+      display: flex; gap: .75rem; flex-wrap: wrap;
+      margin-top: 3rem;
+    }
+    .cred-card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 12px;
+      padding: .8rem 1rem;
+      font-size: .72rem;
+      flex: 1; min-width: 160px;
+    }
+    .cred-card-role {
+      font-weight: 700;
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      margin-bottom: .4rem;
+    }
+    .cred-card-row { color: rgba(255,255,255,.55); margin-bottom: .2rem; }
+    .cred-card-row span { color: rgba(255,255,255,.85); font-weight: 600; font-family: monospace; font-size: .75rem; }
+
+    /* ── Right panel: the actual form ── */
+    .login-right {
+      width: 420px;
+      flex-shrink: 0;
+      background: rgba(255,255,255,.97);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2.5rem 2.2rem;
+      box-shadow: -20px 0 60px rgba(0,0,0,.3);
+    }
+
+    .form-logo {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 2rem;
+    }
+    .form-logo-icon {
+      width: 42px; height: 42px;
+      background: linear-gradient(135deg, #1e3a8a, #15803d);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 1.1rem;
+      box-shadow: 0 4px 14px rgba(30,58,138,.35);
+    }
+    .form-logo-name {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 800; font-size: 1rem; color: #1e3a8a; line-height: 1.1;
+    }
+    .form-logo-sub {
+      font-size: .6rem; color: #64748b; text-transform: uppercase; letter-spacing: .06em;
+    }
+
+    .form-title { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.5rem; color: #0f172a; margin-bottom: .35rem; }
+    .form-subtitle { font-size: .8rem; color: #64748b; margin-bottom: 1.8rem; }
+
+    /* Role tabs */
+    .role-tabs { display: flex; gap: .5rem; margin-bottom: 1.75rem; }
+    .role-tab {
+      flex: 1; padding: .55rem; border: 1.5px solid #e2e8f0;
+      border-radius: 10px; background: white;
+      font-size: .78rem; font-weight: 600; color: #64748b;
+      cursor: pointer; text-align: center;
+      transition: all .2s; display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .role-tab.active {
+      border-color: #1e3a8a; background: #eff6ff; color: #1e3a8a;
+      box-shadow: 0 0 0 3px rgba(30,58,138,.1);
+    }
+    .role-tab i { font-size: .8rem; }
+
+    /* Form controls */
+    .nca-field { margin-bottom: 1.1rem; }
+    .nca-label { display: block; font-size: .75rem; font-weight: 700; color: #374151; margin-bottom: .4rem; }
+    .nca-input-wrap { position: relative; }
+    .nca-input-icon {
+      position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+      color: #94a3b8; font-size: .8rem; pointer-events: none;
+    }
+    .nca-input {
+      width: 100%; padding: .65rem 1rem .65rem 2.4rem;
+      border: 1.5px solid #e2e8f0; border-radius: 10px;
+      font-size: .85rem; color: #1e293b; font-family: 'Inter', sans-serif;
+      outline: none; transition: border-color .2s, box-shadow .2s;
+      background: #f8fafc;
+    }
+    .nca-input:focus { border-color: #1e3a8a; box-shadow: 0 0 0 3px rgba(30,58,138,.1); background: white; }
+    .nca-input.error { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,.1); }
+
+    .nca-pw-toggle {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: #94a3b8; font-size: .8rem;
+      transition: color .2s;
+    }
+    .nca-pw-toggle:hover { color: #1e3a8a; }
+
+    /* Error banner */
+    .login-error {
+      background: #fef2f2; border: 1px solid #fecaca;
+      border-radius: 10px; padding: .65rem 1rem;
+      font-size: .78rem; color: #dc2626; font-weight: 500;
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 1rem; display: none;
+    }
+    .login-error.show { display: flex; }
+
+    /* Submit button */
+    .login-btn {
+      width: 100%; padding: .75rem;
+      background: linear-gradient(135deg, #1e3a8a, #1e40af);
+      color: white; border: none; border-radius: 10px;
+      font-size: .88rem; font-weight: 700; font-family: 'Inter', sans-serif;
+      cursor: pointer; transition: all .25s;
+      box-shadow: 0 4px 14px rgba(30,58,138,.35);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      margin-bottom: 1.25rem;
+    }
+    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(30,58,138,.45); }
+    .login-btn:active { transform: translateY(0); }
+    .login-btn:disabled { opacity: .7; cursor: not-allowed; transform: none; }
+
+    .login-btn-spinner { display: none; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.4); border-top-color: white; border-radius: 50%; animation: spin .6s linear infinite; }
+    .login-btn.loading .login-btn-spinner { display: block; }
+    .login-btn.loading .login-btn-text { opacity: .7; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Back link */
+    .back-link {
+      text-align: center; font-size: .77rem; color: #64748b;
+    }
+    .back-link a { color: #1e3a8a; font-weight: 600; text-decoration: none; }
+    .back-link a:hover { text-decoration: underline; }
+
+    /* Divider */
+    .form-divider {
+      display: flex; align-items: center; gap: .75rem;
+      margin-bottom: 1.25rem; font-size: .72rem; color: #94a3b8;
+    }
+    .form-divider::before, .form-divider::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+
+    /* Trust badges */
+    .trust-row {
+      display: flex; justify-content: center; align-items: center; gap: 1rem;
+      margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #f1f5f9;
+    }
+    .trust-item { display: flex; align-items: center; gap: 5px; font-size: .68rem; color: #94a3b8; }
+    .trust-item i { color: #86efac; font-size: .7rem; }
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+      .login-left { display: none; }
+      .login-right { width: 100%; box-shadow: none; }
+    }
+    @media (max-width: 480px) {
+      .login-right { padding: 2rem 1.5rem; }
+    }
+
+    /* Animate in */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .login-right { animation: slideUp .45s cubic-bezier(.16,1,.3,1) both; }
+    .login-left  { animation: slideUp .5s .1s cubic-bezier(.16,1,.3,1) both; }
+  </style>
+</head>
+<body>
+  <div class="login-bg"></div>
+  <div class="grid-overlay"></div>
+
+  <div class="login-wrapper">
+
+    <!-- ═══════════ LEFT PANEL ═══════════ -->
+    <div class="login-left">
+
+      <div class="school-badge">
+        <div class="school-badge-icon"><i class="fa-solid fa-graduation-cap text-white"></i></div>
+        <div>
+          <span class="school-badge-text" id="login-school-name">School Platform</span>
+          <span class="school-badge-sub" id="login-school-badge">Learning Portal</span>
+        </div>
+      </div>
+
+      <h1 class="left-headline" id="login-welcome">
+        Welcome to<br><span>Our School</span><br>Platform
+      </h1>
+      <p class="left-desc" id="login-desc">
+        A modern Learning Management System designed to empower schools, teachers, and students.
+      </p>
+
+      <ul class="feature-list">
+        <li>
+          <div class="feature-dot" style="background:rgba(59,130,246,.2);">
+            <i class="fa-solid fa-bullhorn" style="color:#60a5fa;"></i>
+          </div>
+          Post &amp; manage announcements visible to all students
+        </li>
+        <li>
+          <div class="feature-dot" style="background:rgba(21,128,61,.2);">
+            <i class="fa-solid fa-book-open" style="color:#4ade80;"></i>
+          </div>
+          Upload lesson notes, PDF books &amp; video resources
+        </li>
+        <li>
+          <div class="feature-dot" style="background:rgba(234,179,8,.2);">
+            <i class="fa-solid fa-square-poll-vertical" style="color:#facc15;"></i>
+          </div>
+          Enter &amp; update student academic marks &amp; grades
+        </li>
+        <li>
+          <div class="feature-dot" style="background:rgba(168,85,247,.2);">
+            <i class="fa-solid fa-users-gear" style="color:#c084fc;"></i>
+          </div>
+          Administer user accounts and platform settings
+        </li>
+      </ul>
+
+      <!-- Demo credentials -->
+      <div class="cred-cards">
+        <div class="cred-card">
+          <div class="cred-card-role" style="color:#f472b6;">
+            <i class="fa-solid fa-shield-halved me-1"></i> Admin Account
+          </div>
+          <div class="cred-card-row">Email: <span>admin@hon-academy.rw</span></div>
+          <div class="cred-card-row">Password: <span>admin2026</span></div>
+        </div>
+        <div class="cred-card">
+          <div class="cred-card-role" style="color:#fbbf24;">
+            <i class="fa-solid fa-chalkboard-user me-1"></i> Teacher Account
+          </div>
+          <div class="cred-card-row">Email: <span>carter@hon-academy.rw</span></div>
+          <div class="cred-card-row">Password: <span>teacher123</span></div>
+        </div>
+        <div class="cred-card">
+          <div class="cred-card-role" style="color:#6ee7b7;">
+            <i class="fa-solid fa-user-graduate me-1"></i> Student Account
+          </div>
+          <div class="cred-card-row">Email: <span>alice@hon-academy.rw</span></div>
+          <div class="cred-card-row">Password: <span>student2026</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════ RIGHT PANEL: Login Form ═══════════ -->
+    <div class="login-right">
+
+      <!-- Logo -->
+      <div class="form-logo">
+        <div class="form-logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div>
+          <div class="form-logo-name" id="form-logo-name">School</div>
+          <div class="form-logo-sub">Learning Portal</div>
+        </div>
+      </div>
+
+      <h2 class="form-title">Welcome Back</h2>
+      <p class="form-subtitle" id="form-subtitle">Sign in to your account</p>
+
+      <!-- Role Tabs -->
+      <div class="role-tabs" id="role-tabs">
+        <button class="role-tab active" data-role="admin" onclick="selectRole('admin')">
+          <i class="fa-solid fa-shield-halved"></i> Admin
+        </button>
+        <button class="role-tab" data-role="teacher" onclick="selectRole('teacher')">
+          <i class="fa-solid fa-chalkboard-user"></i> Teacher
+        </button>
+        <button class="role-tab" data-role="student" onclick="selectRole('student')">
+          <i class="fa-solid fa-user-graduate"></i> Student
+        </button>
+      </div>
+
+      <!-- Error banner -->
+      <div class="login-error" id="login-error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span id="error-msg">Invalid email or password. Please try again.</span>
+      </div>
+
+      <!-- Form -->
+      <form id="login-form" onsubmit="handleLogin(event)" novalidate>
+        <!-- Email -->
+        <div class="nca-field">
+          <label class="nca-label" for="login-email">Email Address</label>
+          <div class="nca-input-wrap">
+            <i class="fa-solid fa-envelope nca-input-icon"></i>
+            <input
+              type="email"
+              id="login-email"
+              class="nca-input"
+              placeholder="e.g. admin@hon-academy.rw"
+              autocomplete="email"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="nca-field">
+          <label class="nca-label" for="login-password">Password</label>
+          <div class="nca-input-wrap">
+            <i class="fa-solid fa-lock nca-input-icon"></i>
+            <input
+              type="password"
+              id="login-password"
+              class="nca-input"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              required
+            />
+            <button type="button" class="nca-pw-toggle" id="pw-toggle" onclick="togglePassword()" aria-label="Show/hide password">
+              <i class="fa-solid fa-eye" id="pw-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="login-btn" id="login-btn">
+          <div class="login-btn-spinner" id="btn-spinner"></div>
+          <span class="login-btn-text">
+            <i class="fa-solid fa-right-to-bracket me-1"></i> Sign In to Staff Portal
+          </span>
+        </button>
+      </form>
+
+      <div class="form-divider">or</div>
+
+      <div class="back-link">
+        <a href="index.html"><i class="fa-solid fa-arrow-left me-1"></i>Back to Student Homepage</a>
+      </div>
+
+      <!-- Trust row -->
+      <div class="trust-row">
+        <div class="trust-item"><i class="fa-solid fa-lock"></i> Secure Login</div>
+        <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> REB Compliant</div>
+        <div class="trust-item"><i class="fa-solid fa-certificate"></i> Platform Certified</div>
+      </div>
+
+      <!-- Developer attribution -->
+      <div class="text-center mt-4">
+        <p class="text-[11px] text-muted mb-0">
+          Developed by
+          <a href="https://tuyishime-nu.vercel.app" target="_blank" rel="noopener noreferrer" class="fw-bold" style="color: #64748b; text-decoration: none;">Honore Tuyishime</a>
+        </p>
+      </div>
+    </div>
+
+  </div><!-- / login-wrapper -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+
+  <!-- ⚠️ Seed version guard: clears stale localStorage users when seed changes -->
+  <script>
+    (function() {
+      const SEED_VERSION = 'v5_honacademy_2026'; // bump this when DEFAULT_USERS changes
+      const stored = localStorage.getItem('hone_seed_version');
+      if (stored !== SEED_VERSION) {
+        // Clear only the user table so new seed loads fresh
+        localStorage.removeItem('db_users');
+        localStorage.removeItem('current_user');
+        localStorage.setItem('hone_seed_version', SEED_VERSION);
+        console.log('[HonE] Seed version updated — user cache cleared.');
+      }
+    })();
+  </script>
+
+  <script src="js/data.js"></script>
+  <script>
+    // ── State ──
+    let selectedRole = 'admin';
+
+    // ── On page load: clear stale local session to prevent redirect loops ──
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Load CMS school info
+      try {
+        var school = window.db.getSchoolInfo();
+        var short = school.shortName || school.name || 'School';
+        document.getElementById('login-title').textContent = 'Login - ' + school.name;
+        document.getElementById('login-school-name').textContent = school.name;
+        document.getElementById('login-school-badge').textContent = school.badge || 'Learning Portal';
+        document.getElementById('login-welcome').innerHTML = 'Welcome to<br><span>' + short + '</span><br>Platform';
+        document.getElementById('login-desc').textContent = school.loginDescription || school.aboutIntro || 'A modern Learning Management System designed to empower schools, teachers, and students through secure, accessible, and engaging digital learning experiences.';
+        document.getElementById('form-logo-name').textContent = short;
+        document.getElementById('form-subtitle').textContent = 'Sign in to your ' + short + ' account';
+      } catch(e) {}
+      // Check for role URL parameter
+      var params = new URLSearchParams(window.location.search);
+      var roleParam = params.get('role');
+      if (roleParam && ['admin','teacher','student'].includes(roleParam)) {
+        selectRole(roleParam);
+      }
+      // Only auto-redirect if there is BOTH a local session AND a valid Supabase session
+      // We intentionally do NOT auto-redirect so the user can always re-enter credentials
+
+      // Check Supabase active session
+      if (window.supabaseClient) {
+        try {
+          const { data: { session } } = await window.supabaseClient.auth.getSession();
+          if (session) {
+            const { data: profile } = await window.supabaseClient
+              .from('users').select('role').eq('id', session.user.id).single();
+            if (profile && profile.role) {
+              if (!roleParam || roleParam === profile.role) {
+                redirectByRole(profile.role);
+                return;
+              }
+            }
+          }
+        } catch(e) {
+          console.warn('Supabase session check failed, proceeding to login form.', e);
+        }
+      }
+
+      // Check local DB session — redirect only if matches the roleParam or no roleParam
+      const user = window.db.getCurrentUser();
+      if (user && (user.role === 'admin' || user.role === 'teacher' || user.role === 'student')) {
+        if (!roleParam || roleParam === user.role) {
+          redirectByRole(user.role);
+        }
+      }
+    });
+
+    function selectRole(role) {
+      selectedRole = role;
+      document.querySelectorAll('.role-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.role === role);
+      });
+      // Only update the PLACEHOLDER, never overwrite what the user has typed
+      const hints = {
+        admin:   'admin@hon-academy.rw',
+        teacher: 'carter@hon-academy.rw',
+        student: 'alice@hon-academy.rw'
+      };
+      const emailInput = document.getElementById('login-email');
+      emailInput.placeholder = hints[role];
+      // Auto-fill only if current value is blank or was previously just a hint
+      const isHint = Object.values(hints).includes(emailInput.value);
+      if (!emailInput.value || isHint) {
+        emailInput.value = hints[role];
+      }
+      document.getElementById('login-password').value = '';
+      hideError();
+    }
+
+    function redirectByRole(role) {
+      if (role === 'admin')   window.location.href = 'admin-dashboard.html';
+      else if (role === 'teacher') window.location.href = 'teacher-dashboard.html';
+      else if (role === 'student') window.location.href = 'student-dashboard.html';
+      else window.location.href = 'index.html';
+    }
+
+    function togglePassword() {
+      const input = document.getElementById('login-password');
+      const eye   = document.getElementById('pw-eye');
+      if (input.type === 'password') {
+        input.type = 'text';
+        eye.className = 'fa-solid fa-eye-slash';
+      } else {
+        input.type = 'password';
+        eye.className = 'fa-solid fa-eye';
+      }
+    }
+
+    function showError(msg) {
+      const banner = document.getElementById('login-error');
+      document.getElementById('error-msg').textContent = msg;
+      banner.classList.add('show');
+    }
+    function hideError() {
+      document.getElementById('login-error').classList.remove('show');
+    }
+
+    function setLoading(loading) {
+      const btn = document.getElementById('login-btn');
+      btn.disabled = loading;
+      btn.classList.toggle('loading', loading);
+    }
+
+
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      hideError();
+
+      const email    = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+
+      if (!email || !password) {
+        showError('Please enter your email and password.');
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        // Attempt Supabase Login first
+        if (window.supabaseClient) {
+          const authAttempt = async () => {
+            let res = await window.supabaseClient.auth.signInWithPassword({
+              email: email,
+              password: password,
+            });
+
+            // If user doesn't exist, try transparent signup (for seamless demo transition)
+            if (res.error && res.error.message.includes('Invalid login credentials')) {
+               console.log("No Supabase user found. Creating initial user map transparently...");
+               const signUpReq = await window.supabaseClient.auth.signUp({
+                 email: email,
+                 password: password,
+               });
+               
+               if (!signUpReq.error) {
+                  // Now that we have Auth, let's insert into public.users
+                  await window.supabaseClient.from('users').upsert([
+                    { id: signUpReq.data.user.id, email: email, full_name: selectedRole === 'admin' ? 'System Admin' : 'Teacher', role: selectedRole }
+                  ]);
+                  res = signUpReq; // Treat as success
+               } else {
+                  console.warn("Supabase Signup fallback failed:", signUpReq.error.message);
+               }
+            }
+            return res;
+          };
+
+          // Race with 2.5 second timeout to prevent offline hanging
+          const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Authentication timeout')), 2500)
+          );
+          
+          let authResult = await Promise.race([authAttempt(), timeoutPromise]);
+
+          // Important: check if the session exists or if it requires email confirmation
+          if (!authResult.error && authResult.data.user && authResult.data.session) {
+            // Success via Supabase!
+            // Sync local DB session so synchronous RBAC guards in portals allow access
+            let finalRole = selectedRole;
+            const users = window.db.getUsers();
+            let matchedUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+            
+            if (matchedUser) {
+              window.db.setCurrentUser(matchedUser);
+              finalRole = matchedUser.role; // Use actual verified role, not the selected tab
+            } else {
+              window.db.setCurrentUser({ 
+                id: authResult.data.user.id, 
+                name: 'Authorized User', 
+                email: email, 
+                role: selectedRole 
+              });
+            }
+
+            setLoading(false);
+            finishLoginSuccess(finalRole);
+            return;
+          } else {
+            console.warn("Supabase auth sequence incomplete or email unverified. Falling back to local DB session...");
+          }
+        }
+      } catch (err) {
+        console.error("Critical error in Supabase Authentication step:", err);
+      }
+
+      // Fallback local DB check if Supabase fails or isn't init natively
+      setTimeout(() => {
+        try {
+          const result = window.db.login(email, password);
+          setLoading(false);
+
+          if (result.success) {
+            finishLoginSuccess(result.user.role);
+          } else {
+            showError(result.error || 'Invalid credentials. Please try again.');
+            // Shake form
+            const form = document.getElementById('login-form');
+            form.style.animation = 'none';
+            void form.offsetHeight;
+            form.style.animation = 'shake .4s ease';
+          }
+        } catch(fallbackErr) {
+          setLoading(false);
+          showError("A system error occurred. Please refresh the page.");
+          console.error(fallbackErr);
+        }
+      }, 700);
+    }
+
+    function finishLoginSuccess(role) {
+      const btn = document.getElementById('login-btn');
+      btn.style.background = 'linear-gradient(135deg,#15803d,#166534)';
+      btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>Signed in! Redirecting…</span>';
+      setTimeout(() => redirectByRole(role), 900);
+    }
+
+    // Simple shake animation
+    const shakeStyle = document.createElement('style');
+    shakeStyle.textContent = `
+      @keyframes shake {
+        0%,100% { transform: translateX(0); }
+        20%,60%  { transform: translateX(-6px); }
+        40%,80%  { transform: translateX(6px); }
+      }
+    `;
+    document.head.appendChild(shakeStyle);
+  </script>
+</body>
+</html>

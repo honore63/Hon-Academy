@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Course Management — HonE-Learning Platform</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root { --portal-primary: #1e3a8a; --nav-main-w: 80px; --nav-sub-w: 220px; }
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f0f4f8; margin: 0; padding: 0; overflow-x: hidden; }
+    .portal-sidebar-main { position: fixed; top: 0; left: 0; bottom: 0; width: var(--nav-main-w); background: #0f172a; z-index: 1050; display: flex; flex-direction: column; align-items: center; padding: 16px 0; }
+    .nav-brand-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, var(--portal-primary), #6366f1); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; margin-bottom: 24px; }
+    .nav-main-item { width: 64px; height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: rgba(255,255,255,0.5); text-decoration: none; border-radius: 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; border: none; background: transparent; }
+    .nav-main-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .nav-main-item.active { background: rgba(59,130,246,0.15); color: #3b82f6; }
+    .nav-main-item i { font-size: 18px; margin-bottom: 4px; }
+    .nav-main-item span { font-size: 10px; font-weight: 600; line-height: 1.1; text-align: center; }
+    .portal-sidebar-sub { position: fixed; top: 0; left: var(--nav-main-w); bottom: 0; width: var(--nav-sub-w); background: #fff; z-index: 1040; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; }
+    .sub-brand-text { height: 64px; display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid #f1f5f9; font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700; color: #0f172a; }
+    .sub-nav-content { flex: 1; overflow-y: auto; padding: 20px 14px; }
+    .sub-nav-title { font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 12px 10px; }
+    .sub-nav-list { list-style: none; padding: 0; margin: 0; }
+    .sub-nav-list li a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: #475569; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.2s; margin-bottom: 4px; border: none; background: transparent; width: 100%; text-align: left; cursor: pointer; }
+    .sub-nav-list li a:hover { background: #f8fafc; color: #0f172a; }
+    .sub-nav-list li a.active { background: #eff6ff; color: #2563eb; font-weight: 600; border-left: 3px solid #3b82f6; }
+    .portal-main { margin-left: calc(var(--nav-main-w) + var(--nav-sub-w)); min-height: 100vh; }
+    .portal-topbar { height: 64px; background: #fff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; position: sticky; top: 0; z-index: 100; }
+    .portal-content { padding: 28px; flex: 1; }
+    .section-card { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; margin-bottom: 20px; }
+    .section-card-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid #f1f5f9; }
+    .section-card-title { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700; color: #0f172a; margin: 0; }
+    .section-card-body { padding: 20px; }
+    .portal-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .portal-table th { padding: 10px 14px; background: #f8fafc; color: #64748b; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+    .portal-table td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; color: #1e293b; vertical-align: middle; }
+    .portal-table tr:hover td { background: #f8fafc; }
+    .role-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .portal-input { width: 100%; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 13px; outline: none; transition: border-color 0.2s; }
+    .portal-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
+    .portal-input.error { border-color: #ef4444; }
+    .portal-btn { padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; }
+    .portal-btn-primary { background: #1e3a8a; color: #fff; }
+    .portal-btn-primary:hover { background: #1d4ed8; }
+    .portal-btn-success { background: #15803d; color: #fff; }
+    .portal-btn-danger { background: #ef4444; color: #fff; }
+    .portal-btn-warning { background: #f59e0b; color: #fff; }
+    .portal-btn-sm { padding: 6px 14px; font-size: 12px; }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: #fff; border-radius: 16px; padding: 20px; border: 1px solid #e2e8f0; }
+    .stat-value { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 800; color: #0f172a; }
+    .stat-label { font-size: 12px; color: #64748b; }
+    .error-text { font-size: 11px; color: #ef4444; margin-top: 4px; display: none; }
+    .error-text.show { display: block; }
+    @media (max-width: 900px) { .portal-sidebar-main, .portal-sidebar-sub { display: none; } .portal-main { margin-left: 0; } }
+  </style>
+</head>
+<body>
+<aside class="portal-sidebar-main">
+  <div class="nav-brand-icon"><i class="fa-solid fa-book-open"></i></div>
+  <button class="nav-main-item active" onclick="window.location.href='admin-dashboard.html'"><i class="fa-solid fa-arrow-left"></i><span>Back</span></button>
+  <div style="flex:1;"></div>
+  <button class="nav-main-item" style="color:#ef4444;" onclick="window.db.logout(); window.location.href='index.html'"><i class="fa-solid fa-power-off"></i><span>Logout</span></button>
+</aside>
+
+<aside class="portal-sidebar-sub">
+  <div class="sub-brand-text">Course Management</div>
+  <div class="sub-nav-content">
+    <div class="sub-nav-title">Manage</div>
+    <ul class="sub-nav-list">
+      <li><a href="#" class="active" onclick="showTab(event, 'all-courses')"><i class="fa-solid fa-list"></i> All Courses</a></li>
+      <li><a href="#" onclick="showTab(event, 'create-course')"><i class="fa-solid fa-plus"></i> Create Course</a></li>
+      <li><a href="#" onclick="showTab(event, 'lessons')"><i class="fa-solid fa-video"></i> Lessons</a></li>
+      <li><a href="#" onclick="showTab(event, 'categories')"><i class="fa-solid fa-tags"></i> Categories</a></li>
+    </ul>
+  </div>
+</aside>
+
+<div class="portal-main">
+  <div class="portal-topbar">
+    <div><div class="topbar-title" style="font-weight:700;font-size:18px;">Course Management</div></div>
+    <div class="topbar-right d-flex align-items-center gap-2">
+      <span style="font-size:12px;color:#64748b;" id="courseStats"></span>
+    </div>
+  </div>
+  <div class="portal-content">
+    <!-- ALL COURSES -->
+    <div id="tab-all-courses">
+      <div class="section-card">
+        <div class="section-card-header">
+          <h5 class="section-card-title"><i class="fa-solid fa-book text-primary me-2"></i>All Courses</h5>
+          <div class="d-flex gap-2">
+            <input type="text" class="portal-input" style="width:200px;" id="course-search" placeholder="Search courses..." oninput="filterCourses()">
+            <select class="portal-input" style="width:150px;" id="course-status-filter" onchange="filterCourses()">
+              <option value="all">All Status</option>
+              <option value="published">Published</option>
+              <option value="draft">Draft</option>
+              <option value="featured">Featured</option>
+            </select>
+          </div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="portal-table">
+            <thead><tr><th>Title</th><th>Subject</th><th>Grade Level</th><th>Instructor</th><th>Students</th><th>Status</th><th style="text-align:center;">Actions</th></tr></thead>
+            <tbody id="courses-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- CREATE COURSE -->
+    <div id="tab-create-course" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-plus-circle text-success me-2"></i>Create New Course</h5></div>
+        <div class="section-card-body">
+          <form id="create-course-form" onsubmit="createCourse(event)" novalidate>
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label" style="font-size:12px;font-weight:600;">Course Title *</label>
+                <input type="text" class="portal-input" id="course-title" required minlength="3" data-required>
+                <div class="error-text" id="err-course-title">Title is required (min 3 characters)</div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label" style="font-size:12px;font-weight:600;">Subject *</label>
+                <select class="portal-input" id="course-subject" required data-required>
+                  <option value="">Select Subject</option>
+                </select>
+                <div class="error-text" id="err-course-subject">Subject is required</div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label" style="font-size:12px;font-weight:600;">Grade Level *</label>
+                <select class="portal-input" id="course-grade" required data-required>
+                  <option value="">Select Grade</option>
+                  <option value="Primary 1">Primary 1</option><option value="Primary 2">Primary 2</option>
+                  <option value="Primary 3">Primary 3</option><option value="Primary 4">Primary 4</option>
+                  <option value="Primary 5">Primary 5</option><option value="Primary 6">Primary 6</option>
+                  <option value="Senior 1">Senior 1</option><option value="Senior 2">Senior 2</option>
+                  <option value="Senior 3">Senior 3</option><option value="Senior 4">Senior 4</option>
+                  <option value="Senior 5">Senior 5</option><option value="Senior 6">Senior 6</option>
+                </select>
+                <div class="error-text" id="err-course-grade">Grade level is required</div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Description *</label>
+              <textarea class="portal-input" id="course-desc" rows="4" required minlength="10" data-required></textarea>
+              <div class="error-text" id="err-course-desc">Description is required (min 10 characters)</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Duration (minutes)</label>
+              <input type="number" class="portal-input" id="course-duration" min="1" value="60" style="width:200px;">
+            </div>
+            <div class="d-flex gap-2">
+              <button type="submit" class="portal-btn portal-btn-success"><i class="fa-solid fa-check me-1"></i>Create Course</button>
+              <button type="button" class="portal-btn" style="background:#e2e8f0;color:#475569;" onclick="showTab(event, 'all-courses')">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- LESSONS -->
+    <div id="tab-lessons" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header">
+          <h5 class="section-card-title"><i class="fa-solid fa-video text-primary me-2"></i>Manage Lessons</h5>
+          <select class="portal-input" style="width:250px;" id="lesson-course-select" onchange="loadLessons()">
+            <option value="">Select a course first</option>
+          </select>
+        </div>
+        <div class="section-card-body">
+          <form id="create-lesson-form" onsubmit="createLesson(event)" novalidate>
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label class="form-label" style="font-size:12px;font-weight:600;">Lesson Title *</label>
+                <input type="text" class="portal-input" id="lesson-title" required data-required>
+                <div class="error-text" id="err-lesson-title">Title is required</div>
+              </div>
+              <div class="col-md-3">
+                <label class="form-label" style="font-size:12px;font-weight:600;">Order</label>
+                <input type="number" class="portal-input" id="lesson-order" min="1" value="1">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label" style="font-size:12px;font-weight:600;">Duration (min)</label>
+                <input type="number" class="portal-input" id="lesson-duration" min="1" value="30">
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Content / Description</label>
+              <textarea class="portal-input" id="lesson-content" rows="4"></textarea>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" style="font-size:12px;font-weight:600;">Video URL (YouTube embed)</label>
+              <input type="url" class="portal-input" id="lesson-video" placeholder="https://www.youtube.com/embed/...">
+            </div>
+            <button type="submit" class="portal-btn portal-btn-primary"><i class="fa-solid fa-plus me-1"></i>Add Lesson</button>
+          </form>
+          <hr>
+          <div style="overflow-x:auto;">
+            <table class="portal-table">
+              <thead><tr><th>#</th><th>Title</th><th>Duration</th><th style="text-align:center;">Actions</th></tr></thead>
+              <tbody id="lessons-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <div id="tab-categories" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-tags text-warning me-2"></i>Subject Categories</h5></div>
+        <div class="section-card-body" id="categories-content"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/db-extension.js"></script>
+<script src="js/components.js"></script>
+<script>
+  function showTab(e, tab) {
+    e && e.preventDefault();
+    document.querySelectorAll('[id^="tab-"]').forEach(t => t.classList.add('d-none'));
+    document.getElementById('tab-' + tab).classList.remove('d-none');
+    document.querySelectorAll('.sub-nav-list a').forEach(a => a.classList.remove('active'));
+    e && e.currentTarget.classList.add('active');
+    if (tab === 'all-courses') loadCourses();
+    if (tab === 'create-course') populateSubjectSelect();
+    if (tab === 'lessons') populateLessonCourseSelect();
+    if (tab === 'categories') loadCategories();
+  }
+
+  function loadCourses() {
+    const courses = window.db.getCourses ? window.db.getCourses() : [];
+    const users = window.db.getUsers();
+    document.getElementById('courseStats').textContent = `${courses.length} total courses`;
+    document.getElementById('courses-tbody').innerHTML = courses.length ? courses.map(c => {
+      const instructor = users.find(u => u.id === c.instructorId);
+      const status = c.isFeatured ? 'featured' : c.isPublished ? 'published' : 'draft';
+      const badge = status === 'published' ? 'background:#dcfce7;color:#166534;' : status === 'featured' ? 'background:#fef9c3;color:#854d0e;' : 'background:#f1f5f9;color:#64748b;';
+      return `<tr>
+        <td><strong>${c.title}</strong></td>
+        <td>${c.subject}</td>
+        <td>${c.gradeLevel}</td>
+        <td>${instructor ? instructor.name : 'Unknown'}</td>
+        <td>${c.enrollmentCount || 0}</td>
+        <td><span class="role-pill" style="${badge}">${status}</span></td>
+        <td style="text-align:center;">
+          <button class="portal-btn portal-btn-sm portal-btn-primary" onclick="toggleFeature(${c.id})" title="Toggle Featured"><i class="fa-solid fa-star"></i></button>
+          <button class="portal-btn portal-btn-sm portal-btn-warning" onclick="togglePublish(${c.id})" title="Toggle Publish"><i class="fa-solid fa-${c.isPublished ? 'eye-slash' : 'eye'}"></i></button>
+          <button class="portal-btn portal-btn-sm portal-btn-danger" onclick="deleteCourse(${c.id})" title="Delete"><i class="fa-solid fa-trash"></i></button>
+        </td>
+      </tr>`;
+    }).join('') : '<tr><td colspan="7" style="text-align:center;padding:30px;color:#94a3b8;">No courses found. <a href="#" onclick="showTab(event, \'create-course\')" style="color:#3b82f6;">Create one</a></td></tr>';
+  }
+
+  function filterCourses() {
+    const q = document.getElementById('course-search').value.toLowerCase();
+    const statusFilter = document.getElementById('course-status-filter').value;
+    document.querySelectorAll('#courses-tbody tr').forEach(tr => {
+      const title = tr.querySelector('td')?.textContent?.toLowerCase() || '';
+      const statusCell = tr.querySelectorAll('td')[5]?.textContent?.trim() || '';
+      const matchSearch = !q || title.includes(q);
+      const matchStatus = statusFilter === 'all' || statusFilter === statusCell;
+      tr.style.display = matchSearch && matchStatus ? '' : 'none';
+    });
+  }
+
+  function populateSubjectSelect() {
+    const subjects = window.db.getSubjects();
+    const sel = document.getElementById('course-subject');
+    sel.innerHTML = '<option value="">Select Subject</option>' + subjects.map(s => `<option value="${s.title}">${s.title}</option>`).join('');
+  }
+
+  function validateField(id) {
+    const el = document.getElementById(id);
+    const err = document.getElementById('err-' + id);
+    if (!el) return true;
+    const valid = el.value && el.value.length >= (parseInt(el.getAttribute('minlength') || '1'));
+    if (!valid) { el.classList.add('error'); if (err) err.classList.add('show'); }
+    else { el.classList.remove('error'); if (err) err.classList.remove('show'); }
+    return valid;
+  }
+
+  function createCourse(e) {
+    e.preventDefault();
+    const valid = ['course-title','course-subject','course-grade','course-desc'].every(id => validateField(id));
+    if (!valid) { window.showToast('Please fill in all required fields', 'error'); return; }
+
+    const user = window.db.getCurrentUser();
+    const course = {
+      title: document.getElementById('course-title').value,
+      subject: document.getElementById('course-subject').value,
+      gradeLevel: document.getElementById('course-grade').value,
+      description: document.getElementById('course-desc').value,
+      duration: parseInt(document.getElementById('course-duration').value) || 60,
+      instructorId: user ? user.id : 1,
+      isPublished: 0,
+      isFeatured: 0,
+      enrollmentCount: 0,
+    };
+    window.db.createCourse(course);
+    window.showToast('Course created successfully!', 'success');
+    showTab(event, 'all-courses');
+    loadCourses();
+  }
+
+  function toggleFeature(id) {
+    const courses = window.db.getCourses ? window.db.getCourses() : [];
+    const c = courses.find(c => c.id === id);
+    if (c) { c.isFeatured = c.isFeatured ? 0 : 1; window.db.updateCourse(id, { isFeatured: c.isFeatured }); loadCourses(); window.showToast(c.isFeatured ? 'Featured' : 'Unfeatured', 'success'); }
+  }
+
+  function togglePublish(id) {
+    const courses = window.db.getCourses ? window.db.getCourses() : [];
+    const c = courses.find(c => c.id === id);
+    if (c) { c.isPublished = c.isPublished ? 0 : 1; window.db.updateCourse(id, { isPublished: c.isPublished }); loadCourses(); window.showToast(c.isPublished ? 'Published' : 'Unpublished', 'success'); }
+  }
+
+  function deleteCourse(id) {
+    if (!confirm('Delete this course? This action cannot be undone.')) return;
+    window.db.deleteCourse && window.db.deleteCourse(id);
+    loadCourses();
+    window.showToast('Course deleted', 'success');
+  }
+
+  function populateLessonCourseSelect() {
+    const courses = window.db.getCourses ? window.db.getCourses() : [];
+    const sel = document.getElementById('lesson-course-select');
+    sel.innerHTML = '<option value="">Select a course</option>' + courses.map(c => `<option value="${c.id}">${c.title}</option>`).join('');
+  }
+
+  function loadLessons() {
+    const courseId = document.getElementById('lesson-course-select').value;
+    if (!courseId) return;
+    const allLessons = window.db.getAllLessons ? window.db.getAllLessons() : [];
+    const courseLessons = allLessons.filter(l => l.courseId === parseInt(courseId));
+    document.getElementById('lessons-tbody').innerHTML = courseLessons.length ? courseLessons.map(l => `
+      <tr><td>${l.order || '-'}</td><td><strong>${l.title}</strong></td><td>${l.duration || '-'} min</td>
+      <td style="text-align:center;"><button class="portal-btn portal-btn-sm portal-btn-danger" onclick="deleteLesson(${l.id})"><i class="fa-solid fa-trash"></i></button></td></tr>
+    `).join('') : '<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:20px;">No lessons yet for this course.</td></tr>';
+  }
+
+  function createLesson(e) {
+    e.preventDefault();
+    const courseId = document.getElementById('lesson-course-select').value;
+    if (!courseId) { window.showToast('Select a course first', 'error'); return; }
+    if (!document.getElementById('lesson-title').value) { window.showToast('Lesson title is required', 'error'); return; }
+
+    window.db.createLesson({
+      courseId: parseInt(courseId),
+      subjectId: 0,
+      title: document.getElementById('lesson-title').value,
+      description: document.getElementById('lesson-content').value,
+      content: document.getElementById('lesson-content').value,
+      videoUrl: document.getElementById('lesson-video').value,
+      duration: parseInt(document.getElementById('lesson-duration').value) || 30,
+      order: parseInt(document.getElementById('lesson-order').value) || 1,
+    });
+    window.showToast('Lesson added!', 'success');
+    document.getElementById('create-lesson-form').reset();
+    loadLessons();
+  }
+
+  function deleteLesson(id) {
+    window.db.deleteLesson && window.db.deleteLesson(id);
+    loadLessons();
+    window.showToast('Lesson deleted', 'success');
+  }
+
+  function loadCategories() {
+    const subjects = window.db.getSubjects();
+    const groups = {};
+    subjects.forEach(s => { if (!groups[s.level]) groups[s.level] = []; groups[s.level].push(s); });
+    document.getElementById('categories-content').innerHTML = Object.entries(groups).map(([level, subs]) => `
+      <div class="mb-4"><h6 style="font-weight:700;color:#1e3a8a;margin-bottom:12px;">${level} (${subs.length} subjects)</h6>
+      <div class="d-flex flex-wrap gap-2">${subs.map(s => `<span class="role-pill" style="background:#dbeafe;color:#1e40af;">${s.title} (${s.code})</span>`).join('')}</div></div>
+    `).join('');
+  }
+
+  document.addEventListener('DOMContentLoaded', () => { loadCourses(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="page-title">HON-ACADEMY — Excellence in Education, Innovation &amp; Leadership</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      .hero-banner{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#1e40af 100%);border-radius:1rem;overflow:hidden;position:relative}
+      .hero-banner::before{content:'';position:absolute;top:-50%;right:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(255,255,255,.06) 0%,transparent 70%);border-radius:50%}
+      .hero-banner .display-4{font-size:2.6rem;line-height:1.2}
+      .stat-card{border:none;border-radius:1rem;transition:transform .25s,box-shadow .25s}
+      .stat-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.1)}
+      .stat-icon{width:56px;height:56px;border-radius:.8rem;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+      .why-card{border:1px solid #e9ecef;border-radius:1rem;padding:1.5rem;background:#fff;transition:.25s;height:100%}
+      .why-card:hover{box-shadow:0 8px 24px rgba(26,60,123,.1);transform:translateY(-2px)}
+      .why-card .why-icon{width:56px;height:56px;border-radius:.8rem;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
+      .level-card{border:1px solid #e9ecef;border-radius:1rem;overflow:hidden;transition:.25s;background:#fff;height:100%}
+      .level-card:hover{box-shadow:0 8px 24px rgba(26,60,123,.12);transform:translateY(-2px)}
+      .level-card .level-header{padding:1.5rem 1.25rem 1rem;color:#fff;position:relative}
+      .level-card .level-header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:20px;background:#fff;border-radius:1rem 1rem 0 0}
+      .level-card .level-body{padding:0 1.25rem 1.5rem}
+      .level-card .level-body ul{list-style:none;padding:0;margin:0}
+      .level-card .level-body li{padding:.3rem 0;font-size:.85rem;color:#495057}
+      .level-card .level-body li::before{content:'\f00c';font-family:'Font Awesome 6 Free';font-weight:900;color:#10b981;margin-right:.5rem;font-size:.7rem}
+      .cta-banner{background:linear-gradient(135deg,#1e3a8a,#3b82f6);border-radius:1rem;color:#fff;padding:3rem 2rem;text-align:center}
+      .combo-badge{display:inline-block;padding:.25rem .6rem;border-radius:.4rem;font-size:.75rem;font-weight:600;margin:.15rem}
+      @media(max-width:767.98px){.hero-banner .display-4{font-size:1.8rem}.hero-banner .lead{font-size:1rem}}
+    </style>
+  </head>
+  <body class="animate-fade-in">
+    <header class="site-header"></header>
+
+    <!-- ═══════════ HERO ═══════════ -->
+    <section class="hero-banner p-5 mb-5 shadow-lg text-center text-md-start">
+      <div class="row align-items-center g-5">
+        <div class="col-md-7">
+          <span class="badge bg-success text-uppercase px-3 py-2 small mb-3" id="hero-badge"><i class="fa-solid fa-flag me-1"></i> <span id="hero-badge-text">Rwanda Education Board Compliant</span></span>
+          <h1 class="display-4 font-bold text-white leading-tight" id="hero-title">Welcome to HON-ACADEMY</h1>
+          <p class="lead text-white-50 mb-2" id="hero-subtitle">Excellence in Education &bull; Innovation &bull; Leadership</p>
+          <p class="text-light mb-4" id="hero-description" style="font-size:.95rem;line-height:1.7">At HON-ACADEMY, we believe education is the foundation for a brighter future. We are committed to nurturing learners who are academically excellent, morally responsible, technologically skilled, and globally competitive.</p>
+          <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-md-start" id="hero-ctas"></div>
+        </div>
+        <div class="col-md-5 d-none d-md-block text-center">
+          <div class="bg-white/10 p-4 rounded-4 border border-white/20 shadow-lg">
+            <i class="fa-solid fa-graduation-cap text-white mb-3" style="font-size:4.5rem;filter:drop-shadow(0 4px 6px rgba(0,0,0,.15))"></i>
+            <h5 class="text-white font-bold mb-1" id="hero-school-name">HON-ACADEMY</h5>
+            <p class="text-white-50 small mb-0" id="hero-subtitle-r">Excellence in Education &bull; Innovation &bull; Leadership</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="container my-5">
+
+      <!-- ═══════════ STATS ═══════════ -->
+      <section class="row g-4 mb-5 text-center" id="stats-section"></section>
+
+      <!-- ═══════════ ABOUT / WHY CHOOSE US ═══════════ -->
+      <section class="mb-5">
+        <div class="text-center mb-4">
+          <h3 class="font-bold text-dark" id="about-title">Why Choose HON-ACADEMY?</h3>
+          <p class="text-muted" id="about-subtitle">We provide a holistic education experience that prepares learners for success.</p>
+        </div>
+        <div class="row g-4" id="why-choose-grid"></div>
+      </section>
+
+      <!-- ═══════════ EDUCATIONAL LEVELS ═══════════ -->
+      <section class="mb-5">
+        <div class="text-center mb-4">
+          <h3 class="font-bold text-dark">Educational Levels</h3>
+          <p class="text-muted">Comprehensive programs from Primary through TVET.</p>
+        </div>
+        <div class="row g-4" id="levels-grid"></div>
+      </section>
+
+      <div class="row g-5">
+        <!-- LEFT COLUMN -->
+        <div class="col-lg-8">
+
+          <!-- ═══════════ FEATURED PROGRAMS ═══════════ -->
+          <section id="featured-programs-section" class="mb-4">
+            <h3 class="mb-4 font-bold text-dark border-bottom pb-2"><i class="fa-solid fa-star text-warning me-2"></i>Featured Programs</h3>
+            <div class="row g-3" id="featured-programs-grid"></div>
+          </section>
+
+          <!-- ═══════════ LATEST NEWS ═══════════ -->
+          <section class="mb-4" id="latest-news-section">
+            <h3 class="mb-4 font-bold text-dark border-bottom pb-2"><i class="fa-solid fa-newspaper text-primary me-2"></i>Latest News</h3>
+            <div class="row g-3" id="news-grid"></div>
+          </section>
+
+          <!-- ═══════════ ANNOUNCEMENTS ═══════════ -->
+          <section class="mb-4">
+            <h3 class="mb-4 font-bold text-dark border-bottom pb-2"><i class="fa-solid fa-bullhorn text-danger me-2"></i>Announcements</h3>
+            <div id="announcements-feed"></div>
+          </section>
+
+          <!-- ═══════════ EVENTS ═══════════ -->
+          <section class="mb-4" id="upcoming-events-section">
+            <h3 class="mb-4 font-bold text-dark border-bottom pb-2"><i class="fa-solid fa-calendar-days text-success me-2"></i>Upcoming Events</h3>
+            <div id="events-grid"></div>
+          </section>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div class="col-lg-4">
+
+          <!-- MOTTO -->
+          <div class="card bg-success text-white border-0 p-4 shadow-sm mb-4">
+            <div class="card-body text-center">
+              <i class="fa-solid fa-shield-halved mb-3" style="font-size:2.8rem"></i>
+              <h4 class="font-bold">Our Motto</h4>
+              <p class="lead font-semibold text-warning mb-2" id="motto-text">"Excellence in Education, Success in Life."</p>
+              <p class="small text-light mb-0" id="motto-description"></p>
+            </div>
+          </div>
+
+          <!-- TEACHERS -->
+          <div class="card border-0 p-4 shadow-sm mb-4">
+            <div class="card-body">
+              <h4 class="font-bold text-dark border-bottom pb-2 mb-4"><i class="fa-solid fa-chalkboard-user text-primary me-2"></i>Our Educators</h4>
+              <div id="teachers-list"></div>
+            </div>
+          </div>
+
+          <!-- COMBINATIONS -->
+          <div class="card border-0 p-4 shadow-sm mb-4">
+            <div class="card-body">
+              <h4 class="font-bold text-dark border-bottom pb-2 mb-4"><i class="fa-solid fa-layer-group text-info me-2"></i>Upper Secondary Combinations</h4>
+              <div id="home-combos"></div>
+            </div>
+          </div>
+
+          <!-- BOOKS -->
+          <div class="card border-0 p-4 shadow-sm">
+            <div class="card-body">
+              <h4 class="font-bold text-dark border-bottom pb-2 mb-4"><i class="fa-solid fa-book-journal-whills text-warning me-2"></i>Featured Resources</h4>
+              <div id="featured-books-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ TESTIMONIALS ═══════════ -->
+      <section class="mt-5 pt-4 border-top" id="testimonials-section">
+        <div class="text-center mb-4">
+          <h3 class="font-bold text-dark">What Our Community Says</h3>
+          <p class="text-muted">Feedback from students, parents, alumni, and partners.</p>
+        </div>
+        <div class="row g-4" id="testimonials-grid"></div>
+      </section>
+
+      <!-- ═══════════ PARTNERS ═══════════ -->
+      <section class="mt-5 pt-4 border-top text-center" id="partners-section">
+        <h6 class="font-bold text-muted text-uppercase tracking-wider mb-4">Trusted By Our Educational Partners</h6>
+        <div class="d-flex justify-content-center flex-wrap gap-4 align-items-center" id="partners-grid"></div>
+      </section>
+
+      <!-- ═══════════ CTA ═══════════ -->
+      <section class="cta-banner mt-5">
+        <h3 class="font-bold mb-3">Begin Your Educational Journey Today</h3>
+        <p class="mb-4" style="max-width:700px;margin:0 auto">At HON-ACADEMY, every learner is given the opportunity to discover their strengths, achieve academic excellence, and prepare for a successful future.</p>
+        <div class="d-flex flex-wrap gap-3 justify-content-center">
+          <a href="admissions.html" class="btn btn-light btn-lg rounded-pill px-5 font-bold"><i class="fa-solid fa-graduation-cap me-2"></i>Apply for Admission</a>
+          <a href="contact.html" class="btn btn-outline-light btn-lg rounded-pill px-5"><i class="fa-solid fa-phone me-2"></i>Contact Admissions</a>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="site-footer"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/db-extension.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      loadHomepageData();
+      window.addEventListener("auth_change", loadHomepageData);
+    });
+
+    function loadHomepageData() {
+      const user  = window.db.getCurrentUser();
+      const data  = window.db.getHomepageData();
+      const school = data.school;
+
+      // Title
+      document.getElementById('page-title').textContent = school.name + ' — Excellence in Education, Innovation & Leadership';
+
+      // Hero
+      document.getElementById('hero-badge-text').textContent = school.badge || 'Rwanda Education Board Compliant';
+      document.getElementById('hero-title').textContent = school.heroTitle || 'Welcome to ' + school.name;
+      document.getElementById('hero-subtitle').textContent = school.heroSubtitle || 'Excellence in Education • Innovation • Leadership';
+      document.getElementById('hero-description').textContent = school.heroDescription || school.aboutIntro || '';
+      document.getElementById('hero-school-name').textContent = school.name;
+      document.getElementById('hero-subtitle-r').textContent = school.heroSubtitle || '';
+
+      // CTAs
+      const ctaBox = document.getElementById("hero-ctas");
+      if (ctaBox) {
+        if (user) {
+          let dashLink = user.role === "teacher" ? "teacher-dashboard.html" : user.role === "admin" ? "admin-dashboard.html" : "student-dashboard.html";
+          ctaBox.innerHTML = '<a href="admissions.html" class="btn btn-nca-green rounded-pill btn-lg px-4 shadow"><i class="fa-solid fa-graduation-cap me-2"></i>Apply Now</a><a href="subjects.html" class="btn btn-light rounded-pill btn-lg px-4 shadow text-primary font-bold"><i class="fa-solid fa-book-open me-2"></i>Explore Programs</a><a href="'+dashLink+'" class="btn btn-outline-light rounded-pill btn-lg px-4"><i class="fa-solid fa-gauge me-2"></i>Dashboard</a>';
+        } else {
+          ctaBox.innerHTML = '<a href="admissions.html" class="btn btn-nca-green rounded-pill btn-lg px-4 shadow"><i class="fa-solid fa-graduation-cap me-2"></i>Apply Now</a><a href="subjects.html" class="btn btn-light rounded-pill btn-lg px-4 shadow text-primary font-bold"><i class="fa-solid fa-book-open me-2"></i>Explore Programs</a><a href="contact.html" class="btn btn-outline-light rounded-pill btn-lg px-4"><i class="fa-solid fa-phone me-2"></i>Contact Us</a>';
+        }
+      }
+
+      // Stats
+      const stats = data.stats;
+      const statDefs = [
+        {bg:'bg-primary',icon:'fa-users',label:'Students Enrolled',key:'students'},
+        {bg:'bg-success',icon:'fa-chalkboard-user',label:'Qualified Teachers',key:'teachers'},
+        {bg:'bg-warning text-dark',icon:'fa-book',label:'Academic Programs',key:'subjects'},
+        {bg:'bg-info text-dark',icon:'fa-graduation-cap',label:'Graduates',key:'resources'},
+        {bg:'bg-danger',icon:'fa-people-group',label:'Clubs & Societies',key:'students'},
+        {bg:'bg-secondary',icon:'fa-calendar-check',label:'Years of Excellence',key:'subjects'}
+      ];
+      document.getElementById('stats-section').innerHTML = statDefs.map(s => {
+        const val = s.key === 'students' ? stats.students : s.key === 'teachers' ? stats.teachers : s.key === 'subjects' ? stats.subjects : stats.resources;
+        const displayVal = s.label === 'Years of Excellence' ? '8+' : s.label === 'Clubs & Societies' ? '12+' : val + '+';
+        return '<div class="col-6 col-md-4 col-lg-2"><div class="card stat-card h-100 border-0 shadow-sm"><div class="card-body text-center p-3"><div class="'+s.bg+' text-white stat-icon mx-auto mb-2"><i class="fa-solid '+s.icon+'"></i></div><h4 class="font-extrabold text-dark mb-0">'+displayVal+'</h4><p class="small text-muted mb-0">'+s.label+'</p></div></div></div>';
+      }).join('');
+
+      // Why Choose Us
+      const whyItems = [
+        {icon:'fa-award',color:'#1e3a8a',bg:'#e0e7ff',title:'Academic Excellence',desc:'Delivering quality education through Rwanda\u2019s Competence-Based Curriculum with critical thinking, creativity, and problem-solving skills.'},
+        {icon:'fa-chalkboard-user',color:'#059669',bg:'#d1fae5',title:'Qualified Teachers',desc:'Experienced and passionate educators committed to student success with continuous professional development.'},
+        {icon:'fa-laptop-code',color:'#7c3aed',bg:'#ede9fe',title:'Digital Learning',desc:'Technology-integrated classrooms with digital resources, learning management systems, and interactive platforms.'},
+        {icon:'fa-shield-halved',color:'#dc2626',bg:'#fee2e2',title:'Safe Environment',desc:'A secure and supportive learning environment promoting discipline, respect, and personal growth.'},
+        {icon:'fa-building',color:'#0891b2',bg:'#cffafe',title:'Modern Facilities',desc:'Well-equipped classrooms, science labs, ICT lab, library, sports grounds, and innovation hub.'},
+        {icon:'fa-users',color:'#d97706',bg:'#fef3c7',title:'Holistic Development',desc:'Sports, leadership, clubs, arts, innovation, entrepreneurship, and community engagement.'}
+      ];
+      document.getElementById('why-choose-grid').innerHTML = whyItems.map(w => '<div class="col-sm-6 col-lg-4"><div class="why-card"><div class="d-flex align-items-start gap-3"><div class="why-icon" style="background:'+w.bg+';color:'+w.color+'"><i class="fa-solid '+w.icon+'"></i></div><div><h6 class="font-bold mb-1">'+w.title+'</h6><p class="small text-muted mb-0" style="line-height:1.5">'+w.desc+'</p></div></div></div></div>').join('');
+
+      // Educational Levels
+      const levels = [
+        {title:'Primary Education',range:'P1\u2013P6',color:'#10b981',items:['Literacy & Numeracy','Science & Technology','Creative Arts','Physical Education','ICT Fundamentals','Values Education']},
+        {title:'Lower Secondary',range:'S1\u2013S3',color:'#3b82f6',items:['Critical Thinking','Problem-Solving','Languages','Sciences','Humanities','Foundation Skills']},
+        {title:'Upper Secondary',range:'S4\u2013S6',color:'#8b5cf6',items:['Science Combinations (MPC, PCM, PCB)','Humanities Combinations (HEG, HGL)','Specialized Subjects','University Preparation','Career Guidance','Research Skills']},
+        {title:'TVET Programmes',range:'Technical & Vocational',color:'#f59e0b',items:['ICT & Networking','Engineering Trades','Hospitality & Tourism','Agriculture','Creative Arts','Entrepreneurship']}
+      ];
+      document.getElementById('levels-grid').innerHTML = levels.map(l => '<div class="col-sm-6 col-lg-3"><div class="level-card"><div class="level-header" style="background:'+l.color+'"><h6 class="font-bold mb-0 text-white">'+l.title+'</h6><small class="opacity-75 text-white">'+l.range+'</small></div><div class="level-body mt-3"><ul>'+l.items.map(i=>'<li>'+i+'</li>').join('')+'</ul></div></div></div>').join('');
+
+      // Featured Programs
+      const programs = window.db.getFeaturedPrograms();
+      const progGrid = document.getElementById('featured-programs-grid');
+      const progSec  = document.getElementById('featured-programs-section');
+      if (progGrid) {
+        if (programs.length) {
+          progSec.style.display = 'block';
+          progGrid.innerHTML = programs.map(p => '<div class="col-md-6"><div class="card border-0 bg-white p-3 h-100 shadow-sm"><div class="d-flex align-items-center gap-3 mb-2"><div class="bg-primary bg-opacity-10 p-2 rounded" style="color:#1e3a8a"><i class="fa-solid '+(p.icon||'fa-graduation-cap')+' fs-4"></i></div><h5 class="font-bold mb-0">'+p.title+'</h5></div><p class="text-muted small mb-0">'+(p.description||'')+'</p></div></div>').join('');
+        } else { progSec.style.display = 'none'; }
+      }
+
+      // Latest News
+      const news = data.recentNews;
+      const newsGrid = document.getElementById('news-grid');
+      const newsSec  = document.getElementById('latest-news-section');
+      if (newsGrid) {
+        if (news.length) {
+          newsSec.style.display = 'block';
+          newsGrid.innerHTML = news.map(n => '<div class="col-md-6"><a href="news-detail.html?id='+n.id+'" class="text-decoration-none"><div class="card border-0 bg-white h-100 shadow-sm"><div class="card-body"><span class="badge bg-primary mb-2">'+(n.category||'News')+'</span><h6 class="font-bold text-dark">'+n.title+'</h6><p class="small text-muted">'+(n.content||n.description||'').substring(0,140)+'...</p><div class="d-flex justify-content-between align-items-center mt-2"><small class="text-muted">'+new Date(n.createdAt).toLocaleDateString()+'</small><small class="text-primary fw-bold">'+(n.author||'')+'</small></div></div></div></a></div>').join('');
+        } else { newsSec.style.display = 'none'; }
+      }
+
+      // Featured Subjects
+      const subjects = data.featuredSubjects;
+      // announcements
+      const annFeed = document.getElementById("announcements-feed");
+      if (annFeed) {
+        const anns = data.latestAnnouncements;
+        annFeed.innerHTML = anns.length ? anns.map(a => {
+          const d = new Date(a.createdAt).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
+          const cb = a.category==="Timetable"?"bg-warning text-dark":a.category==="Meetings"?"bg-info text-dark":"bg-danger text-white";
+          return '<a href="announcements.html" class="text-decoration-none"><div class="card border-0 p-4 bg-white mb-3 shadow-sm"><div class="d-flex justify-content-between align-items-start mb-2"><span class="badge '+cb+' text-uppercase font-bold small" style="font-size:9px">'+a.category+'</span><span class="small text-muted">'+d+'</span></div><h6 class="font-bold text-dark mb-1">'+a.title+'</h6><p class="small text-muted mb-0">'+a.content+'</p></div></a>';
+        }).join('') : '<p class="text-muted text-center p-4">No announcements published yet.</p>';
+      }
+
+      // Events
+      const events = data.upcomingEvents;
+      const evGrid = document.getElementById('events-grid');
+      const evSec  = document.getElementById('upcoming-events-section');
+      if (evGrid) {
+        if (events.length) {
+          evSec.style.display = 'block';
+          evGrid.innerHTML = events.map(e => '<a href="event-detail.html?id='+e.id+'" class="text-decoration-none"><div class="card border-0 bg-white p-3 mb-3 shadow-sm"><div class="d-flex align-items-center gap-3"><div class="text-center bg-light rounded p-2" style="min-width:50px"><div class="font-bold text-primary" style="font-size:18px">'+new Date(e.date).getDate()+'</div><div class="small text-muted">'+new Date(e.date).toLocaleString('default',{month:'short'})+'</div></div><div><h6 class="font-bold mb-1 text-dark">'+e.title+'</h6><p class="small text-muted mb-0">'+(e.time||'')+(e.location?' \u00b7 '+e.location:'')+'</p></div></div></div></a>').join('');
+        } else { evSec.style.display = 'none'; }
+      }
+
+      // Motto
+      document.getElementById('motto-text').textContent = '\u201c' + school.motto + '\u201d';
+      document.getElementById('motto-description').textContent = school.aboutIntro || '';
+
+      // Teachers
+      const tList = document.getElementById("teachers-list");
+      if (tList) {
+        const t = data.featuredTeachers;
+        tList.innerHTML = t.length ? t.map(te => '<div class="d-flex align-items-center gap-3 p-3 bg-light border rounded-3 mb-2"><img src="'+te.avatarUrl+'" alt="'+te.name+'" class="rounded-circle border" style="width:44px;height:44px;object-fit:cover"><div><h6 class="mb-0 font-bold small">'+te.name+'</h6><p class="text-xs text-muted mb-0">'+(te.subjectSpecialty||'Educator')+'</p></div></div>').join('') : '<p class="text-muted text-center small">No instructors listed yet.</p>';
+      }
+
+      // Combinations
+      const comboBox = document.getElementById('home-combos');
+      if (comboBox) {
+        try {
+          const combos = window.db.getCombinations();
+          if (combos.length) {
+            comboBox.innerHTML = combos.map(c => {
+              const clr = c.stream==='science'?'primary':'info';
+              return '<div class="mb-2"><strong class="text-'+clr+'" style="font-size:.95rem">'+c.name+'</strong> <small class="text-muted">('+c.fullName+')</small><div class="d-flex flex-wrap gap-1 mt-1">'+c.subjects.map(s=>'<span class="combo-badge bg-'+clr+' bg-opacity-10 text-'+clr+'">'+s+'</span>').join('')+'</div></div>';
+            }).join('<hr class="my-2">');
+          } else {
+            comboBox.innerHTML = '<p class="text-muted small">No combinations defined yet.</p>';
+          }
+        } catch(e) { comboBox.innerHTML = ''; }
+      }
+
+      // Books
+      const bList = document.getElementById("featured-books-list");
+      if (bList) {
+        const bks = data.featuredBooks;
+        bList.innerHTML = bks.length ? bks.map(b => {
+          const fi = b.fileType==='pdf'?'fa-file-pdf text-danger':b.fileType==='video'?'fa-file-video text-primary':'fa-book text-success';
+          return '<div class="d-flex align-items-center gap-3 p-3 bg-light border rounded-3 mb-2"><div class="bg-white p-2 rounded border shadow-sm text-center" style="width:40px;height:40px"><i class="fa-solid '+fi+' fs-5"></i></div><div><h6 class="mb-0 font-bold small">'+b.title+'</h6><p class="text-xs text-muted mb-0">'+(b.fileType||'PDF').toUpperCase()+'</p></div></div>';
+        }).join('') : '<p class="text-muted text-center small">No resources available yet.</p>';
+      }
+
+      // Testimonials
+      const test = data.testimonials;
+      const testGrid = document.getElementById('testimonials-grid');
+      const testSec  = document.getElementById('testimonials-section');
+      if (testGrid) {
+        if (test.length) {
+          testSec.style.display = 'block';
+          const cols = ['#10b981','#4f46e5','#f59e0b','#ef4444'];
+          testGrid.innerHTML = test.map((t,i) => '<div class="col-md-6"><div class="card p-4 border-0 shadow-sm bg-white h-100" style="border-left:4px solid '+cols[i%cols.length]+' !important"><p class="mb-0 fst-italic">"'+t.quote+'"</p><div class="mt-3 font-bold small" style="color:'+cols[i%cols.length]+'">\u2014 '+t.author+(t.role?', '+t.role:'')+'</div></div></div>').join('');
+        } else { testSec.style.display = 'none'; }
+      }
+
+      // Partners
+      const parts = data.partners;
+      const pGrid = document.getElementById('partners-grid');
+      const pSec  = document.getElementById('partners-section');
+      if (pGrid) {
+        if (parts.length) {
+          pSec.style.display = 'block';
+          pGrid.innerHTML = parts.map(p => '<div class="d-flex align-items-center gap-2 opacity-75"><i class="'+(p.icon||'fa-solid fa-building-columns')+' fs-3 text-secondary"></i><span class="font-bold">'+p.name+'</span></div>').join('');
+        } else { pSec.style.display = 'none'; }
+      }
+    }
+    </script>
+  </body>
+</html>

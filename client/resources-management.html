@@ -1,0 +1,890 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resource Library — HonE-Learning Platform</title>
+  <meta name="description" content="HonE-Learning Platform Digital library of notes, reference books, past examination papers, syllabus curricula, and interactive courses." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .resource-card {
+      transition: all 0.25s ease;
+      overflow: hidden;
+      border: 1px solid #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .resource-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+    }
+    .resource-thumbnail {
+      height: 140px;
+      background-position: center;
+      background-size: cover;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .resource-type-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255,255,255,0.9);
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #1e3a8a;
+    }
+    .preview-backdrop {
+      background: rgba(15,23,42,0.85);
+      backdrop-filter: blur(8px);
+    }
+    .file-drop-area {
+      border: 2px dashed #cbd5e1;
+      background: #f8fafc;
+      padding: 2rem 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .file-drop-area:hover {
+      border-color: #1e3a8a;
+      background: #eff6ff;
+    }
+    
+    /* ── Layout Overrides ── */
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .wrapper-d-flex {
+      display: flex;
+      flex: 1;
+      width: 100%;
+    }
+    .dashboard-sidebar {
+      position: sticky !important;
+      top: 110px !important;
+      height: calc(100vh - 110px) !important;
+      overflow-y: auto;
+      width: 260px;
+      flex-shrink: 0;
+      background-color: white;
+      border-right: 1px solid #e2e8f0;
+    }
+    .dashboard-main {
+      margin-left: 0 !important;
+      flex: 1;
+      min-width: 0;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+  <header class="site-header" style="position: sticky; top: 0; z-index: 1030;"></header>
+
+  <div class="wrapper-d-flex">
+    <!-- Sidebar dynamically generated -->
+    <div id="dashboard-sidebar"></div>
+
+    <div class="dashboard-main w-100 p-4">
+      
+      <!-- Top Title Bar -->
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3 select-none">
+        <div>
+          <h2 class="font-bold text-dark mb-1">Books &amp; Learning Resources</h2>
+          <p class="text-muted small mb-0">Publish reference books, syllabus notes, video tutorials, worksheets, and exam past papers.</p>
+        </div>
+        <div class="d-flex gap-2" id="resource-action-buttons">
+          <button class="btn btn-nca-blue rounded-pill px-3 py-2 text-sm" onclick="openResourceModal()">
+            <i class="fa-solid fa-cloud-arrow-up me-1.5"></i>Upload Resource
+          </button>
+        </div>
+      </div>
+
+      <!-- Statistics Dashboard Banner -->
+      <div class="row g-4 mb-4 select-none" id="stats-dashboard-row">
+        <!-- Stats are loaded dynamically via reloadStatsDashboard() -->
+      </div>
+
+      <!-- Main Contents Column Grid Layout -->
+      <div class="row g-4">
+        
+        <!-- Left Column: Search Filters & Directory (col-lg-3) -->
+        <div class="col-lg-3">
+          <div class="card border-0 bg-white p-4.5 shadow-sm mb-4 select-none">
+            <h5 class="font-bold text-dark mb-3"><i class="fa-solid fa-filter text-primary me-2"></i>Filters</h5>
+            
+            <div class="space-y-4">
+              <!-- Search query -->
+              <div>
+                <label class="form-label text-xs font-bold text-muted text-uppercase tracking-wider">Search Key</label>
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text bg-light border-end-0"><i class="fa-solid fa-magnifying-glass text-muted"></i></span>
+                  <input type="text" id="lib-search" class="form-control bg-light border-start-0 text-xs" placeholder="Title, tag, author..." oninput="loadResourcesCardList()">
+                </div>
+              </div>
+
+              <!-- Categories -->
+              <div>
+                <label class="form-label text-xs font-bold text-muted text-uppercase tracking-wider">Category</label>
+                <select id="lib-category" class="form-select form-select-sm text-xs" onchange="loadResourcesCardList()">
+                  <option value="">All Categories</option>
+                </select>
+              </div>
+
+              <!-- Format File types -->
+              <div>
+                <label class="form-label text-xs font-bold text-muted text-uppercase tracking-wider">File Type</label>
+                <select id="lib-format" class="form-select form-select-sm text-xs" onchange="loadResourcesCardList()">
+                  <option value="">All Formats</option>
+                  <option value="PDF">PDF eBook</option>
+                  <option value="PPT">PowerPoint Slide</option>
+                  <option value="Word">Word Document</option>
+                  <option value="Excel">Excel Sheet</option>
+                  <option value="Video">Video Course</option>
+                  <option value="Audio">Audio / Podcast</option>
+                  <option value="ZIP">ZIP/RAR Archive</option>
+                  <option value="HTML">HTML Lesson</option>
+                </select>
+              </div>
+
+              <!-- Target Class -->
+              <div>
+                <label class="form-label text-xs font-bold text-muted text-uppercase tracking-wider">Target Level/Grade</label>
+                <select id="lib-class-filter" class="form-select form-select-sm text-xs" onchange="loadResourcesCardList()">
+                  <option value="">All Roster Classes</option>
+                  <option value="P1">Primary 1 (P1)</option>
+                  <option value="P2">Primary 2 (P2)</option>
+                  <option value="P3">Primary 3 (P3)</option>
+                  <option value="P4">Primary 4 (P4)</option>
+                  <option value="P5">Primary 5 (P5)</option>
+                  <option value="P6">Primary 6 (P6)</option>
+                  <option value="S1">Senior 1 (S1)</option>
+                  <option value="S2">Senior 2 (S2)</option>
+                  <option value="S3">Senior 3 (S3)</option>
+                  <option value="S4">Senior 4 (S4)</option>
+                  <option value="S5">Senior 5 (S5)</option>
+                  <option value="S6">Senior 6 (S6)</option>
+                </select>
+              </div>
+
+              <!-- Storage Meter indicator -->
+              <div class="pt-3 border-top select-none" id="storage-meter-pane"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Results Grid and View Details (col-lg-9) -->
+        <div class="col-lg-9">
+          <!-- Page Result List -->
+          <div class="row g-4" id="resources-grid-row">
+            <!-- Dynamic list of assets cards loaded -->
+          </div>
+
+          <!-- Empty state -->
+          <div id="empty-resources-pane" class="card border-0 bg-white p-5 shadow-sm text-center text-muted d-none">
+            <i class="fa-solid fa-folder-open fs-1 text-primary mb-3"></i>
+            <h5 class="font-bold text-dark mb-1">No Educational Resources Found</h5>
+            <p class="text-xs mb-0">Modify search filter settings or upload a new book, exam PDF, or class study notes.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════════ RESOURCE UPLOAD / EDIT MODAL ════════════ -->
+  <div class="modal fade" id="resource-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg rounded-4">
+        <div class="modal-header border-0 bg-light rounded-top-4 pb-0">
+          <h5 class="modal-title font-bold text-dark" id="resource-modal-title">Upload Learning Resource</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="resource-form" onsubmit="handleSaveResource(event)" novalidate>
+          <input type="hidden" id="resource-form-id" value="">
+          <div class="modal-body p-4 text-xs font-semibold text-gray-700">
+            
+            <div class="row g-3">
+              <!-- Title -->
+              <div class="col-md-8">
+                <label class="form-label font-bold text-dark">Resource Title <span class="text-danger">*</span></label>
+                <input type="text" id="res-title" class="form-control rounded-pill text-sm" placeholder="e.g. Physics Core Laws & formulas" required>
+              </div>
+
+              <!-- Version -->
+              <div class="col-md-2">
+                <label class="form-label font-bold text-dark">Version</label>
+                <input type="text" id="res-version" class="form-control rounded-pill text-sm" placeholder="1.0">
+              </div>
+
+              <!-- File type format -->
+              <div class="col-md-2">
+                <label class="form-label font-bold text-dark">Format <span class="text-danger">*</span></label>
+                <select id="res-format" class="form-select rounded-pill text-sm" required>
+                  <option value="PDF">PDF</option>
+                  <option value="PPT">PowerPoint</option>
+                  <option value="Word">Word Doc</option>
+                  <option value="Excel">Excel Sheet</option>
+                  <option value="Video">Video Lecture</option>
+                  <option value="Audio">Audio / MP3</option>
+                  <option value="ZIP">ZIP Archive</option>
+                  <option value="HTML">HTML Lesson</option>
+                </select>
+              </div>
+
+              <!-- Description -->
+              <div class="col-12">
+                <label class="form-label font-bold text-dark">Short Study Syllabus Description</label>
+                <textarea id="res-desc" class="form-control text-sm" rows="2" style="border-radius:12px;" placeholder="Brief summaries details..."></textarea>
+              </div>
+
+              <!-- Category -->
+              <div class="col-md-4">
+                <label class="form-label font-bold text-dark">Category Type <span class="text-danger">*</span></label>
+                <select id="res-category" class="form-select rounded-pill text-sm" required></select>
+              </div>
+
+              <!-- Subject -->
+              <div class="col-md-4">
+                <label class="form-label font-bold text-dark">Subject Track <span class="text-danger">*</span></label>
+                <select id="res-subject" class="form-select rounded-pill text-sm" required></select>
+              </div>
+
+              <!-- Language -->
+              <div class="col-md-4">
+                <label class="form-label font-bold text-dark">Language</label>
+                <select id="res-language" class="form-select rounded-pill text-sm">
+                  <option value="English">English</option>
+                  <option value="French">French</option>
+                  <option value="Kinyarwanda">Kinyarwanda</option>
+                  <option value="Kiswahili">Kiswahili</option>
+                </select>
+              </div>
+
+              <!-- Classes Assignment checklist (multi-select check box container) -->
+              <div class="col-md-6">
+                <label class="form-label font-bold text-dark d-block">Assign Class Roster Targets</label>
+                <div class="border rounded-3 p-3 bg-light d-flex flex-wrap gap-2 select-none" id="res-classes-check-pane" style="max-height: 120px; overflow-y: auto;">
+                  <!-- Dynamically populated classes checklists -->
+                </div>
+              </div>
+
+              <!-- Author / tag fields -->
+              <div class="col-md-6">
+                <div class="row g-2">
+                  <div class="col-12">
+                    <label class="form-label font-bold text-dark">Author / Publisher</label>
+                    <input type="text" id="res-author" class="form-control rounded-pill text-sm" placeholder="e.g. REB, Ms. Beatrice">
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label font-bold text-dark">Tags <span class="text-muted">(comma separated)</span></label>
+                    <input type="text" id="res-tags" class="form-control rounded-pill text-sm" placeholder="math, physics, exam, primary">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Security, File permissions and Visibility options -->
+              <div class="col-12 mt-3 pt-3 border-top">
+                <h6 class="font-bold text-primary mb-3"><i class="fa-solid fa-lock me-2"></i>Visibility &amp; Security Permissions</h6>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label font-bold text-dark">Visibility Level</label>
+                <select id="res-visibility" class="form-select rounded-pill text-sm">
+                  <option value="Students">Everyone (Students &amp; Teachers)</option>
+                  <option value="Teachers Only">Teachers Only</option>
+                  <option value="Only Me">Private / Only Me</option>
+                </select>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label font-bold text-dark">Download Permission</label>
+                <select id="res-download" class="form-select rounded-pill text-sm">
+                  <option value="true">Allowed (Can Download File)</option>
+                  <option value="false">Forbidden (View Online Only)</option>
+                </select>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label font-bold text-dark">Publication Status</label>
+                <select id="res-status" class="form-select rounded-pill text-sm">
+                  <option value="Published">Published Immediately</option>
+                  <option value="Draft">Draft Mode</option>
+                  <option value="Archived">Archived Roster</option>
+                </select>
+              </div>
+
+              <!-- Upload Mode Toggle -->
+              <div class="col-12 mt-3 pt-3 border-top">
+                <h6 class="font-bold text-primary mb-3"><i class="fa-solid fa-link me-2"></i>Resource Upload Method</h6>
+                <div class="d-flex gap-4 mb-3">
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="uploadType" id="upload-type-file" value="file" checked onchange="toggleUploadType()">
+                    <label class="form-check-label text-sm font-semibold" for="upload-type-file"><i class="fa-solid fa-file-arrow-up me-1 text-primary"></i> File Attachment</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="uploadType" id="upload-type-link" value="link" onchange="toggleUploadType()">
+                    <label class="form-check-label text-sm font-semibold" for="upload-type-link"><i class="fa-solid fa-globe me-1 text-success"></i> External URL Link</label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- File Attachments mock inputs -->
+              <div class="col-12" id="pane-upload-file">
+                <label class="form-label font-bold text-dark">Resource Files Attachment</label>
+                <div class="file-drop-area select-none" id="upload-file-drag" onclick="triggerMockFileSelector()">
+                  <i class="fa-solid fa-cloud-arrow-up fs-4 text-muted mb-2"></i>
+                  <div class="font-bold text-dark text-xs mb-1" id="upload-file-label">Drag &amp; Drop classwork file or click to browse</div>
+                  <div class="text-muted text-[10px]" id="upload-file-details">Supported documents types up to 50MB maximum size.</div>
+                  <input type="file" id="res-file" class="d-none" onchange="handleMockFileChange(event)">
+                </div>
+              </div>
+
+              <!-- External URL input -->
+              <div class="col-12 d-none" id="pane-upload-link">
+                <label class="form-label font-bold text-dark">External Resource URL</label>
+                <input type="url" id="res-link-url" class="form-control rounded-pill text-sm" placeholder="https://www.youtube.com/watch?v=...">
+                <div class="text-muted text-[10px] mt-1 ms-2">Enter the full web address (e.g., YouTube video, Google Drive doc).</div>
+              </div>
+
+            </div>
+
+          </div>
+          <div class="modal-footer border-0 bg-light rounded-bottom-4">
+            <button type="button" class="btn btn-outline-secondary btn-sm px-4 rounded-pill" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-nca-blue btn-sm px-4 rounded-pill" id="resource-save-btn">Upload and Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ PREVIEW FILE LIGHTBOX MODAL ════════════ -->
+  <div class="modal fade" id="preview-modal" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-0 shadow-lg text-white preview-backdrop">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title font-bold text-white" id="preview-modal-title">File Preview Lightbox</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4 text-center">
+          <div class="p-5 border rounded-3 bg-dark text-muted bg-opacity-25" id="preview-viewport-content">
+            <!-- Render file placeholder or mock viewer inside -->
+          </div>
+        </div>
+        <div class="modal-footer border-0 pb-3 pt-0">
+          <div class="w-100 d-flex justify-content-between align-items-center">
+            <span class="text-xs text-white text-opacity-50" id="preview-modal-footer-size">PDF eBook — 3.2MB</span>
+            <button class="btn btn-nca-green btn-sm px-4 rounded-pill font-bold" id="preview-modal-download-btn"><i class="fa-solid fa-download me-1.5"></i>Download Document</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/db-extension.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    // ── CONFIG AND STATE ─────────────────────────────────────────
+    let currentRoleUser = null;
+    let mockSelectedFile = null;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      currentRoleUser = window.db.getCurrentUser();
+      
+      // Select correct sidebar target
+      window.renderDashboardSidebar("resources");
+
+      // Setup actions buttons and lists based on current role permissions
+      enforceClientPermissions();
+
+      // Load form dropdown references
+      populateFormDropdowns();
+
+      // Load items
+      loadResourcesCardList();
+    });
+
+    // ── Permissions Enforcer ────────────────────────────────────
+    function enforceClientPermissions() {
+      const uBtn = document.getElementById("resource-action-buttons");
+      if (!currentRoleUser || (currentRoleUser.role !== "admin" && currentRoleUser.role !== "teacher")) {
+        // Hide upload buttons for students / guests
+        if (uBtn) uBtn.classList.add("d-none");
+      }
+    }
+
+    function populateFormDropdowns() {
+      const categories = window.dbExt.getResourceCategories();
+      const dbSubjects = window.db.getSubjects ? window.db.getSubjects() : [];
+      
+      // populate forms option values
+      const catSelect = document.getElementById("res-category");
+      const catSubFilter = document.getElementById("lib-category");
+      const subSelect = document.getElementById("res-subject");
+
+      catSelect.innerHTML = "";
+      subSelect.innerHTML = "";
+      catSubFilter.innerHTML = '<option value="">All Categories</option>';
+
+      categories.forEach(cat => {
+        catSelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+        catSubFilter.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
+      });
+
+      dbSubjects.forEach(sub => {
+        subSelect.innerHTML += `<option value="${sub.id}">${sub.name} (${sub.code})</option>`;
+      });
+
+      // Populate classes target checklist box
+      const classChecklist = document.getElementById("res-classes-check-pane");
+      classChecklist.innerHTML = "";
+      
+      const REB_CLASSES = ["P1","P2","P3","P4","P5","P6","S1","S2","S3","S4","S5","S6"];
+      REB_CLASSES.forEach(c => {
+        classChecklist.innerHTML += `
+          <div class="form-check me-3">
+            <input class="form-check-input res-class-check" type="checkbox" value="${c}" id="chk-class-${c}">
+            <label class="form-check-label font-bold" for="chk-class-${c}">${c}</label>
+          </div>
+        `;
+      });
+    }
+
+    // ── Dashboard Metrics Row ────────────────────────────────────
+    function reloadStatsDashboard() {
+      const stats = window.dbExt.getResourceStats();
+      const storage = window.dbExt.getStorageInfo();
+      const container = document.getElementById("stats-dashboard-row");
+
+      container.innerHTML = `
+        <div class="col col-md-3 col-sm-6 flex-grow-1">
+          <div class="card border-0 bg-white p-3 shadow-xs text-xs font-semibold">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="text-muted text-uppercase tracking-wider">Total Resources</span>
+              <span class="rounded bg-primary-light text-primary px-2 py-0.5"><i class="fa-solid fa-folder-open"></i></span>
+            </div>
+            <h4 class="font-bold mb-0 text-dark">${stats.total}</h4>
+            <div class="text-[10px] text-muted mt-1.5"><i class="fa-solid fa-book me-1"></i>${stats.books} books · <i class="fa-solid fa-circle-play ms-1.5 me-1"></i>${stats.videos} videos</div>
+          </div>
+        </div>
+        <div class="col col-md-3 col-sm-6 flex-grow-1">
+          <div class="card border-0 bg-white p-3 shadow-xs text-xs font-semibold">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="text-muted text-uppercase tracking-wider">Views Sync</span>
+              <span class="rounded bg-success-light text-success px-2 py-0.5"><i class="fa-solid fa-eye"></i></span>
+            </div>
+            <h4 class="font-bold mb-0 text-dark">${stats.totalViews}</h4>
+            <div class="text-[10px] text-success mt-1.5"><i class="fa-solid fa-arrow-trend-up me-1"></i>High classroom engagement</div>
+          </div>
+        </div>
+        <div class="col col-md-3 col-sm-6 flex-grow-1">
+          <div class="card border-0 bg-white p-3 shadow-xs text-xs font-semibold">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="text-muted text-uppercase tracking-wider">Downloads</span>
+              <span class="rounded bg-purple-light text-purple px-2 py-0.5"><i class="fa-solid fa-download"></i></span>
+            </div>
+            <h4 class="font-bold mb-0 text-dark">${stats.totalDownloads}</h4>
+            <div class="text-[10px] text-muted mt-1.5">Offline-allowed syllabus access</div>
+          </div>
+        </div>
+        <div class="col col-md-3 col-sm-6 flex-grow-1">
+          <div class="card border-0 bg-white p-3 shadow-xs text-xs font-semibold">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <span class="text-muted text-uppercase tracking-wider">Disk Storage</span>
+              <span class="rounded bg-warning-light text-warning px-2 py-0.5"><i class="fa-solid fa-floppy-disk"></i></span>
+            </div>
+            <h4 class="font-bold mb-0 text-dark">${window.dbExt.formatBytes(storage.used)}</h4>
+            <div class="progress mt-2" style="height: 4px;">
+              <div class="progress-bar bg-warning" role="progressbar" style="width: ${storage.percent}%" aria-valuenow="${storage.percent}" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Draw left storage filter widget
+      const storageWidget = document.getElementById("storage-meter-pane");
+      storageWidget.innerHTML = `
+        <label class="form-label text-xs font-bold text-muted text-uppercase tracking-wider d-flex justify-content-between">
+          <span>Used Space</span>
+          <span>${storage.percent}%</span>
+        </label>
+        <div class="progress mb-2" style="height: 6px;">
+          <div class="progress-bar bg-primary" role="progressbar" style="width: ${storage.percent}%" aria-valuenow="${storage.percent}" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div class="text-[10px] text-muted d-flex justify-content-between">
+          <span>${window.dbExt.formatBytes(storage.used)} used</span>
+          <span>${window.dbExt.formatBytes(storage.max - storage.used)} free</span>
+        </div>
+      `;
+    }
+
+    // ── Resources Listing Cards ─────────────────────────────────
+    function loadResourcesCardList() {
+      const q = document.getElementById("lib-search").value;
+      const cat = document.getElementById("lib-category").value;
+      const format = document.getElementById("lib-format").value;
+      const classFilter = document.getElementById("lib-class-filter").value;
+
+      const items = window.dbExt.searchResources(q, cat, format, classFilter);
+      reloadStatsDashboard();
+
+      const grid = document.getElementById("resources-grid-row");
+      const empty = document.getElementById("empty-resources-pane");
+
+      grid.innerHTML = "";
+
+      if (items.length === 0) {
+        empty.classList.remove("d-none");
+        return;
+      }
+      empty.classList.add("d-none");
+
+      const categories = window.dbExt.getResourceCategories();
+      const currentUserId = currentRoleUser ? currentRoleUser.id : 0;
+
+      items.forEach(res => {
+        const catObj = categories.find(c => c.id === res.categoryId);
+        const catName = catObj ? catObj.name : "Other";
+        const catIcon = catObj ? catObj.icon : "fa-folder";
+        const catColor = catObj ? catObj.color : "#64748b";
+
+        // cover picture placeholder
+        let coverStyle = `background: linear-gradient(135deg, ${catColor}dd, ${catColor})`;
+        if (res.coverUrl) {
+          coverStyle = `background: url('${res.coverUrl}') center/cover;`;
+        }
+
+        // Bookmark state check
+        const isBooked = window.dbExt.isBookmarked(currentUserId, res.id);
+        const bookmarkedIcon = isBooked ? "fa-solid fa-bookmark text-warning" : "fa-regular fa-bookmark";
+
+        // Permission flags layout
+        const canManage = currentRoleUser && (currentRoleUser.role === "admin" || (currentRoleUser.role === "teacher" && res.uploadedBy === currentUserId));
+
+        grid.innerHTML += `
+          <div class="col-md-4 col-sm-6">
+            <div class="card resource-card shadow-sm border-0">
+              <div class="resource-thumbnail" style="${coverStyle}">
+                <div class="resource-type-icon select-none shadow-xs"><i class="fa-solid ${catIcon} me-1"></i>${res.fileType}</div>
+                <div class="text-center p-3 text-white">
+                  <i class="fa-solid ${catIcon} fs-1 text-white text-opacity-80 mb-2"></i>
+                  <div class="font-bold text-xs select-none max-w-[80%] mx-auto text-uppercase tracking-wider">${catName}</div>
+                </div>
+              </div>
+              <div class="card-body p-3.5 d-flex flex-column justify-content-between text-xs font-semibold">
+                <div>
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="text-[10px] text-muted text-uppercase font-bold">${res.author || 'Author Private'}</span>
+                    <button class="btn btn-link py-0 px-1 text-muted text-decoration-none" onclick="toggleBookmarkRes(${res.id})"><i class="${bookmarkedIcon}"></i></button>
+                  </div>
+                  <h6 class="font-bold text-dark text-sm mb-1 leading-snug truncate" title="${res.title}">${res.title}</h6>
+                  <p class="text-muted text-[11px] mb-3 line-clamp-2">${res.description || 'No study summaries detail provided.'}</p>
+                </div>
+                
+                <div>
+                  <!-- Class badges -->
+                  <div class="mb-3 d-flex flex-wrap gap-1">
+                    ${(res.gradeClasses || []).map(gc => `<span class="badge bg-primary-light text-primary px-1.5 py-0.5 text-[9px] rounded-1">${gc}</span>`).join("")}
+                  </div>
+
+                  <!-- Actions footer row -->
+                  <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                    <div class="text-[10px] text-muted">
+                      <span><i class="fa-solid fa-eye me-0.5"></i> ${res.views || 0}</span>
+                      <span class="ms-2"><i class="fa-solid fa-download me-0.5"></i> ${res.downloads || 0}</span>
+                    </div>
+
+                    <div class="d-flex gap-1">
+                      <button class="btn btn-outline-secondary btn-xs py-1 px-2.5 rounded-pill font-bold" onclick="previewResFile(${res.id})"><i class="fa-solid fa-eye me-1"></i>Preview</button>
+                      ${canManage ? `
+                        <div class="dropdown d-inline-block">
+                          <button class="btn btn-light btn-xs p-1 text-muted rounded-circle" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                          <ul class="dropdown-menu dropdown-menu-end border-0 shadow" style="font-size: 12px;">
+                            <li><button class="dropdown-item" onclick="editResourceItem(${res.id})"><i class="fa-solid fa-pen-to-square text-primary me-2"></i>Edit Details</button></li>
+                            <li><button class="dropdown-item text-danger" onclick="deleteResourceItem(${res.id})"><i class="fa-solid fa-trash-can me-2"></i>Delete</button></li>
+                          </ul>
+                        </div>
+                      ` : ''}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // ── Preview Lightbox Implementation ──────────────────────────
+    function previewResFile(id) {
+      const res = window.dbExt.getResource(id);
+      if (!res) return;
+
+      window.dbExt.incrementResourceView(id);
+      loadResourcesCardList();
+
+      document.getElementById("preview-modal-title").textContent = res.title;
+      document.getElementById("preview-modal-footer-size").textContent = `${res.fileType} format — ${window.dbExt.formatBytes(res.fileSize)}`;
+
+      const viewPort = document.getElementById("preview-viewport-content");
+      viewPort.innerHTML = "";
+
+      // Embed mock viewer layout inside viewport based on format
+      if (res.externalUrl) {
+        viewPort.innerHTML = `
+          <div class="text-center py-5">
+            <i class="fa-solid fa-link text-success fs-1 mb-3"></i>
+            <h6 class="font-bold mb-2">External Link Resource</h6>
+            <p class="text-xs text-white text-opacity-50 mb-4 max-w-[70%] mx-auto">This resource is hosted externally outside HonE-Learning Storage.</p>
+            <a href="${res.externalUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm px-4 rounded-pill font-bold">
+              <i class="fa-solid fa-arrow-up-right-from-square me-2"></i>Open Resource Link
+            </a>
+          </div>
+        `;
+        document.getElementById("preview-modal-footer-size").textContent = "External URL / Cloud Link";
+      } else if (res.fileType === "PDF") {
+        viewPort.innerHTML = `
+          <div class="text-center py-4 bg-muted bg-opacity-10 text-white">
+            <i class="fa-solid fa-file-pdf text-danger fs-1 mb-3 animate-pulse"></i>
+            <h6 class="font-bold mb-1">eLearning PDF Document Matches standard REB Reader</h6>
+            <p class="text-xs text-white text-opacity-50 max-w-[70%] mx-auto mb-4">Rendering full browser interactive inline view limits. Click below to view in raw browser or download offline.</p>
+            <button class="btn btn-nca-blue btn-sm px-4 rounded-pill" onclick="window.open('https://pdfobject.com/pdf/sample.pdf', '_blank')"><i class="fa-solid fa-arrow-up-right-from-square me-2"></i>Open Fullscreen Viewer</button>
+          </div>
+        `;
+      } else if (res.fileType === "Video") {
+        viewPort.innerHTML = `
+          <div class="text-center py-4 bg-black bg-opacity-40 text-white border rounded">
+            <i class="fa-solid fa-play-circle text-primary fs-1 mb-3"></i>
+            <h6 class="font-bold mb-1">HonE-Learning Stream Library</h6>
+            <p class="text-xs text-white text-opacity-50 max-w-[70%] mx-auto mb-4">Class video syllabus instructions resource.</p>
+            <video class="w-100 rounded shadow border-0" controls src="https://www.w3schools.com/html/mov_bbb.mp4" style="max-height: 250px;"></video>
+          </div>
+        `;
+      } else if (res.fileType === "Audio") {
+        viewPort.innerHTML = `
+          <div class="text-center py-5">
+            <i class="fa-solid fa-headphones text-purple fs-1 mb-3"></i>
+            <h6 class="font-bold mb-2">Class Podcast & Lecturing Audio Reference</h6>
+            <audio controls class="mx-auto mt-2" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+          </div>
+        `;
+      } else {
+        viewPort.innerHTML = `
+          <div class="text-center py-5">
+            <i class="fa-solid fa-folder-closed text-warning fs-1 mb-3"></i>
+            <h6 class="font-bold mb-2">Document Online Matches Unavailable</h6>
+            <p class="text-xs text-white text-opacity-50 mb-3">Online slides / excel spreadsheets preview is pending REB compiler update. Access file immediately via download below.</p>
+          </div>
+        `;
+      }
+
+      // Download btn action binding
+      const dBtn = document.getElementById("preview-modal-download-btn");
+      if (res.downloadAllowed) {
+        dBtn.disabled = false;
+        dBtn.onclick = () => {
+          window.dbExt.incrementResourceDownload(res.id);
+          alert(`Downloading file: ${res.fileName || 'learning-notes.pdf'}`);
+          bootstrap.Modal.getInstance(document.getElementById("preview-modal")).hide();
+          loadResourcesCardList();
+        };
+      } else {
+        dBtn.disabled = true;
+        dBtn.textContent = "Offline Download Restricted";
+      }
+
+      new bootstrap.Modal(document.getElementById("preview-modal")).show();
+    }
+
+    // ── Bookmark actions ────────────────────────────────────────
+    function toggleBookmarkRes(id) {
+      if (!currentRoleUser) {
+        window.showToast("Sign in required to bookmark reading materials.", "warning");
+        return;
+      }
+      const userId = currentRoleUser.id;
+      const isBooked = window.dbExt.isBookmarked(userId, id);
+      if (isBooked) {
+        window.dbExt.removeBookmark(userId, id);
+        window.showToast("Bookmark removed.", "success");
+      } else {
+        window.dbExt.addBookmark(userId, id);
+        window.showToast("Resource bookmarked.", "success");
+      }
+      loadResourcesCardList();
+    }
+
+    // ── Save/Edit/Delete actions ────────────────────────────────
+    function toggleUploadType() {
+      const type = document.querySelector('input[name="uploadType"]:checked').value;
+      if (type === 'file') {
+        document.getElementById('pane-upload-file').classList.remove('d-none');
+        document.getElementById('pane-upload-link').classList.add('d-none');
+      } else {
+        document.getElementById('pane-upload-file').classList.add('d-none');
+        document.getElementById('pane-upload-link').classList.remove('d-none');
+      }
+    }
+
+    function openResourceModal() {
+      document.getElementById("resource-form").reset();
+      document.getElementById("resource-form-id").value = "";
+      document.getElementById("upload-file-label").textContent = "Drag & Drop classwork file or click to browse";
+      document.getElementById("upload-file-details").textContent = "Supported documents types up to 50MB maximum size.";
+      document.getElementById("res-link-url").value = "";
+      document.getElementById("upload-type-file").checked = true;
+      toggleUploadType();
+      mockSelectedFile = null;
+
+      // Uncheck classes
+      document.querySelectorAll(".res-class-check").forEach(c => c.checked = false);
+
+      document.getElementById("resource-modal-title").textContent = "Upload Learning Resource";
+      new bootstrap.Modal(document.getElementById("resource-modal")).show();
+    }
+
+    function editResourceItem(id) {
+      const res = window.dbExt.getResource(id);
+      if (!res) return;
+
+      document.getElementById("resource-form-id").value = res.id;
+      document.getElementById("res-title").value = res.title;
+      document.getElementById("res-version").value = res.version || "1.0";
+      document.getElementById("res-format").value = res.fileType;
+      document.getElementById("res-desc").value = res.description || "";
+      document.getElementById("res-category").value = res.categoryId;
+      document.getElementById("res-subject").value = res.subjectId;
+      document.getElementById("res-language").value = res.language;
+      document.getElementById("res-author").value = res.author || "";
+      document.getElementById("res-tags").value = (res.tags || []).join(", ");
+      document.getElementById("res-visibility").value = res.visibility;
+      document.getElementById("res-download").value = String(res.downloadAllowed);
+      document.getElementById("res-status").value = res.status;
+
+      // Handle checkboxes classes
+      document.querySelectorAll(".res-class-check").forEach(chk => {
+        chk.checked = (res.gradeClasses || []).includes(chk.value);
+      });
+
+      if (res.externalUrl) {
+        document.getElementById("upload-type-link").checked = true;
+        document.getElementById("res-link-url").value = res.externalUrl;
+      } else {
+        document.getElementById("upload-type-file").checked = true;
+        document.getElementById("res-link-url").value = "";
+      }
+      toggleUploadType();
+
+      document.getElementById("upload-file-label").textContent = res.fileName ? `Attached: ${res.fileName}` : "Drag & Drop classwork file or click to browse";
+      document.getElementById("upload-file-details").textContent = res.fileSize ? `Size: ${window.dbExt.formatBytes(res.fileSize)}` : "Supported documents types up to 50MB maximum size.";
+
+      document.getElementById("resource-modal-title").textContent = "Modify Educational Resource Details";
+      new bootstrap.Modal(document.getElementById("resource-modal")).show();
+    }
+
+    function handleSaveResource(e) {
+      e.preventDefault();
+      const form = document.getElementById("resource-form");
+      if (!form.checkValidity()) {
+        form.classList.add("was-validated");
+        return;
+      }
+
+      // Collect checklists
+      const checkedClasses = [];
+      document.querySelectorAll(".res-class-check:checked").forEach(chk => {
+        checkedClasses.push(chk.value);
+      });
+
+      const id = document.getElementById("resource-form-id").value;
+      const data = {
+        title: document.getElementById("res-title").value,
+        version: document.getElementById("res-version").value || "1.0",
+        fileType: document.getElementById("res-format").value,
+        description: document.getElementById("res-desc").value,
+        categoryId: Number(document.getElementById("res-category").value),
+        subjectId: Number(document.getElementById("res-subject").value),
+        language: document.getElementById("res-language").value,
+        author: document.getElementById("res-author").value,
+        tags: document.getElementById("res-tags").value.split(",").map(t => t.trim()).filter(t => t !== ""),
+        visibility: document.getElementById("res-visibility").value,
+        downloadAllowed: document.getElementById("res-download").value === "true",
+        status: document.getElementById("res-status").value,
+        gradeClasses: checkedClasses,
+        uploadedBy: currentRoleUser ? currentRoleUser.id : 3,
+        externalUrl: null
+      };
+
+      const upType = document.querySelector('input[name="uploadType"]:checked').value;
+      if (upType === 'link') {
+        const linkVal = document.getElementById("res-link-url").value.trim();
+        if(!linkVal) {
+          window.showToast("Please provide a valid URL link.", "error");
+          return;
+        }
+        data.externalUrl = linkVal;
+        data.fileName = null;
+        data.fileSize = 0;
+      } else {
+        if (mockSelectedFile) {
+          data.fileName = mockSelectedFile.name;
+          data.fileSize = mockSelectedFile.size;
+        } else if (!id) {
+          // Fallback for upload demo if no file selected
+          data.fileName = `handout_${Date.now()}.pdf`;
+          data.fileSize = 1450000; 
+        }
+      }
+
+      if (id) {
+        window.dbExt.updateResource(id, data);
+        window.showToast("Educational material updated.", "success");
+      } else {
+        window.dbExt.createResource(data);
+        window.showToast(`Resource "${data.title}" published successfully.`, "success");
+      }
+
+      bootstrap.Modal.getInstance(document.getElementById("resource-modal")).hide();
+      loadResourcesCardList();
+    }
+
+    function deleteResourceItem(id) {
+      if (confirm("Confirm removal of this book/learning material from platform storage?")) {
+        window.dbExt.deleteResource(id);
+        window.showToast("Material removed successfully.", "success");
+        loadResourcesCardList();
+      }
+    }
+
+    // ── Mock selector handling ─────────────────────────────────
+    function triggerMockFileSelector() {
+      document.getElementById("res-file").click();
+    }
+
+    function handleMockFileChange(e) {
+      if (e.target.files.length > 0) {
+        const file = e.target.files[0];
+        mockSelectedFile = { name: file.name, size: file.size };
+        document.getElementById("upload-file-label").textContent = `Roster Selected: ${file.name}`;
+        document.getElementById("upload-file-details").textContent = `Size: ${window.dbExt.formatBytes(file.size)} • Click again to modify attachment`;
+      }
+    }
+  </script>
+</body>
+</html>

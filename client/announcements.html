@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Announcements - HON-ACADEMY</title>
+    <meta name="description" content="Latest school news, timetables, and important notices from HON-ACADEMY." />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body class="animate-fade-in">
+    <header class="site-header"></header>
+
+    <section class="page-banner">
+        <div class="container">
+          <div class="breadcrumb-custom"><a href="index.html">Home</a><span>/</span><span class="current">Announcements</span></div>
+          <h1>Announcements</h1>
+          <p id="page-intro">Stay updated with the latest news, timetable changes, meeting notices, and events.</p>
+        </div>
+    </section>
+
+    <main class="container my-5">
+
+      <!-- Category Filter -->
+      <div class="d-flex flex-wrap gap-2 justify-content-center mb-5" id="category-filters">
+        <button class="btn btn-primary rounded-pill px-4 active" data-cat="all">All</button>
+        <button class="btn btn-outline-primary rounded-pill px-4" data-cat="School News">School News</button>
+        <button class="btn btn-outline-primary rounded-pill px-4" data-cat="Academic">Academic</button>
+        <button class="btn btn-outline-primary rounded-pill px-4" data-cat="Timetable">Timetable</button>
+        <button class="btn btn-outline-primary rounded-pill px-4" data-cat="Meetings">Meetings</button>
+        <button class="btn btn-outline-primary rounded-pill px-4" data-cat="Competitions">Competitions</button>
+        <button class="btn btn-outline-primary rounded-pill px-4" data-cat="Events">Events</button>
+      </div>
+
+      <!-- Announcements Feed -->
+      <div class="row g-4" id="announcements-grid"></div>
+    </main>
+
+    <footer class="site-footer"></footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/components.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const school = window.db.getSchoolInfo();
+        document.getElementById('page-intro').textContent = school.announcementsIntro || 'Stay updated with the latest news, timetable changes, meeting notices, and events from ' + school.name + '.';
+        const announcements = window.db.getAnnouncements();
+        let activeCategory = "all";
+
+        const catIcons = {
+          "School News": "fa-newspaper text-primary",
+          "Timetable": "fa-calendar-days text-warning",
+          "Meetings": "fa-users text-info",
+          "Events": "fa-calendar-check text-success"
+        };
+
+        const catBadgeColors = {
+          "School News": "bg-primary",
+          "Timetable": "bg-warning text-dark",
+          "Meetings": "bg-info text-dark",
+          "Events": "bg-success"
+        };
+
+        function renderAnnouncements() {
+          const filtered = activeCategory === "all" ? announcements : announcements.filter(a => a.category === activeCategory);
+          const grid = document.getElementById("announcements-grid");
+
+          grid.innerHTML = filtered.map(a => {
+            const date = new Date(a.createdAt).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
+            const icon = catIcons[a.category] || "fa-bell text-secondary";
+            const badge = catBadgeColors[a.category] || "bg-secondary";
+
+            return `
+              <div class="col-md-6 col-lg-4">
+                <div class="card border-0 bg-white h-100">
+                  <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                      <div class="bg-light rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                        <i class="fa-solid ${icon} fs-5"></i>
+                      </div>
+                      <span class="badge ${badge} text-uppercase" style="font-size: 9px;">${a.category}</span>
+                    </div>
+                    <h5 class="font-bold text-dark mb-2">${a.title}</h5>
+                    <p class="small text-muted mb-3 flex-grow-1 leading-relaxed">${a.content}</p>
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                      <span class="small text-muted"><i class="fa-regular fa-clock me-1"></i> ${date}</span>
+                      <span class="small text-muted"><i class="fa-solid fa-user me-1"></i> ${a.authorName || 'Admin'}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join("");
+        }
+
+        // Category filter buttons
+        document.querySelectorAll("#category-filters button").forEach(btn => {
+          btn.addEventListener("click", () => {
+            document.querySelectorAll("#category-filters button").forEach(b => {
+              b.classList.remove("btn-primary", "active");
+              b.classList.add("btn-outline-primary");
+            });
+            btn.classList.remove("btn-outline-primary");
+            btn.classList.add("btn-primary", "active");
+            activeCategory = btn.dataset.cat;
+            renderAnnouncements();
+          });
+        });
+
+        renderAnnouncements();
+      });
+    </script>
+  </body>
+</html>
+

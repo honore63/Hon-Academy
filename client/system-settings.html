@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings — HonE-Learning Platform</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f0f4f8; margin: 0; padding: 20px; }
+    .settings-container { max-width: 900px; margin: 0 auto; }
+    .section-card { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; margin-bottom: 20px; }
+    .section-card-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid #f1f5f9; }
+    .section-card-title { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700; color: #0f172a; margin: 0; }
+    .section-card-body { padding: 20px; }
+    .portal-input { width: 100%; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 13px; outline: none; }
+    .portal-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.12); }
+    .portal-btn { padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; }
+    .portal-btn-primary { background: #1e3a8a; color: #fff; }
+    .portal-btn-success { background: #15803d; color: #fff; }
+    .portal-btn-danger { background: #ef4444; color: #fff; }
+  </style>
+</head>
+<body>
+<div class="settings-container">
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <a href="admin-dashboard.html" class="portal-btn" style="background:#e2e8f0;color:#475569;"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+    <h4 style="font-family:'Poppins',sans-serif;font-weight:700;color:#0f172a;margin:0;">System Settings</h4>
+  </div>
+
+  <!-- School Info -->
+  <div class="section-card">
+    <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-school text-primary me-2"></i>School Information</h5></div>
+    <div class="section-card-body">
+      <div class="row g-3">
+        <div class="col-md-6"><label style="font-size:12px;font-weight:600;">School Name</label><input class="portal-input" value="HonE-Learning School" id="set-school-name"></div>
+        <div class="col-md-6"><label style="font-size:12px;font-weight:600;">School Motto</label><input class="portal-input" value="Unity, Discipline & Excellence" id="set-motto"></div>
+        <div class="col-md-4"><label style="font-size:12px;font-weight:600;">Email</label><input class="portal-input" value="info@hone-learning.rw" id="set-email"></div>
+        <div class="col-md-4"><label style="font-size:12px;font-weight:600;">Phone</label><input class="portal-input" value="+250 788 000 000" id="set-phone"></div>
+        <div class="col-md-4"><label style="font-size:12px;font-weight:600;">Location</label><input class="portal-input" value="Kigali, Rwanda" id="set-location"></div>
+      </div>
+      <button class="portal-btn portal-btn-primary mt-3" onclick="saveSchoolInfo()"><i class="fa-solid fa-save me-1"></i>Save Information</button>
+    </div>
+  </div>
+
+  <!-- Academic Settings -->
+  <div class="section-card">
+    <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-calendar text-warning me-2"></i>Academic Settings</h5></div>
+    <div class="section-card-body">
+      <div class="row g-3">
+        <div class="col-md-4"><label style="font-size:12px;font-weight:600;">Academic Year</label><input class="portal-input" value="2025-2026" id="set-academic-year"></div>
+        <div class="col-md-4"><label style="font-size:12px;font-weight:600;">Current Term</label><select class="portal-input" id="set-term"><option>Term 1</option><option>Term 2</option><option selected>Term 3</option></select></div>
+        <div class="col-md-4"><label style="font-size:12px;font-weight:600;">Max Class Capacity</label><input type="number" class="portal-input" value="40" id="set-capacity"></div>
+      </div>
+      <button class="portal-btn portal-btn-primary mt-3" onclick="saveAcademicSettings()"><i class="fa-solid fa-save me-1"></i>Save Settings</button>
+    </div>
+  </div>
+
+  <!-- Grading Configuration -->
+  <div class="section-card">
+    <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-chart-simple text-success me-2"></i>Grading Configuration</h5></div>
+    <div class="section-card-body">
+      <div class="row g-3">
+        <div class="col-md-3"><label style="font-size:12px;font-weight:600;">Grade A (Min)</label><input type="number" class="portal-input" value="85" id="grade-a-min"></div>
+        <div class="col-md-3"><label style="font-size:12px;font-weight:600;">Grade B (Min)</label><input type="number" class="portal-input" value="70" id="grade-b-min"></div>
+        <div class="col-md-3"><label style="font-size:12px;font-weight:600;">Grade C (Min)</label><input type="number" class="portal-input" value="55" id="grade-c-min"></div>
+        <div class="col-md-3"><label style="font-size:12px;font-weight:600;">Pass Marks</label><input type="number" class="portal-input" value="40" id="pass-marks"></div>
+      </div>
+      <button class="portal-btn portal-btn-primary mt-3" onclick="saveGrading()"><i class="fa-solid fa-save me-1"></i>Save Grading</button>
+    </div>
+  </div>
+
+  <!-- Security -->
+  <div class="section-card">
+    <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-shield-halved text-danger me-2"></i>Security</h5></div>
+    <div class="section-card-body">
+      <div class="row g-3 align-items-center mb-3">
+        <div class="col-md-6"><label style="font-size:12px;font-weight:600;">New Admin Password</label><input type="password" class="portal-input" id="new-admin-pw" placeholder="Leave blank to keep current"></div>
+        <div class="col-md-6"><label style="font-size:12px;font-weight:600;">Confirm Password</label><input type="password" class="portal-input" id="confirm-admin-pw" placeholder="Confirm new password"></div>
+      </div>
+      <button class="portal-btn portal-btn-primary" onclick="changePassword()"><i class="fa-solid fa-key me-1"></i>Change Password</button>
+      <button class="portal-btn portal-btn-danger ms-2" onclick="resetPlatform()" style="background:#dc2626;"><i class="fa-solid fa-rotate-left me-1"></i>Reset All Data (Demo)</button>
+    </div>
+  </div>
+
+  <!-- Platform Status -->
+  <div class="section-card">
+    <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-server text-info me-2"></i>Platform Status</h5></div>
+    <div class="section-card-body">
+      <div class="d-flex flex-wrap gap-4">
+        <div><span class="role-pill" style="background:#dcfce7;color:#166534;"><i class="fa-solid fa-circle-check me-1"></i> Database: Connected</span></div>
+        <div><span class="role-pill" style="background:#dcfce7;color:#166534;"><i class="fa-solid fa-circle-check me-1"></i> Storage: Active</span></div>
+        <div><span class="role-pill" style="background:#fef9c3;color:#854d0e;"><i class="fa-solid fa-circle-half-stroke me-1"></i> Cache: 12MB</span></div>
+        <div><span class="role-pill" style="background:#dbeafe;color:#1e40af;"><i class="fa-solid fa-users me-1"></i> Active Users: <span id="active-user-count">0</span></span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/components.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const users = window.db.getUsers();
+    document.getElementById('active-user-count').textContent = users.length;
+  });
+
+  function saveSchoolInfo() { window.showToast('School information saved successfully', 'success'); }
+  function saveAcademicSettings() { window.showToast('Academic settings saved', 'success'); }
+  function saveGrading() { window.showToast('Grading configuration saved', 'success'); }
+  function changePassword() {
+    const pw = document.getElementById('new-admin-pw').value;
+    const confirm = document.getElementById('confirm-admin-pw').value;
+    if (pw && pw !== confirm) { window.showToast('Passwords do not match', 'error'); return; }
+    if (pw && pw.length < 6) { window.showToast('Password must be at least 6 characters', 'error'); return; }
+    window.showToast(pw ? 'Password changed successfully' : 'No changes made', 'success');
+    document.getElementById('new-admin-pw').value = '';
+    document.getElementById('confirm-admin-pw').value = '';
+  }
+  function resetPlatform() {
+    if (!confirm('This will delete all demo data. Are you sure?')) return;
+    localStorage.clear();
+    window.showToast('Platform reset. Refreshing...', 'warning');
+    setTimeout(() => window.location.href = 'index.html', 1500);
+  }
+</script>
+</body>
+</html>

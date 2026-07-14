@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Portal — HonE-Learning Platform</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root { --portal-primary: #166534; --portal-accent: #22c55e; --nav-main-w: 80px; --nav-sub-w: 220px; }
+    * { box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f0f4f8; margin: 0; padding: 0; overflow-x: hidden; }
+    .portal-sidebar-main { position: fixed; top: 0; left: 0; bottom: 0; width: var(--nav-main-w); background: #0f172a; z-index: 1050; display: flex; flex-direction: column; align-items: center; padding: 16px 0; border-right: 1px solid rgba(255,255,255,0.05); }
+    .nav-brand-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #22c55e, #15803d); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(34,197,94,0.2); }
+    .nav-main-item { width: 64px; height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: rgba(255,255,255,0.5); text-decoration: none; border-radius: 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; border: none; background: transparent; }
+    .nav-main-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .nav-main-item.active { background: rgba(34,197,94,0.15); color: var(--portal-accent); }
+    .nav-main-item i { font-size: 18px; margin-bottom: 4px; }
+    .nav-main-item span { font-size: 10px; font-weight: 600; line-height: 1.1; text-align: center; }
+    .portal-sidebar-sub { position: fixed; top: 0; left: var(--nav-main-w); bottom: 0; width: var(--nav-sub-w); background: #ffffff; z-index: 1040; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; }
+    .sub-brand-text { height: 64px; display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid #f1f5f9; font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700; color: #0f172a; }
+    .sub-nav-content { flex: 1; overflow-y: auto; padding: 20px 14px; }
+    .sub-nav-group { display: none; }
+    .sub-nav-group.active { display: block; }
+    .sub-nav-title { font-size: 11px; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 12px 10px; }
+    .sub-nav-list { list-style: none; padding: 0; margin: 0; }
+    .sub-nav-list li a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: #475569; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.2s; margin-bottom: 4px; border: none; background: transparent; width: 100%; text-align: left; cursor: pointer; }
+    .sub-nav-list li a:hover { background: #f8fafc; color: #0f172a; }
+    .sub-nav-list li a.active { background: #f0fdf4; color: #166534; font-weight: 600; border-left: 3px solid #22c55e; }
+    .sub-nav-list li a i { font-size: 14px; width: 16px; text-align: center; }
+    .portal-main { margin-left: calc(var(--nav-main-w) + var(--nav-sub-w)); min-height: 100vh; display: flex; flex-direction: column; }
+    .portal-topbar { height: 64px; background: #fff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .topbar-title { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 18px; color: #0f172a; }
+    .topbar-subtitle { font-size: 12px; color: #64748b; }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-user { display: flex; align-items: center; gap: 10px; padding: 6px 12px; border-radius: 10px; border: 1px solid #e2e8f0; }
+    .topbar-user img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+    .topbar-user-name { font-size: 13px; font-weight: 600; color: #1e293b; }
+    .topbar-user-role { font-size: 10px; color: #166534; font-weight: 500; }
+    .portal-content { padding: 28px; flex: 1; }
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: #fff; border-radius: 16px; padding: 20px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); transition: all 0.2s; }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+    .stat-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 12px; }
+    .stat-value { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 800; color: #0f172a; }
+    .stat-label { font-size: 12px; color: #64748b; margin-top: 4px; font-weight: 500; }
+    .section-card { background: #fff; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.04); overflow: hidden; margin-bottom: 20px; }
+    .section-card-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid #f1f5f9; }
+    .section-card-title { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700; color: #0f172a; margin: 0; }
+    .section-card-body { padding: 20px; }
+    .portal-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .portal-table th { padding: 10px 14px; background: #f8fafc; color: #64748b; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+    .portal-table td { padding: 12px 14px; border-bottom: 1px solid #f1f5f9; color: #1e293b; }
+    .portal-table tr:hover td { background: #f8fafc; }
+    .role-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .portal-input { width: 100%; padding: 10px 14px; border: 1px solid #e2e8f0; border-radius: 10px; font-size: 13px; outline: none; }
+    .portal-btn { padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; }
+    .portal-btn-primary { background: #166534; color: #fff; }
+    .portal-btn-primary:hover { background: #14532d; }
+    .portal-btn-sm { padding: 6px 14px; font-size: 12px; }
+    .progress-bar-custom { height: 8px; border-radius: 4px; background: #e2e8f0; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #22c55e, #15803d); transition: width 1s ease; }
+    @media (max-width: 900px) { .portal-sidebar-main, .portal-sidebar-sub { display: none; } .portal-main { margin-left: 0; } }
+    .doc-card{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid #f1f5f9;border-radius:12px;transition:all .2s;cursor:default;background:#fff}
+    .doc-card:hover{border-color:#dbeafe;box-shadow:0 2px 8px rgba(59,130,246,.08)}
+    .mobile-toggle { display: none; position: fixed; bottom: 20px; left: 20px; z-index: 1060; width: 48px; height: 48px; border-radius: 50%; background: #166534; color: #fff; border: none; box-shadow: 0 4px 16px rgba(22,101,52,0.4); cursor: pointer; align-items: center; justify-content: center; font-size: 18px; }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1045; }
+    .sidebar-open .portal-sidebar-main, .sidebar-open .portal-sidebar-sub { display: flex !important; }
+    .sidebar-open .sidebar-overlay { display: block; }
+    @media (max-width: 900px) { .mobile-toggle { display: flex !important; } }
+  </style>
+</head>
+<body>
+
+<!-- MAIN NAV -->
+<aside class="portal-sidebar-main">
+  <div class="nav-brand-icon"><i class="fa-solid fa-user-graduate"></i></div>
+  <button class="nav-main-item active" onclick="switchNav('dashboard')"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></button>
+  <button class="nav-main-item" onclick="switchNav('academics')"><i class="fa-solid fa-book"></i><span>Academics</span></button>
+  <button class="nav-main-item" onclick="switchNav('results')"><i class="fa-solid fa-chart-bar"></i><span>Results</span></button>
+  <button class="nav-main-item" onclick="switchNav('attendance')"><i class="fa-solid fa-user-check"></i><span>Attendance</span></button>
+  <button class="nav-main-item" onclick="switchNav('timetable')"><i class="fa-solid fa-clock"></i><span>Timetable</span></button>
+  <div style="flex:1;"></div>
+  <button class="nav-main-item" style="color:#ef4444;" onclick="doLogout()"><i class="fa-solid fa-power-off"></i><span>Logout</span></button>
+</aside>
+
+<!-- SUB NAV -->
+<aside class="portal-sidebar-sub">
+  <div class="sub-brand-text">Student Portal</div>
+  <div class="sub-nav-content">
+    <div class="sub-nav-group active" id="sub-group-dashboard">
+      <div class="sub-nav-title">Overview</div>
+      <ul class="sub-nav-list">
+        <li><a href="#" class="active" onclick="setActiveSub(event, 'home')"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="#" onclick="setActiveSub(event, 'profile')"><i class="fa-solid fa-user"></i> My Profile</a></li>
+        <li><a href="#" onclick="setActiveSub(event, 'announcements')"><i class="fa-solid fa-bullhorn"></i> Announcements</a></li>
+      </ul>
+    </div>
+    <div class="sub-nav-group" id="sub-group-academics">
+      <div class="sub-nav-title">Academics</div>
+      <ul class="sub-nav-list">
+        <li><a href="#" onclick="setActiveSub(event, 'my-subjects')"><i class="fa-solid fa-book-open"></i> My Subjects</a></li>
+        <li><a href="#" onclick="setActiveSub(event, 'my-class')"><i class="fa-solid fa-school"></i> My Class</a></li>
+      </ul>
+    </div>
+    <div class="sub-nav-group" id="sub-group-results">
+      <div class="sub-nav-title">Results</div>
+      <ul class="sub-nav-list">
+        <li><a href="#" onclick="setActiveSub(event, 'my-marks')"><i class="fa-solid fa-pen-to-square"></i> My Marks</a></li>
+        <li><a href="#" onclick="setActiveSub(event, 'report-cards')"><i class="fa-solid fa-file-pdf"></i> Report Cards</a></li>
+      </ul>
+    </div>
+    <div class="sub-nav-group" id="sub-group-attendance">
+      <div class="sub-nav-title">Attendance</div>
+      <ul class="sub-nav-list">
+        <li><a href="#" onclick="setActiveSub(event, 'my-attendance')"><i class="fa-solid fa-clipboard-check"></i> My Attendance</a></li>
+      </ul>
+    </div>
+    <div class="sub-nav-group" id="sub-group-timetable">
+      <div class="sub-nav-title">Timetable</div>
+      <ul class="sub-nav-list">
+        <li><a href="#" onclick="setActiveSub(event, 'my-timetable')"><i class="fa-solid fa-calendar-days"></i> Class Timetable</a></li>
+      </ul>
+    </div>
+    <div class="sub-nav-group" id="sub-group-documents">
+      <div class="sub-nav-title">Documents</div>
+      <ul class="sub-nav-list">
+        <li><a href="#" onclick="setActiveSub(event, 'my-documents')"><i class="fa-solid fa-folder-open"></i> My Documents</a></li>
+      </ul>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="portal-main">
+  <div class="portal-topbar">
+    <div>
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-subtitle" id="topbarSubtitle">Welcome back</div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-user">
+        <img id="topbarAvatar" src="https://ui-avatars.com/api/?name=Student&background=22c55e&color=fff" alt="Student">
+        <div>
+          <div class="topbar-user-name" id="topbarName">Student</div>
+          <div class="topbar-user-role" id="topbarRole">Student</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="portal-content">
+    <!-- HOME -->
+    <div id="section-home">
+      <div class="stat-grid" id="studentStatsGrid"></div>
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <div class="section-card">
+            <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-book text-primary me-2"></i>My Subjects</h5></div>
+            <div class="section-card-body" id="my-subjects-preview"></div>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-chart-line text-success me-2"></i>Recent Results</h5></div>
+            <div class="section-card-body">
+              <div style="overflow-x:auto;">
+                <table class="portal-table">
+                  <thead><tr><th>Subject</th><th>Marks</th><th>Grade</th><th>Exam</th></tr></thead>
+                  <tbody id="recent-results-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="section-card" style="margin-bottom:16px;">
+            <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-school text-success me-2"></i>My Class</h5></div>
+            <div class="section-card-body" id="my-class-info"></div>
+          </div>
+          <div class="section-card" style="margin-bottom:16px;">
+            <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-clipboard-check text-primary me-2"></i>Attendance</h5></div>
+            <div class="section-card-body text-center" id="attendance-summary"></div>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-bullhorn text-danger me-2"></i>Announcements</h5></div>
+            <div class="section-card-body" id="student-announcements"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY SUBJECTS -->
+    <div id="section-my-subjects" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-book-open text-primary me-2"></i>My Enrolled Subjects</h5></div>
+        <div class="section-card-body">
+          <div class="row g-4" id="my-subjects-full"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY CLASS -->
+    <div id="section-my-class" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-school text-success me-2"></i>My Class Details</h5></div>
+        <div class="section-card-body" id="my-class-details"></div>
+      </div>
+    </div>
+
+    <!-- MY MARKS -->
+    <div id="section-my-marks" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-pen-to-square text-warning me-2"></i>My Examination Marks</h5></div>
+        <div class="section-card-body">
+          <div style="overflow-x:auto;">
+            <table class="portal-table">
+              <thead><tr><th>Subject</th><th>Marks</th><th>Grade</th><th>Exam</th><th>Status</th></tr></thead>
+              <tbody id="all-marks-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORT CARDS -->
+    <div id="section-report-cards" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-file-pdf text-danger me-2"></i>My Report Cards</h5></div>
+        <div class="section-card-body" id="my-reports-content"></div>
+      </div>
+    </div>
+
+    <!-- MY ATTENDANCE -->
+    <div id="section-my-attendance" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-clipboard-check text-success me-2"></i>My Attendance Record</h5></div>
+        <div class="section-card-body">
+          <div id="attendance-stats-cards" class="stat-grid mb-4"></div>
+          <div style="overflow-x:auto;">
+            <table class="portal-table">
+              <thead><tr><th>Date</th><th>Status</th><th>Class</th></tr></thead>
+              <tbody id="attendance-history-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY TIMETABLE -->
+    <div id="section-my-timetable" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-clock text-warning me-2"></i>Class Timetable</h5></div>
+        <div class="section-card-body">
+          <div style="overflow-x:auto;">
+            <table class="portal-table">
+              <thead><tr><th>Day</th><th>Time</th><th>Subject</th><th>Teacher</th><th>Room</th></tr></thead>
+              <tbody id="student-timetable-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY DOCUMENTS -->
+    <div id="section-my-documents" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-folder-open text-primary me-2"></i>My Documents</h5><div style="display:flex;gap:8px;"><input type="text" class="portal-input" style="width:200px;padding:8px 12px;font-size:12px;" id="student-doc-search" placeholder="Search documents..." oninput="loadStudentDocuments()"><select class="portal-input" style="width:150px;padding:8px 12px;font-size:12px;" id="student-doc-category" onchange="loadStudentDocuments()"><option value="">All Categories</option></select></div></div>
+        <div class="section-card-body" id="student-documents-container">
+          <div style="text-align:center;padding:40px;color:#94a3b8;"><i class="fa-solid fa-folder-open" style="font-size:40px;margin-bottom:12px;"></i><p>Loading documents...</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANNOUNCEMENTS -->
+    <div id="section-announcements" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-bullhorn text-danger me-2"></i>School Announcements</h5></div>
+        <div class="section-card-body" id="all-student-announcements"></div>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="section-profile" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-user text-primary me-2"></i>My Profile</h5></div>
+        <div class="section-card-body" id="student-profile-content"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="sidebar-overlay" onclick="toggleStudentSidebar()"></div>
+<button class="mobile-toggle" onclick="toggleStudentSidebar()" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/db-extension.js"></script>
+<script src="js/components.js"></script>
+<script>
+  const studentUser = window.db.getCurrentUser();
+  if (!studentUser || studentUser.role !== 'student') { window.location.href = '403.html'; }
+
+  if (studentUser) {
+    document.getElementById('topbarName').textContent = studentUser.name;
+    if (studentUser.avatarUrl) document.getElementById('topbarAvatar').src = studentUser.avatarUrl;
+  }
+
+  const sections = ['home','my-subjects','my-class','my-marks','report-cards','my-attendance','my-timetable','announcements','profile','my-documents'];
+  function showSection(id) {
+    sections.forEach(s => { const el = document.getElementById('section-' + s); if (el) el.classList.toggle('d-none', s !== id); });
+    const titles = { home:'Dashboard', 'my-subjects':'My Subjects', 'my-class':'My Class', 'my-marks':'My Marks', 'report-cards':'Report Cards', 'my-attendance':'My Attendance', 'my-timetable':'Timetable', announcements:'Announcements', profile:'My Profile' };
+    document.getElementById('topbarTitle').textContent = titles[id] || 'Student Portal';
+  }
+
+  function setActiveSub(e, section) {
+    e.preventDefault();
+    document.querySelectorAll('.sub-nav-list li a').forEach(a => a.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+    showSection(section);
+    if (section === 'home') loadStudentDashboard();
+    if (section === 'my-subjects') loadMySubjects();
+    if (section === 'my-class') loadMyClass();
+    if (section === 'my-marks') loadMyMarks();
+    if (section === 'report-cards') loadReportCards();
+    if (section === 'my-attendance') loadMyAttendance();
+    if (section === 'my-timetable') loadMyTimetable();
+    if (section === 'announcements') loadAnnouncements();
+    if (section === 'profile') loadProfile();
+    if (section === 'my-documents') loadStudentDocuments();
+  }
+
+  function switchNav(group) {
+    document.querySelectorAll('.nav-main-item').forEach(n => n.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.querySelectorAll('.sub-nav-group').forEach(g => g.classList.remove('active'));
+    const subGroup = document.getElementById('sub-group-' + group);
+    if (subGroup) subGroup.classList.add('active');
+  }
+
+  function loadStudentDashboard() {
+    const subjects = ['Mathematics','Science','English','Kinyarwanda','Social Studies','ICT'];
+    const marks = Array.from({length: 6}, () => Math.floor(Math.random() * 40) + 60);
+    const avg = Math.round(marks.reduce((a,b) => a+b, 0) / marks.length);
+
+    document.getElementById('studentStatsGrid').innerHTML = [
+      { icon:'fa-book', bg:'#dbeafe', color:'#1e40af', value:subjects.length, label:'My Subjects' },
+      { icon:'fa-chart-line', bg:'#dcfce7', color:'#166534', value:avg + '%', label:'Average Score' },
+      { icon:'fa-calendar-check', bg:'#ede9fe', color:'#5b21b6', value:'92%', label:'Attendance' },
+      { icon:'fa-trophy', bg:'#fef9c3', color:'#854d0e', value:'3rd', label:'Class Rank' },
+    ].map(s => `<div class="stat-card"><div class="stat-icon" style="background:${s.bg};color:${s.color};"><i class="fa-solid ${s.icon}"></i></div><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div></div>`).join('');
+
+    document.getElementById('my-subjects-preview').innerHTML = subjects.slice(0, 4).map((s,i) => {
+      const progress = marks[i];
+      return `<div style="display:flex;align-items:center;gap:12px;padding:12px;background:#f8fafc;border-radius:10px;margin-bottom:8px;"><div style="width:40px;height:40px;background:#dbeafe;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#1e40af;"><i class="fa-solid fa-book"></i></div><div style="flex:1;"><strong>${s}</strong><div class="progress-bar-custom mt-1"><div class="progress-fill" style="width:${progress}%;"></div></div></div><span style="font-size:12px;font-weight:700;color:#166534;">${progress}%</span></div>`;
+    }).join('');
+
+    document.getElementById('recent-results-tbody').innerHTML = subjects.slice(0, 4).map((s,i) => {
+      const m = marks[i];
+      const grade = m >= 80 ? 'A' : m >= 70 ? 'B' : m >= 55 ? 'C' : m >= 40 ? 'D' : 'F';
+      return `<tr><td><strong>${s}</strong></td><td>${m}</td><td><span class="role-pill" style="background:#dcfce7;color:#166534;">${grade}</span></td><td style="font-size:12px;color:#64748b;">Term 1 Exam</td></tr>`;
+    }).join('');
+
+    document.getElementById('my-class-info').innerHTML = `
+      <div style="text-align:center;padding:16px;background:#f0fdf4;border-radius:12px;"><div style="font-size:36px;font-weight:800;color:#166534;">P4A</div><p style="font-size:12px;color:#64748b;margin:4px 0 0;">Primary 4 Alpha</p><p style="font-size:11px;color:#94a3b8;">Class Teacher: Mr. John Doe</p></div>`;
+
+    document.getElementById('attendance-summary').innerHTML = `
+      <div style="font-size:32px;font-weight:800;color:#166534;">92%</div>
+      <p style="font-size:12px;color:#64748b;margin:0;">Overall Attendance</p>
+      <div style="display:flex;justify-content:center;gap:16px;margin-top:12px;">
+        <div><span style="font-size:18px;font-weight:700;color:#166534;">45</span><p style="font-size:10px;color:#94a3b8;margin:0;">Present</p></div>
+        <div><span style="font-size:18px;font-weight:700;color:#ef4444;">3</span><p style="font-size:10px;color:#94a3b8;margin:0;">Absent</p></div>
+        <div><span style="font-size:18px;font-weight:700;color:#f59e0b;">1</span><p style="font-size:10px;color:#94a3b8;margin:0;">Late</p></div>
+      </div>`;
+
+    const anns = window.db.getAnnouncements().slice(0, 3);
+    document.getElementById('student-announcements').innerHTML = anns.map(a => `<div style="padding:10px;background:#f8fafc;border-radius:8px;margin-bottom:8px;border-left:3px solid #ef4444;"><strong style="font-size:13px;">${a.title}</strong><p style="font-size:12px;color:#64748b;margin:4px 0 0;">${a.content.substring(0, 60)}...</p></div>`).join('');
+  }
+
+  function loadMySubjects() {
+    const subjects = ['Mathematics','Science','English','Kinyarwanda','Social Studies','ICT'];
+    document.getElementById('my-subjects-full').innerHTML = subjects.map((s,i) => `<div class="col-md-4"><div class="section-card"><div class="section-card-body text-center"><div style="width:60px;height:60px;background:#dbeafe;border-radius:16px;display:flex;align-items:center;justify-content:center;color:#1e40af;margin:0 auto 12px;font-size:24px;"><i class="fa-solid fa-book"></i></div><h6 style="font-weight:700;">${s}</h6><p style="font-size:12px;color:#64748b;">12 Lessons • 3 Exams</p><div class="progress-bar-custom"><div class="progress-fill" style="width:${60 + i * 7}%;"></div></div></div></div></div>`).join('');
+  }
+
+  function loadMyClass() {
+    document.getElementById('my-class-details').innerHTML = `
+      <div class="row g-4">
+        <div class="col-md-6"><h6>Class Name</h6><p style="font-size:14px;font-weight:700;">P4A - Primary 4 Alpha</p><h6>Class Teacher</h6><p style="font-size:14px;">Mr. John Doe</p><h6>Class Size</h6><p style="font-size:14px;">35 Students</p></div>
+        <div class="col-md-6"><h6>Stream</h6><p style="font-size:14px;">Alpha</p><h6>Academic Year</h6><p style="font-size:14px;">2025-2026</p><h6>Term</h6><p style="font-size:14px;">Term 1</p></div>
+      </div>`;
+  }
+
+  function loadMyMarks() {
+    const subjects = ['Mathematics','Science','English','Kinyarwanda','Social Studies','ICT'];
+    document.getElementById('all-marks-tbody').innerHTML = subjects.map((s,i) => {
+      const m = Math.floor(Math.random() * 40) + 60;
+      const grade = m >= 80 ? 'A' : m >= 70 ? 'B' : m >= 55 ? 'C' : m >= 40 ? 'D' : 'F';
+      return `<tr><td><strong>${s}</strong></td><td>${m}</td><td><span class="role-pill" style="background:#dcfce7;color:#166534;">${grade}</span></td><td>Term ${i % 3 + 1} Exam</td><td><span class="role-pill" style="background:#dbeafe;color:#1e40af;">Approved</span></td></tr>`;
+    }).join('');
+  }
+
+  function loadReportCards() {
+    document.getElementById('my-reports-content').innerHTML = `
+      <div class="row g-3">
+        ${['Term 1 - 2025','Term 2 - 2025','Term 3 - 2025'].map(term => `
+          <div class="col-md-4"><div style="padding:20px;background:#f8fafc;border-radius:12px;text-align:center;border:1px solid #e2e8f0;"><i class="fa-solid fa-file-pdf" style="font-size:36px;color:#ef4444;margin-bottom:12px;"></i><h6 style="font-weight:700;">${term}</h6><p style="font-size:12px;color:#64748b;">Report Card</p><button class="portal-btn portal-btn-primary portal-btn-sm" onclick="window.showToast('Downloading report card...','info')"><i class="fa-solid fa-download me-1"></i>Download</button></div></div>
+        `).join('')}
+      </div>`;
+  }
+
+  function loadMyAttendance() {
+    const stats = { present: 45, absent: 3, late: 1, excused: 1, total: 50 };
+    document.getElementById('attendance-stats-cards').innerHTML = [
+      { icon:'fa-check-circle', bg:'#dcfce7', color:'#166534', value:stats.present, label:'Present' },
+      { icon:'fa-times-circle', bg:'#fee2e2', color:'#dc2626', value:stats.absent, label:'Absent' },
+      { icon:'fa-clock', bg:'#fef9c3', color:'#854d0e', value:stats.late, label:'Late' },
+      { icon:'fa-clipboard', bg:'#dbeafe', color:'#1e40af', value:stats.excused, label:'Excused' },
+    ].map(s => `<div class="stat-card"><div class="stat-icon" style="background:${s.bg};color:${s.color};"><i class="fa-solid ${s.icon}"></i></div><div class="stat-value">${s.value}</div><div class="stat-label">${s.label}</div></div>`).join('');
+
+    const dates = ['2025-09-01','2025-09-02','2025-09-03','2025-09-04','2025-09-05'];
+    const statuses = ['present','present','absent','present','late'];
+    document.getElementById('attendance-history-tbody').innerHTML = dates.map((d,i) => {
+      const color = statuses[i] === 'present' ? '#166534' : statuses[i] === 'absent' ? '#dc2626' : '#854d0e';
+      const bg = statuses[i] === 'present' ? '#dcfce7' : statuses[i] === 'absent' ? '#fee2e2' : '#fef9c3';
+      return `<tr><td>${d}</td><td><span class="role-pill" style="background:${bg};color:${color};">${statuses[i]}</span></td><td>P4A</td></tr>`;
+    }).join('');
+  }
+
+  function loadMyTimetable() {
+    const days = ['Monday','Tuesday','Wednesday','Thursday','Friday'];
+    const entries = [];
+    days.forEach(day => {
+      for (let i = 0; i < 5; i++) {
+        entries.push({ day, time: `${8 + i}:00 - ${9 + i}:00`, subject: ['Mathematics','Science','English','Kinyarwanda','ICT'][i], teacher: ['Mr. John','Ms. Jane','Mr. Paul','Ms. Mary','Mr. Alex'][i], room: `Room ${i + 1}` });
+      }
+    });
+    document.getElementById('student-timetable-tbody').innerHTML = entries.map(e => `<tr><td><strong>${e.day}</strong></td><td>${e.time}</td><td>${e.subject}</td><td>${e.teacher}</td><td>${e.room}</td></tr>`).join('');
+  }
+
+  function loadAnnouncements() {
+    const anns = window.db.getAnnouncements();
+    document.getElementById('all-student-announcements').innerHTML = anns.map(a => `<div style="padding:16px;background:#f8fafc;border-radius:12px;margin-bottom:12px;border-left:4px solid #ef4444;"><div style="display:flex;justify-content:space-between;margin-bottom:8px;"><strong>${a.title}</strong><span style="font-size:11px;color:#94a3b8;">${new Date(a.createdAt).toLocaleDateString()}</span></div><p style="font-size:13px;color:#475569;margin:0;">${a.content}</p></div>`).join('');
+  }
+
+  function loadProfile() {
+    document.getElementById('student-profile-content').innerHTML = `
+      <div class="row g-3">
+        <div class="col-md-6"><label style="font-size:12px;font-weight:600;color:#64748b;">Admission Number</label><input class="portal-input" value="${studentUser.admissionNumber || 'N/A'}" readonly></div>
+        <div class="col-md-6"><label style="font-size:12px;font-weight:600;color:#64748b;">Full Name</label><input class="portal-input" id="stu-name" value="${studentUser.name}"></div>
+        <div class="col-md-6"><label style="font-size:12px;font-weight:600;color:#64748b;">Email</label><input class="portal-input" id="stu-email" value="${studentUser.email || ''}"></div>
+        <div class="col-md-6"><label style="font-size:12px;font-weight:600;color:#64748b;">Phone</label><input class="portal-input" id="stu-phone" value="${studentUser.phone || ''}"></div>
+        <div class="col-md-6"><label style="font-size:12px;font-weight:600;color:#64748b;">Gender</label><input class="portal-input" value="${studentUser.gender || 'N/A'}" readonly></div>
+        <div class="col-md-6"><label style="font-size:12px;font-weight:600;color:#64748b;">Date of Birth</label><input class="portal-input" value="${studentUser.dateOfBirth ? new Date(studentUser.dateOfBirth).toLocaleDateString() : 'N/A'}" readonly></div>
+        <div class="col-12"><button class="portal-btn portal-btn-primary" onclick="saveStudentProfile()"><i class="fa-solid fa-save me-1"></i>Update Profile</button></div>
+      </div>`;
+  }
+
+  function saveStudentProfile() {
+    const name = document.getElementById('stu-name')?.value;
+    const email = document.getElementById('stu-email')?.value;
+    const phone = document.getElementById('stu-phone')?.value;
+    if (!name || name.trim() === '') { window.showToast('Name is required', 'error'); return; }
+    window.db.updateUser(studentUser.id, { name, email, phone });
+    document.getElementById('topbarName').textContent = name;
+    window.showToast('Profile updated successfully', 'success');
+  }
+
+  function loadStudentDocuments() {
+    const container = document.getElementById('student-documents-container');
+    if (!container) return;
+    let docs = window.db.getAllDocuments().filter(d => d.visibility !== 'private' && d.status === 'active');
+    const catFilter = document.getElementById('student-doc-category')?.value;
+    if (catFilter) docs = docs.filter(d => d.category === catFilter);
+    const q = document.getElementById('student-doc-search')?.value.toLowerCase().trim();
+    if (q) docs = docs.filter(d => (d.title||'').toLowerCase().includes(q) || (d.subject||'').toLowerCase().includes(q));
+    docs.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    if (!docs.length) {
+      container.innerHTML = '<div style="text-align:center;padding:40px;color:#94a3b8;"><i class="fa-solid fa-folder-open" style="font-size:40px;margin-bottom:12px;"></i><p>No shared documents available yet.</p></div>';
+      return;
+    }
+
+    container.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">${docs.map(d => {
+      const iconMap = {pdf:'fa-file-pdf',doc:'fa-file-word',docx:'fa-file-word',xls:'fa-file-excel',xlsx:'fa-file-excel',ppt:'fa-file-powerpoint',pptx:'fa-file-powerpoint',jpg:'fa-file-image',jpeg:'fa-file-image',png:'fa-file-image',zip:'fa-file-zipper',txt:'fa-file-lines'};
+      const colorMap = {pdf:'#ef4444',doc:'#2563eb',docx:'#2563eb',xls:'#16a34a',xlsx:'#16a34a',ppt:'#f97316',pptx:'#f97316',jpg:'#8b5cf6',jpeg:'#8b5cf6',png:'#8b5cf6',zip:'#64748b',txt:'#94a3b8'};
+      return `<div class="doc-card" style="display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid #f1f5f9;border-radius:12px;background:#fff;">
+        <div style="width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:${colorMap[d.fileType]||'#94a3b8'}15;color:${colorMap[d.fileType]||'#94a3b8'}"><i class="fa-solid ${iconMap[d.fileType]||'fa-file'}"></i></div>
+        <div style="flex:1;min-width:0;"><strong style="font-size:13px;">${d.title}</strong><br><small style="color:#94a3b8;">${d.category||''} ${d.subject?'· '+d.subject:''}</small></div>
+        <div style="display:flex;gap:4px;">
+          <button class="portal-btn portal-btn-sm portal-btn-primary" onclick="window.open('document-viewer.html?id=${d.id}','_blank')"><i class="fa-solid fa-eye"></i></button>
+          <button class="portal-btn portal-btn-sm portal-btn-success" onclick="studentDownloadDoc(${d.id})"><i class="fa-solid fa-download"></i></button>
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+  }
+
+  function studentDownloadDoc(id) {
+    const doc = window.db.getDocument(id);
+    if (!doc) return;
+    window.db.logDocumentDownload(id, studentUser.id);
+    const ft = (doc.fileType || 'txt');
+    const content = `=== HonE-Learning Platform - Document Download ===\r\n\r\nTitle: ${doc.title}\r\nCategory: ${doc.category || 'N/A'}\r\nSubject: ${doc.subject || 'N/A'}\r\nUploaded By: ${doc.uploadedBy || 'Unknown'}\r\nDate: ${new Date(doc.createdAt).toLocaleDateString()}\r\n\r\n--- Content ---\r\n${doc.description || 'No content available.'}`;
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = doc.fileName || `${doc.title.replace(/[^a-z0-9]/gi,'_').toLowerCase()}.txt`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    window.showToast(`"${doc.title}" downloaded`, 'success');
+  }
+
+  // Populate student doc category filter on load
+  function populateStudentDocFilter() {
+    const sel = document.getElementById('student-doc-category');
+    if (!sel) return;
+    const cats = window.db.DOCUMENT_CATEGORIES;
+    cats.forEach(c => { sel.innerHTML += `<option value="${c}">${c}</option>`; });
+  }
+
+  function toggleStudentSidebar() { document.body.classList.toggle('sidebar-open'); }
+  document.addEventListener('click', (e) => { if (e.target.classList.contains('sidebar-overlay')) document.body.classList.remove('sidebar-open'); });
+
+  function doLogout() { window.db.logout(); window.location.href = 'index.html'; }
+
+  loadStudentDashboard();
+  populateStudentDocFilter();
+</script>
+</body>
+</html>

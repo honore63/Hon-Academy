@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About Us - HON-ACADEMY</title>
+<meta name="description" content="Learn about HON-ACADEMY — our story, vision, mission, core values, leadership, and facilities." />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  .about-hero{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;padding:3rem 0;border-radius:1rem;margin-bottom:3rem}
+  .value-card{text-align:center;border:1px solid #e9ecef;border-radius:1rem;padding:1.5rem 1rem;background:#fff;transition:.25s;height:100%}
+  .value-card:hover{box-shadow:0 8px 24px rgba(26,60,123,.1);transform:translateY(-2px)}
+  .value-icon{width:56px;height:56px;border-radius:.8rem;display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin:0 auto .75rem}
+  .facility-item{display:flex;align-items:center;gap:.75rem;padding:.65rem 0;border-bottom:1px solid #f0f0f0}
+  .facility-item:last-child{border-bottom:none}
+  .facility-item i{color:#1e3a8a;font-size:1rem;width:24px;text-align:center}
+  .level-card{border:1px solid #e9ecef;border-radius:1rem;padding:1.5rem;background:#fff;transition:.25s;height:100%}
+  .level-card:hover{box-shadow:0 8px 24px rgba(26,60,123,.1)}
+</style>
+</head>
+<body class="animate-fade-in">
+<header class="site-header"></header>
+<section class="page-banner">
+  <div class="container">
+    <div class="breadcrumb-custom"><a href="index.html">Home</a><span>/</span><span class="current">About Us</span></div>
+    <h1>About HON-ACADEMY</h1>
+    <p id="page-intro">Learn about our story, mission, vision, and commitment to educational excellence.</p>
+  </div>
+</section>
+
+<main class="container my-5">
+
+  <!-- Our Story -->
+  <section class="mb-5">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <h3 class="font-bold text-dark mb-3" id="story-title">Our Story</h3>
+        <p class="text-muted" id="story-text" style="line-height:1.8"></p>
+      </div>
+      <div class="col-lg-5">
+        <div class="card bg-primary text-white border-0 p-4 shadow-sm">
+          <div class="card-body text-center">
+            <i class="fa-solid fa-quote-left mb-3" style="font-size:2rem;opacity:.5"></i>
+            <h5 class="font-bold mb-3" id="about-motto">"Excellence in Education, Success in Life."</h5>
+            <p class="small mb-0 opacity-75" id="about-motto-sub">Our guiding principle since establishment.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision & Mission -->
+  <section class="mb-5">
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card border-0 p-4 shadow-sm h-100" style="border-left:4px solid #3b82f6 !important">
+          <div class="d-flex align-items-start gap-3">
+            <div class="bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center" style="width:50px;height:50px;flex-shrink:0"><i class="fa-solid fa-eye fs-4"></i></div>
+            <div>
+              <h5 class="font-bold mb-2">Our Vision</h5>
+              <p class="text-muted mb-0" id="about-vision" style="line-height:1.7"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card border-0 p-4 shadow-sm h-100" style="border-left:4px solid #10b981 !important">
+          <div class="d-flex align-items-start gap-3">
+            <div class="bg-success bg-opacity-10 text-success rounded-3 d-flex align-items-center justify-content-center" style="width:50px;height:50px;flex-shrink:0"><i class="fa-solid fa-bullseye fs-4"></i></div>
+            <div>
+              <h5 class="font-bold mb-2">Our Mission</h5>
+              <p class="text-muted mb-0" id="about-mission" style="line-height:1.7"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Values -->
+  <section class="mb-5">
+    <h3 class="text-center font-bold text-dark mb-4">Core Values</h3>
+    <div class="row g-3" id="values-grid"></div>
+  </section>
+
+  <!-- Principal's Message -->
+  <section class="mb-5">
+    <div class="card border-0 p-4 shadow-sm">
+      <div class="row align-items-center g-4">
+        <div class="col-md-3 text-center">
+          <img src="https://ui-avatars.com/api/?name=Principal&background=1e3a8a&color=fff&size=150" alt="Principal" class="rounded-circle border shadow" style="width:140px;height:140px;object-fit:cover">
+        </div>
+        <div class="col-md-9">
+          <h4 class="font-bold text-dark mb-2"><i class="fa-solid fa-quote-left text-primary me-2"></i>Principal's Message</h4>
+          <div id="principal-message" style="white-space:pre-line;line-height:1.8" class="text-muted"></div>
+          <p class="mt-3 font-bold text-primary mb-0" id="principal-name">The Principal, HON-ACADEMY</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Educational Levels -->
+  <section class="mb-5">
+    <h3 class="text-center font-bold text-dark mb-4">Educational Levels</h3>
+    <div class="row g-4" id="about-levels"></div>
+  </section>
+
+  <!-- Teaching Methodology -->
+  <section class="mb-5">
+    <h3 class="text-center font-bold text-dark mb-4">Teaching Methodology</h3>
+    <div class="row g-3" id="methodology-grid"></div>
+  </section>
+
+  <!-- School Leadership -->
+  <section class="mb-5">
+    <h3 class="text-center font-bold text-dark mb-4">School Leadership</h3>
+    <div class="row g-4" id="leadership-grid"></div>
+  </section>
+
+  <!-- School Facilities -->
+  <section class="mb-5">
+    <h3 class="text-center font-bold text-dark mb-4">Our Facilities</h3>
+    <div class="row g-4">
+      <div class="col-md-6">
+        <div class="card border-0 p-4 shadow-sm h-100">
+          <h5 class="font-bold text-dark mb-3"><i class="fa-solid fa-building text-primary me-2"></i>Campus Facilities</h5>
+          <div id="facilities-list"></div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card border-0 p-4 shadow-sm h-100">
+          <h5 class="font-bold text-dark mb-3"><i class="fa-solid fa-graduation-cap text-success me-2"></i>Academic Programs</h5>
+          <div id="programs-list"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="text-center p-5 bg-primary text-white rounded-4">
+    <h3 class="font-bold mb-3">Join Our Growing Family</h3>
+    <p class="mb-4 opacity-75">Experience excellence in education at HON-ACADEMY.</p>
+    <div class="d-flex flex-wrap gap-3 justify-content-center">
+      <a href="admissions.html" class="btn btn-light btn-lg rounded-pill px-5 font-bold"><i class="fa-solid fa-graduation-cap me-2"></i>Apply for Admission</a>
+      <a href="contact.html" class="btn btn-outline-light btn-lg rounded-pill px-5"><i class="fa-solid fa-phone me-2"></i>Contact Us</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/components.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const school = db.getSchoolInfo();
+  const leadership = db.getLeadership();
+
+  // Story
+  document.getElementById('story-title').textContent = 'Our Story';
+  document.getElementById('story-text').textContent = school.storyLong || school.schoolHistory || '';
+  document.getElementById('about-motto').textContent = '\u201c' + school.motto + '\u201d';
+
+  // Vision & Mission
+  document.getElementById('about-vision').textContent = school.visionLong || school.vision || '';
+  document.getElementById('about-mission').textContent = school.missionLong || school.mission || '';
+
+  // Core Values
+  const valuesRaw = school.coreValues || '';
+  const valuesArr = valuesRaw.split(/\.\s+/).filter(Boolean).map(v => {
+    const parts = v.split(/:\s*/);
+    return { title: parts[0].trim(), desc: (parts[1] || '').trim() };
+  });
+  const valIcons = ['fa-award','fa-handshake','fa-heart','fa-user-check','fa-lightbulb','fa-chart-line','fa-people-group','fa-shield-halved','fa-hands-helping','fa-book-open'];
+  const valColors = ['#1e3a8a','#059669','#dc2626','#7c3aed','#f59e0b','#0891b2','#d97706','#10b981','#6366f1','#ec4899'];
+  document.getElementById('values-grid').innerHTML = valuesArr.map((v,i) => '<div class="col-6 col-md-4 col-lg-3"><div class="value-card"><div class="value-icon" style="background:'+valColors[i%valColors.length]+'15;color:'+valColors[i%valColors.length]+'"><i class="fa-solid '+(valIcons[i%valIcons.length])+'"></i></div><h6 class="font-bold mb-1">'+v.title+'</h6><p class="small text-muted mb-0">'+v.desc+'</p></div></div>').join('');
+
+  // Principal Message
+  document.getElementById('principal-message').textContent = school.principalMessage || '';
+
+  // Educational Levels
+  const levels = [
+    {title:'Primary Education (P1\u2013P6)',color:'#10b981',desc:'Building strong foundations in literacy, numeracy, science, technology, creativity, and values.',icon:'fa-school-flag'},
+    {title:'Lower Secondary (S1\u2013S3)',color:'#3b82f6',desc:'Preparing learners with critical thinking, problem-solving, and foundational secondary education.',icon:'fa-building'},
+    {title:'Upper Secondary (S4\u2013S6)',color:'#8b5cf6',desc:'Specialized education in Science, Humanities, and other academic pathways for higher education and careers.',icon:'fa-graduation-cap'},
+    {title:'TVET Programmes',color:'#f59e0b',desc:'Practical technical and vocational education equipping learners with employable skills and entrepreneurship.',icon:'fa-wrench'}
+  ];
+  document.getElementById('about-levels').innerHTML = levels.map(l => '<div class="col-sm-6"><div class="level-card"><div class="d-flex align-items-center gap-3 mb-2"><div class="rounded-3 d-flex align-items-center justify-content-center" style="width:44px;height:44px;background:'+l.color+'15;color:'+l.color+'"><i class="fa-solid '+l.icon+' fs-5"></i></div><h6 class="font-bold mb-0">'+l.title+'</h6></div><p class="small text-muted mb-0">'+l.desc+'</p></div></div>').join('');
+
+  // Teaching Methodology
+  const methods = school.teachingMethodology || ['Student-Centered Learning','Inquiry-Based Learning','Project-Based Learning','Practical Experiments','ICT Integration','Continuous Assessment'];
+  const methIcons = ['fa-user-graduate','fa-magnifying-glass','fa-diagram-project','fa-flask','fa-laptop','fa-clipboard-check'];
+  document.getElementById('methodology-grid').innerHTML = methods.map((m,i) => '<div class="col-sm-6 col-lg-4"><div class="d-flex align-items-center gap-3 p-3 bg-white border rounded-3 shadow-sm h-100"><div class="bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center" style="width:44px;height:44px;flex-shrink:0"><i class="fa-solid '+(methIcons[i%methIcons.length])+'"></i></div><span class="font-bold small">'+m+'</span></div></div>').join('');
+
+  // Leadership
+  const leaderGrid = document.getElementById('leadership-grid');
+  if (leadership.length) {
+    leaderGrid.innerHTML = leadership.map(l => '<div class="col-sm-6 col-lg-3"><div class="card border-0 text-center p-4 shadow-sm h-100"><img src="'+(l.avatar||'https://ui-avatars.com/api/?name='+encodeURIComponent(l.name)+'&background=1e3a8a&color=fff')+'" alt="'+l.name+'" class="rounded-circle mb-3 border" style="width:90px;height:90px;object-fit:cover"><h6 class="font-bold mb-1">'+l.name+'</h6><p class="small text-primary mb-1">'+l.title+'</p><p class="small text-muted mb-0">'+(l.bio||'')+'</p></div></div>').join('');
+  } else {
+    leaderGrid.innerHTML = '<div class="col-12 text-center text-muted p-4"><i class="fa-solid fa-users fs-2 mb-2 d-block"></i><p>Leadership information will be available soon.</p></div>';
+  }
+
+  // Facilities
+  const facList = document.getElementById('facilities-list');
+  const facs = school.facilities || [];
+  facList.innerHTML = facs.length ? facs.map(f => '<div class="facility-item"><i class="fa-solid fa-check-circle"></i><span>'+f+'</span></div>').join('') : '<p class="text-muted">Facilities information coming soon.</p>';
+
+  // Programs
+  const progList = document.getElementById('programs-list');
+  const progs = ['Primary Education','Lower Secondary Education','Upper Secondary Education','TVET Programmes','ICT & Digital Literacy','STEM Education','Entrepreneurship Education','Leadership Development'];
+  progList.innerHTML = progs.map(p => '<div class="facility-item"><i class="fa-solid fa-book"></i><span>'+p+'</span></div>').join('');
+});
+</script>
+</body>
+</html>

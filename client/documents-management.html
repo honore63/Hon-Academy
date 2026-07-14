@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document Management — HonE-Learning Platform</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--portal-primary:#1e3a8a;--nav-main-w:80px;--nav-sub-w:220px}
+*{box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#f0f4f8;margin:0;padding:0;overflow-x:hidden}
+.portal-sidebar-main{position:fixed;top:0;left:0;bottom:0;width:var(--nav-main-w);background:#0f172a;z-index:1050;display:flex;flex-direction:column;align-items:center;padding:16px 0}
+.nav-brand-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--portal-primary),#6366f1);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;margin-bottom:24px}
+.nav-main-item{width:64px;height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,0.5);text-decoration:none;border-radius:12px;margin-bottom:8px;cursor:pointer;transition:all .2s;border:none;background:transparent}
+.nav-main-item:hover{background:rgba(255,255,255,0.08);color:#fff}
+.nav-main-item.active{background:rgba(59,130,246,0.15);color:#3b82f6}
+.nav-main-item i{font-size:18px;margin-bottom:4px}
+.nav-main-item span{font-size:10px;font-weight:600;line-height:1.1;text-align:center}
+.portal-sidebar-sub{position:fixed;top:0;left:var(--nav-main-w);bottom:0;width:var(--nav-sub-w);background:#fff;z-index:1040;border-right:1px solid #e2e8f0;display:flex;flex-direction:column}
+.sub-brand-text{height:64px;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid #f1f5f9;font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:#0f172a}
+.portal-main{margin-left:calc(var(--nav-main-w) + var(--nav-sub-w));min-height:100vh}
+.portal-topbar{height:64px;background:#fff;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:100}
+.portal-content{padding:24px 28px}
+.section-card{background:#fff;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:24px;overflow:hidden}
+.section-card-header{padding:20px 24px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.section-card-title{font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;color:#0f172a;margin:0}
+.section-card-body{padding:24px}
+.portal-input{width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;color:#0f172a;background:#fff;transition:border-color .2s;font-family:'Inter',sans-serif}
+.portal-input:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.portal-input-sm{padding:8px 12px;font-size:12px;width:auto}
+.portal-btn{padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif}
+.portal-btn-primary{background:#1e3a8a;color:#fff}
+.portal-btn-primary:hover{background:#1e40af}
+.portal-btn-success{background:#166534;color:#fff}
+.portal-btn-danger{background:#dc2626;color:#fff}
+.portal-btn-warning{background:#f59e0b;color:#fff}
+.portal-btn-outline{background:transparent;color:#475569;border:1.5px solid #e2e8f0}
+.portal-btn-sm{padding:6px 12px;font-size:12px}
+.portal-btn-outline:hover{background:#f8fafc}
+.portal-table{width:100%;border-collapse:collapse}
+.portal-table th{padding:10px 14px;background:#f8fafc;color:#64748b;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #e2e8f0;text-align:left}
+.portal-table td{padding:12px 14px;font-size:13px;color:#334155;border-bottom:1px solid #f1f5f9}
+.role-pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.doc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.doc-card{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid #f1f5f9;border-radius:12px;transition:all .2s;cursor:pointer;background:#fff}
+.doc-card:hover{border-color:#dbeafe;box-shadow:0 2px 8px rgba(59,130,246,.08)}
+.doc-card.selected{border-color:#3b82f6;background:#eff6ff}
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.filter-bar select,.filter-bar input{width:auto;min-width:140px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:#fff;border-radius:16px;width:90%;max-width:640px;max-height:90vh;overflow-y:auto;padding:28px}
+.modal-box h5{font-family:'Poppins',sans-serif;font-weight:700;margin-bottom:20px}
+.empty-state{text-align:center;padding:60px 20px;color:#94a3b8}
+.empty-state i{font-size:48px;margin-bottom:12px}
+@media(max-width:900px){.portal-sidebar-main,.portal-sidebar-sub{display:none}.portal-main{margin-left:0}}
+</style>
+</head>
+<body>
+<nav class="portal-sidebar-main">
+<a href="admin-dashboard.html" class="nav-brand-icon" title="Dashboard"><i class="fa-solid fa-graduation-cap"></i></a>
+<a href="admin-dashboard.html" class="nav-main-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+<a href="documents-management.html" class="nav-main-item active"><i class="fa-solid fa-folder-open"></i><span>Documents</span></a>
+<a href="courses-management.html" class="nav-main-item"><i class="fa-solid fa-book"></i><span>Courses</span></a>
+<a href="students-management.html" class="nav-main-item"><i class="fa-solid fa-users"></i><span>Students</span></a>
+<a href="system-settings.html" class="nav-main-item"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+</nav>
+<aside class="portal-sidebar-sub">
+<div class="sub-brand-text"><i class="fa-solid fa-folder-open me-2" style="color:#3b82f6;"></i>Documents</div>
+<div style="flex:1;overflow-y:auto;padding:20px 14px;">
+<div class="sub-nav-title">Document Actions</div>
+<ul class="sub-nav-list" style="list-style:none;padding:0;margin:0;">
+<li><a href="#" onclick="openUploadModal();return false;" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#475569;font-size:13px;font-weight:500;text-decoration:none;"><i class="fa-solid fa-upload"></i>Upload Document</a></li>
+<li><a href="#" onclick="switchView('list');return false;" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#475569;font-size:13px;font-weight:500;text-decoration:none;"><i class="fa-solid fa-list"></i>List View</a></li>
+<li><a href="#" onclick="switchView('grid');return false;" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#475569;font-size:13px;font-weight:500;text-decoration:none;"><i class="fa-solid fa-grid-2"></i>Grid View</a></li>
+</ul>
+<div class="sub-nav-title" style="margin-top:20px;">Folders</div>
+<ul class="sub-nav-list" id="folder-list" style="list-style:none;padding:0;margin:0;"></ul>
+<div style="margin-top:12px;"><button class="portal-btn portal-btn-sm portal-btn-outline" onclick="createFolderPrompt()" style="width:100%;justify-content:center;"><i class="fa-solid fa-plus"></i>New Folder</button></div>
+<div class="sub-nav-title" style="margin-top:20px;">Manage</div>
+<ul class="sub-nav-list" style="list-style:none;padding:0;margin:0;">
+<li><a href="#" onclick="showRecycleBin();return false;" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#475569;font-size:13px;font-weight:500;text-decoration:none;"><i class="fa-solid fa-trash"></i>Recycle Bin</a></li>
+<li><a href="#" onclick="showAuditLog();return false;" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#475569;font-size:13px;font-weight:500;text-decoration:none;"><i class="fa-solid fa-clock-rotate-left"></i>Audit Log</a></li>
+</ul>
+</div>
+</aside>
+<main class="portal-main">
+<header class="portal-topbar">
+<div><h5 style="margin:0;font-weight:700;" id="pageTitle">Documents</h5><small style="color:#94a3b8;" id="pageSubtitle">Manage all academic documents</small></div>
+<div style="display:flex;align-items:center;gap:8px;">
+<button class="portal-btn portal-btn-primary" onclick="openUploadModal()"><i class="fa-solid fa-upload"></i>Upload</button>
+</div>
+</header>
+<div class="portal-content">
+<div class="section-card" id="filter-section">
+<div class="section-card-body">
+<div class="filter-bar">
+<select class="portal-input portal-input-sm" id="filter-category" onchange="renderDocuments()"><option value="">All Categories</option></select>
+<select class="portal-input portal-input-sm" id="filter-subject" onchange="renderDocuments()"><option value="">All Subjects</option></select>
+<select class="portal-input portal-input-sm" id="filter-class" onchange="renderDocuments()"><option value="">All Classes</option></select>
+<select class="portal-input portal-input-sm" id="filter-status" onchange="renderDocuments()"><option value="">Status: All</option><option value="active">Active</option><option value="archived">Archived</option></select>
+<input type="text" class="portal-input portal-input-sm" id="search-doc" placeholder="Search documents..." oninput="renderDocuments()" style="min-width:200px;">
+<select class="portal-input portal-input-sm" id="filter-filetype" onchange="renderDocuments()"><option value="">All Types</option><option value="pdf">PDF</option><option value="doc">Word</option><option value="docx">Word</option><option value="xls">Excel</option><option value="xlsx">Excel</option><option value="ppt">PPT</option><option value="pptx">PPT</option><option value="jpg">Image</option><option value="jpeg">Image</option><option value="png">Image</option><option value="zip">ZIP</option><option value="txt">Text</option></select>
+</div>
+</div>
+</div>
+<div class="section-card">
+<div class="section-card-header">
+<h5 class="section-card-title"><i class="fa-solid fa-file me-2 text-primary"></i>All Documents</h5>
+<div style="display:flex;gap:8px;align-items:center;">
+<span id="doc-count" style="font-size:13px;color:#94a3b8;"></span>
+<button class="portal-btn portal-btn-sm portal-btn-danger" id="delete-selected-btn" style="display:none;" onclick="deleteSelected()"><i class="fa-solid fa-trash"></i>Delete Selected</button>
+</div>
+</div>
+<div class="section-card-body" id="documents-container">
+<div class="empty-state"><i class="fa-solid fa-folder-open"></i><p>No documents found. Upload your first document!</p></div>
+</div>
+</div>
+</div>
+</main>
+<div class="modal-overlay" id="upload-modal">
+<div class="modal-box">
+<h5><i class="fa-solid fa-upload text-primary me-2"></i>Upload Document</h5>
+<form onsubmit="uploadDocument(event)">
+<div class="row g-3">
+<div class="col-12"><label style="font-size:12px;font-weight:600;color:#64748b;">Document Title *</label><input type="text" class="portal-input" id="doc-title" required></div>
+<div class="col-12"><label style="font-size:12px;font-weight:600;color:#64748b;">Description</label><textarea class="portal-input" id="doc-desc" rows="2"></textarea></div>
+<div class="col-md-6"><label style="font-size:12px;font-weight:600;color:#64748b;">Category *</label><select class="portal-input" id="doc-category" required></select></div>
+<div class="col-md-6"><label style="font-size:12px;font-weight:600;color:#64748b;">Subject</label><select class="portal-input" id="doc-subject"><option value="">None</option></select></div>
+<div class="col-md-4"><label style="font-size:12px;font-weight:600;color:#64748b;">Class</label><select class="portal-input" id="doc-class"><option value="">All</option></select></div>
+<div class="col-md-4"><label style="font-size:12px;font-weight:600;color:#64748b;">Academic Year</label><input type="text" class="portal-input" id="doc-year" value="2026"></div>
+<div class="col-md-4"><label style="font-size:12px;font-weight:600;color:#64748b;">Term</label><select class="portal-input" id="doc-term"><option value="">N/A</option><option value="Term 1">Term 1</option><option value="Term 2">Term 2</option><option value="Term 3">Term 3</option></select></div>
+<div class="col-md-6"><label style="font-size:12px;font-weight:600;color:#64748b;">Visibility</label><select class="portal-input" id="doc-visibility"><option value="private">Private</option><option value="shared" selected>Shared</option><option value="public">Public</option></select></div>
+<div class="col-md-6"><label style="font-size:12px;font-weight:600;color:#64748b;">Folder</label><select class="portal-input" id="doc-folder"><option value="">None (root)</option></select></div>
+<div class="col-12"><label style="font-size:12px;font-weight:600;color:#64748b;">File (simulated) *</label><input type="file" class="portal-input" id="doc-file" required style="padding:8px;" onchange="previewFileName(this)"></div>
+<div class="col-12" style="display:flex;gap:8px;justify-content:flex-end;">
+<button type="button" class="portal-btn portal-btn-outline" onclick="closeUploadModal()">Cancel</button>
+<button type="submit" class="portal-btn portal-btn-primary"><i class="fa-solid fa-upload"></i>Upload</button>
+</div>
+</div>
+</form>
+</div>
+</div>
+<div class="modal-overlay" id="recycle-bin-modal">
+<div class="modal-box" style="max-width:700px;">
+<h5><i class="fa-solid fa-trash text-danger me-2"></i>Recycle Bin</h5>
+<table class="portal-table"><thead><tr><th>Title</th><th>Deleted At</th><th>Actions</th></tr></thead><tbody id="recycle-tbody"></tbody></table>
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+<button class="portal-btn portal-btn-danger portal-btn-sm" onclick="emptyRecycleBin()"><i class="fa-solid fa-trash-can"></i>Empty Bin</button>
+<button class="portal-btn portal-btn-outline portal-btn-sm" onclick="closeModal('recycle-bin-modal')">Close</button>
+</div>
+</div>
+</div>
+<div class="modal-overlay" id="audit-log-modal">
+<div class="modal-box" style="max-width:800px;max-height:85vh;">
+<h5><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Audit Log</h5>
+<div style="max-height:60vh;overflow-y:auto;">
+<table class="portal-table"><thead><tr><th>Time</th><th>Action</th><th>Details</th><th>User</th></tr></thead><tbody id="audit-tbody"></tbody></table>
+</div>
+<button class="portal-btn portal-btn-outline portal-btn-sm mt-3" onclick="closeModal('audit-log-modal')">Close</button>
+</div>
+</div>
+<div class="modal-overlay" id="doc-detail-modal">
+<div class="modal-box" style="max-width:700px;">
+<h5 id="detail-title"></h5>
+<div id="detail-body"></div>
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;" id="detail-actions"></div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+    <script src="js/db-extension.js"></script>
+    <script src="js/components.js"></script>
+<script>
+(function() {
+  const currentUser = window.db.getCurrentUser();
+  if (!currentUser || (currentUser.role !== 'admin' && currentUser.role !== 'teacher')) { window.location.href = 'index.html'; return; }
+  const isAdmin = currentUser.role === 'admin';
+  const classes = ['P1','P2','P3','P4','P5','P6','S1','S2','S3','S4','S5','S6'];
+
+  function init() {
+    populateSelects();
+    renderFolders();
+    renderDocuments();
+  }
+
+  function populateSelects() {
+    const catSel = document.getElementById('doc-category');
+    const filterCat = document.getElementById('filter-category');
+    const cats = window.db.DOCUMENT_CATEGORIES;
+    cats.forEach(c => { catSel.innerHTML += `<option value="${c}">${c}</option>`; filterCat.innerHTML += `<option value="${c}">${c}</option>`; });
+    const subjects = window.db.getSubjects();
+    const subjSel = document.getElementById('doc-subject');
+    const filterSubj = document.getElementById('filter-subject');
+    subjects.forEach(s => { subjSel.innerHTML += `<option value="${s.title}">${s.title}</option>`; filterSubj.innerHTML += `<option value="${s.title}">${s.title}</option>`; });
+    const classSel = document.getElementById('doc-class');
+    const filterClass = document.getElementById('filter-class');
+    classes.forEach(c => { classSel.innerHTML += `<option value="${c}">${c}</option>`; filterClass.innerHTML += `<option value="${c}">${c}</option>`; });
+  }
+
+  function renderFolders() {
+    const folders = window.db.getFolders();
+    const list = document.getElementById('folder-list');
+    list.innerHTML = '<li><a href="#" onclick="clearFolderFilter();return false;" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#475569;font-size:13px;font-weight:500;text-decoration:none;"><i class="fa-solid fa-folder"></i>All Documents</a></li>' +
+      folders.map(f => `<li><a href="#" onclick="filterByFolder(${f.id});return false;" style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;color:#475569;font-size:13px;text-decoration:none;"><i class="fa-solid fa-folder" style="color:#f59e0b;"></i>${f.name}</a></li>`).join('');
+    const folderSel = document.getElementById('doc-folder');
+    folderSel.innerHTML = '<option value="">None (root)</option>' + folders.map(f => `<option value="${f.id}">${f.name}</option>`).join('');
+  }
+
+  let currentFolderFilter = null;
+
+  function getFilteredDocs() {
+    let docs = window.db.getAllDocuments();
+    if (!isAdmin) docs = docs.filter(d => d.visibility !== 'private' || d.uploadedById === currentUser.id);
+    if (currentFolderFilter) docs = docs.filter(d => d.folderId === currentFolderFilter);
+    const cat = document.getElementById('filter-category').value;
+    if (cat) docs = docs.filter(d => d.category === cat);
+    const subj = document.getElementById('filter-subject').value;
+    if (subj) docs = docs.filter(d => d.subject === subj);
+    const cls = document.getElementById('filter-class').value;
+    if (cls) docs = docs.filter(d => d.class === cls);
+    const status = document.getElementById('filter-status').value;
+    if (status) docs = docs.filter(d => d.status === status);
+    const ft = document.getElementById('filter-filetype').value;
+    if (ft) docs = docs.filter(d => d.fileType === ft);
+    const q = document.getElementById('search-doc').value.toLowerCase().trim();
+    if (q) docs = docs.filter(d => (d.title||'').toLowerCase().includes(q) || (d.uploadedBy||'').toLowerCase().includes(q));
+    return docs.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+  }
+
+  function renderDocuments() {
+    const docs = getFilteredDocs();
+    document.getElementById('doc-count').textContent = `${docs.length} document(s)`;
+    const container = document.getElementById('documents-container');
+    if (!docs.length) { container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-folder-open"></i><p>No documents match your filters.</p></div>'; return; }
+    const viewMode = localStorage.getItem('doc-view-mode') || 'list';
+    if (viewMode === 'grid') {
+      container.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">' +
+        docs.map(d => renderDocCard(d)).join('') + '</div>';
+    } else {
+      container.innerHTML = '<table class="portal-table"><thead><tr><th style="width:30px;"><input type="checkbox" id="select-all" onchange="toggleSelectAll(this)"></th><th>Title</th><th>Category</th><th>Subject</th><th>Class</th><th>Uploaded By</th><th>Date</th><th>Size</th><th>Downloads</th><th>Status</th><th>Actions</th></tr></thead><tbody>' +
+        docs.map(d => renderDocRow(d)).join('') + '</tbody></table>';
+    }
+  }
+
+  function renderDocRow(d) {
+    const iconMap = {pdf:'fa-file-pdf',doc:'fa-file-word',docx:'fa-file-word',xls:'fa-file-excel',xlsx:'fa-file-excel',ppt:'fa-file-powerpoint',pptx:'fa-file-powerpoint',jpg:'fa-file-image',jpeg:'fa-file-image',png:'fa-file-image',zip:'fa-file-zipper',txt:'fa-file-lines'};
+    const icon = iconMap[d.fileType] || 'fa-file';
+    const colorMap = {pdf:'#ef4444',doc:'#2563eb',docx:'#2563eb',xls:'#16a34a',xlsx:'#16a34a',ppt:'#f97316',pptx:'#f97316',jpg:'#8b5cf6',jpeg:'#8b5cf6',png:'#8b5cf6',zip:'#64748b',txt:'#94a3b8'};
+    return `<tr>
+      <td><input type="checkbox" class="doc-select" value="${d.id}" onchange="updateDeleteBtn()"></td>
+      <td><div style="display:flex;align-items:center;gap:8px;"><div class="doc-icon" style="background:${colorMap[d.fileType]||'#94a3b8'}15;color:${colorMap[d.fileType]||'#94a3b8'}"><i class="fa-solid ${icon}"></i></div><div><strong style="font-size:13px;">${d.title}</strong><br><small style="color:#94a3b8;">${d.fileName||''}</small></div></div></td>
+      <td><span class="role-pill" style="background:#dbeafe;color:#1e40af;">${d.category||'N/A'}</span></td>
+      <td>${d.subject||'-'}</td>
+      <td>${d.class||'-'}</td>
+      <td>${d.uploadedBy||'-'}</td>
+      <td style="font-size:12px;color:#94a3b8;">${new Date(d.createdAt).toLocaleDateString()}</td>
+      <td>${d.fileSize||'-'}</td>
+      <td>${d.downloads||0}</td>
+      <td><span class="role-pill" style="background:${d.status==='archived'?'#fef3c7;color:#92400e':'#dcfce7;color:#166534'}">${d.status||'active'}</span></td>
+      <td><div style="display:flex;gap:4px;">${actionButtons(d)}</div></td>
+    </tr>`;
+  }
+
+  function renderDocCard(d) {
+    const iconMap = {pdf:'fa-file-pdf',doc:'fa-file-word',docx:'fa-file-word',xls:'fa-file-excel',xlsx:'fa-file-excel',ppt:'fa-file-powerpoint',pptx:'fa-file-powerpoint',jpg:'fa-file-image',jpeg:'fa-file-image',png:'fa-file-image',zip:'fa-file-zipper',txt:'fa-file-lines'};
+    const icon = iconMap[d.fileType] || 'fa-file';
+    const colorMap = {pdf:'#ef4444',doc:'#2563eb',docx:'#2563eb',xls:'#16a34a',xlsx:'#16a34a',ppt:'#f97316',pptx:'#f97316',jpg:'#8b5cf6',jpeg:'#8b5cf6',png:'#8b5cf6',zip:'#64748b',txt:'#94a3b8'};
+    return `<div class="doc-card">
+      <div class="doc-icon" style="background:${colorMap[d.fileType]||'#94a3b8'}15;color:${colorMap[d.fileType]||'#94a3b8'}"><i class="fa-solid ${icon}"></i></div>
+      <div style="flex:1;min-width:0;"><strong style="font-size:13px;">${d.title}</strong><br><small style="color:#94a3b8;font-size:11px;">${d.category||''} ${d.subject?'· '+d.subject:''}</small><br><small style="color:#94a3b8;font-size:11px;">${new Date(d.createdAt).toLocaleDateString()} · ${d.downloads||0} downloads</small></div>
+      <div style="display:flex;gap:4px;flex-shrink:0;">${actionButtons(d)}</div>
+    </div>`;
+  }
+
+  function actionButtons(d) {
+    const canDelete = isAdmin || d.uploadedById === currentUser.id;
+    const canEdit = isAdmin || d.uploadedById === currentUser.id;
+    return `<button class="portal-btn portal-btn-sm portal-btn-primary" onclick="previewDocument(${d.id})" title="Preview"><i class="fa-solid fa-eye"></i></button>
+      <button class="portal-btn portal-btn-sm portal-btn-success" onclick="downloadDocument(${d.id})" title="Download"><i class="fa-solid fa-download"></i></button>
+      ${canEdit?`<button class="portal-btn portal-btn-sm portal-btn-outline" onclick="editDocument(${d.id})" title="Edit"><i class="fa-solid fa-pen"></i></button>`:''}
+      ${isAdmin?`<button class="portal-btn portal-btn-sm ${d.status==='archived'?'portal-btn-warning':'portal-btn-outline'}" onclick="toggleArchive(${d.id})" title="${d.status==='archived'?'Restore':'Archive'}">${d.status==='archived'?'<i class="fa-solid fa-box-open"></i>':'<i class="fa-solid fa-archive"></i>'}</button>`:''}
+      ${canDelete?`<button class="portal-btn portal-btn-sm portal-btn-danger" onclick="deleteDocument(${d.id})" title="Delete"><i class="fa-solid fa-trash"></i></button>`:''}`;
+  }
+
+  function switchView(mode) { localStorage.setItem('doc-view-mode', mode); renderDocuments(); }
+
+  function openUploadModal() { document.getElementById('upload-modal').classList.add('show'); }
+  function closeUploadModal() { document.getElementById('upload-modal').classList.remove('show'); document.getElementById('upload-modal').querySelector('form').reset(); }
+  function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+  function previewFileName(input) {
+    const name = input.files && input.files[0] ? input.files[0].name : '';
+    // No-op; fileName captured on submit
+  }
+
+  function getFileType(fileName) {
+    const exts = {pdf:'pdf',doc:'doc',docx:'docx',xls:'xls',xlsx:'xlsx',ppt:'ppt',pptx:'pptx',jpg:'jpg',jpeg:'jpeg',png:'png',zip:'zip',txt:'txt'};
+    const ext = (fileName||'').split('.').pop().toLowerCase();
+    return exts[ext] || 'txt';
+  }
+
+  function formatFileSize(bytes) {
+    if (!bytes) return '0 B';
+    const k = 1024; const sizes = ['B','KB','MB','GB'];
+    const i = Math.floor(Math.log(bytes)/Math.log(k));
+    return parseFloat((bytes/Math.pow(k,i)).toFixed(1)) + ' ' + sizes[i];
+  }
+
+  function uploadDocument(e) {
+    e.preventDefault();
+    const title = document.getElementById('doc-title').value.trim();
+    const desc = document.getElementById('doc-desc').value.trim();
+    const category = document.getElementById('doc-category').value;
+    const subject = document.getElementById('doc-subject').value;
+    const docClass = document.getElementById('doc-class').value;
+    const year = document.getElementById('doc-year').value.trim() || '2026';
+    const term = document.getElementById('doc-term').value;
+    const visibility = document.getElementById('doc-visibility').value;
+    const folderId = document.getElementById('doc-folder').value;
+    const fileInput = document.getElementById('doc-file');
+
+    if (!title) { window.showToast('Title is required','error'); return; }
+    if (!category) { window.showToast('Category is required','error'); return; }
+
+    const fileName = fileInput.files && fileInput.files[0] ? fileInput.files[0].name : `document-${Date.now()}.pdf`;
+    const fileSize = fileInput.files && fileInput.files[0] ? formatFileSize(fileInput.files[0].size) : '125 KB';
+    const fileType = getFileType(fileName);
+
+    window.db.createDocument({
+      title, description: desc, category, subject: subject || '', class: docClass || '',
+      academicYear: year, term: term || '', visibility,
+      folderId: folderId ? Number(folderId) : null,
+      fileName, fileType, fileSize,
+      uploadedBy: currentUser.name, uploadedById: currentUser.id
+    });
+    window.showToast(`"${title}" uploaded successfully!`,'success');
+    closeUploadModal();
+    renderDocuments();
+    renderFolders();
+  }
+
+  function previewDocument(id) {
+    const doc = window.db.getDocument(id);
+    if (!doc) return;
+    window.open(`document-viewer.html?id=${id}`, '_blank');
+  }
+
+  function downloadDocument(id) {
+    const doc = window.db.getDocument(id);
+    if (!doc) return;
+    window.db.logDocumentDownload(id, currentUser.id);
+    const ft = (doc.fileType || 'txt');
+    const title = doc.title || 'Untitled';
+    const content = [
+      `=== HonE-Learning Platform - Document Download ===`,
+      ``,
+      `Title: ${title}`,
+      `Description: ${doc.description || 'N/A'}`,
+      `Category: ${doc.category || 'N/A'}`,
+      `Subject: ${doc.subject || 'N/A'}`,
+      `Class: ${doc.class || 'N/A'}`,
+      `Academic Year: ${doc.academicYear || 'N/A'}`,
+      `Term: ${doc.term || 'N/A'}`,
+      `Uploaded By: ${doc.uploadedBy || 'Unknown'}`,
+      `Upload Date: ${new Date(doc.createdAt).toLocaleDateString()}`,
+      `File: ${doc.fileName || 'document.' + ft}`,
+      `File Type: ${ft.toUpperCase()}`,
+      `File Size: ${doc.fileSize || '~125 KB'}`,
+      `Version: v${doc.version || 1}`,
+      ``,
+      `--- Content Preview ---`,
+      ``,
+      `This is a simulated download of "${title}".`,
+      `In the production environment, the actual file "${doc.fileName || 'document.' + ft}" would be served here.`
+    ].join('\r\n');
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = doc.fileName || `${title.replace(/[^a-z0-9]/gi,'_').toLowerCase()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    window.showToast(`"${title}" downloaded`, 'success');
+    renderDocuments();
+  }
+
+  function deleteDocument(id) {
+    if (!confirm('Move this document to recycle bin?')) return;
+    window.db.deleteDocument(id);
+    window.showToast('Document moved to recycle bin','info');
+    renderDocuments();
+  }
+
+  function deleteSelected() {
+    const selected = Array.from(document.querySelectorAll('.doc-select:checked')).map(cb => Number(cb.value));
+    if (!selected.length) return;
+    if (!confirm(`Delete ${selected.length} document(s)?`)) return;
+    selected.forEach(id => window.db.deleteDocument(id));
+    window.showToast(`${selected.length} document(s) deleted`,'info');
+    renderDocuments();
+  }
+
+  function updateDeleteBtn() {
+    const btn = document.getElementById('delete-selected-btn');
+    const selected = document.querySelectorAll('.doc-select:checked').length;
+    btn.style.display = selected ? 'inline-flex' : 'none';
+  }
+
+  function toggleSelectAll(master) {
+    document.querySelectorAll('.doc-select').forEach(cb => cb.checked = master.checked);
+    updateDeleteBtn();
+  }
+
+  function editDocument(id) {
+    const doc = window.db.getDocument(id);
+    if (!doc) return;
+    document.getElementById('doc-title').value = doc.title;
+    document.getElementById('doc-desc').value = doc.description || '';
+    document.getElementById('doc-category').value = doc.category || '';
+    document.getElementById('doc-subject').value = doc.subject || '';
+    document.getElementById('doc-class').value = doc.class || '';
+    document.getElementById('doc-year').value = doc.academicYear || '2026';
+    document.getElementById('doc-term').value = doc.term || '';
+    document.getElementById('doc-visibility').value = doc.visibility || 'shared';
+    document.getElementById('doc-folder').value = doc.folderId || '';
+    document.getElementById('doc-file').required = false;
+    openUploadModal();
+    // Override form submission for edit
+    const form = document.getElementById('upload-modal').querySelector('form');
+    const origSub = form.onsubmit;
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      const updates = {
+        title: document.getElementById('doc-title').value.trim(),
+        description: document.getElementById('doc-desc').value.trim(),
+        category: document.getElementById('doc-category').value,
+        subject: document.getElementById('doc-subject').value,
+        class: document.getElementById('doc-class').value,
+        academicYear: document.getElementById('doc-year').value.trim() || '2026',
+        term: document.getElementById('doc-term').value,
+        visibility: document.getElementById('doc-visibility').value,
+        folderId: document.getElementById('doc-folder').value ? Number(document.getElementById('doc-folder').value) : null
+      };
+      window.db.updateDocument(id, updates);
+      window.showToast('Document updated','success');
+      closeUploadModal();
+      form.onsubmit = origSub;
+      renderDocuments();
+    };
+  }
+
+  function toggleArchive(id) {
+    const doc = window.db.getDocument(id);
+    if (!doc) return;
+    if (doc.status === 'archived') {
+      window.db.restoreDocument(id);
+      window.showToast('Document restored','success');
+    } else {
+      window.db.archiveDocument(id);
+      window.showToast('Document archived','success');
+    }
+    renderDocuments();
+  }
+
+  function filterByFolder(id) { currentFolderFilter = id; renderDocuments(); }
+  function clearFolderFilter() { currentFolderFilter = null; renderDocuments(); }
+
+  function createFolderPrompt() {
+    const name = prompt('Enter folder name:');
+    if (!name || !name.trim()) return;
+    window.db.createFolder({ name: name.trim() });
+    renderFolders();
+  }
+
+  function showRecycleBin() {
+    const bin = window.db.getRecycleBin();
+    const tbody = document.getElementById('recycle-tbody');
+    tbody.innerHTML = bin.length ? bin.map(d => `<tr><td>${d.title}</td><td style="font-size:12px;color:#94a3b8;">${new Date(d.deletedAt).toLocaleString()}</td><td><button class="portal-btn portal-btn-sm portal-btn-success" onclick="restoreFromBin(${d.id})"><i class="fa-solid fa-trash-arrow-up"></i>Restore</button></td></tr>`).join('') : '<tr><td colspan="3" style="text-align:center;color:#94a3b8;">Recycle bin is empty.</td></tr>';
+    document.getElementById('recycle-bin-modal').classList.add('show');
+  }
+
+  function restoreFromBin(id) {
+    window.db.restoreFromRecycleBin(id);
+    window.showToast('Document restored from recycle bin','success');
+    showRecycleBin();
+    renderDocuments();
+  }
+
+  function emptyRecycleBin() {
+    if (!confirm('Permanently delete all items in recycle bin?')) return;
+    window.db.emptyRecycleBin();
+    window.showToast('Recycle bin emptied','info');
+    showRecycleBin();
+  }
+
+  function showAuditLog() {
+    const log = window.db.getAuditLog();
+    const tbody = document.getElementById('audit-tbody');
+    tbody.innerHTML = log.length ? log.map(l => `<tr><td style="font-size:12px;color:#94a3b8;">${new Date(l.timestamp).toLocaleString()}</td><td><span class="role-pill" style="background:${l.action==='delete'?'#fee2e2;color:#991b1b':l.action==='upload'?'#dcfce7;color:#166534':'#dbeafe;color:#1e40af'};">${l.action}</span></td><td>${l.details||''}</td><td>${l.uploadedBy||l.targetType||'-'}</td></tr>`).join('') : '<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:20px;">No audit log entries.</td></tr>';
+    document.getElementById('audit-log-modal').classList.add('show');
+  }
+
+  window.openUploadModal = openUploadModal;
+  window.closeUploadModal = closeUploadModal;
+  window.closeModal = closeModal;
+  window.uploadDocument = uploadDocument;
+  window.previewDocument = previewDocument;
+  window.downloadDocument = downloadDocument;
+  window.deleteDocument = deleteDocument;
+  window.deleteSelected = deleteSelected;
+  window.updateDeleteBtn = updateDeleteBtn;
+  window.toggleSelectAll = toggleSelectAll;
+  window.editDocument = editDocument;
+  window.toggleArchive = toggleArchive;
+  window.filterByFolder = filterByFolder;
+  window.clearFolderFilter = clearFolderFilter;
+  window.createFolderPrompt = createFolderPrompt;
+  window.showRecycleBin = showRecycleBin;
+  window.restoreFromBin = restoreFromBin;
+  window.emptyRecycleBin = emptyRecycleBin;
+  window.showAuditLog = showAuditLog;
+  window.switchView = switchView;
+  window.renderDocuments = renderDocuments;
+  window.previewFileName = previewFileName;
+
+  init();
+})();
+</script>
+</body>
+</html>

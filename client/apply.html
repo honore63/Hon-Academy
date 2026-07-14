@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apply Now - HON-ACADEMY</title>
+<meta name="description" content="Apply online for admission to HON-ACADEMY. Complete the application form and upload required documents." />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+  .apply-hero{background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;padding:3rem 0;border-radius:1rem;margin-bottom:2.5rem}
+  .step-indicator{display:flex;justify-content:center;gap:0;margin-bottom:2rem}
+  .step-dot{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;border:2px solid #dee2e6;background:#fff;color:#6c757d;transition:.3s}
+  .step-dot.active{border-color:#1e3a8a;background:#1e3a8a;color:#fff}
+  .step-dot.done{border-color:#10b981;background:#10b981;color:#fff}
+  .step-line{width:40px;height:2px;background:#dee2e6;align-self:center}
+  .step-line.done{background:#10b981}
+  .form-step{display:none}
+  .form-step.active{display:block}
+  .upload-zone{border:2px dashed #dee2e6;border-radius:.75rem;padding:2rem;text-align:center;cursor:pointer;transition:.2s;background:#f8fafc}
+  .upload-zone:hover{border-color:#3b82f6;background:#eff6ff}
+  .upload-zone i{font-size:2rem;color:#94a3b8;margin-bottom:.5rem;display:block}
+  .success-box{text-align:center;padding:3rem 1rem}
+  .success-box i{font-size:4rem;color:#10b981;margin-bottom:1rem;display:block}
+</style>
+</head>
+<body class="animate-fade-in">
+<header class="site-header"></header>
+
+<div class="container my-5" style="max-width:800px">
+
+  <!-- Hero -->
+  <div class="apply-hero p-4 p-md-5 text-center">
+    <i class="fa-solid fa-graduation-cap mb-3" style="font-size:3rem"></i>
+    <h1 class="font-bold mb-2" id="apply-title">Apply to HON-ACADEMY</h1>
+    <p class="opacity-75 mb-0" id="apply-subtitle">Complete the online application form and upload the required documents. Our admissions office will review your application and contact you with the next steps.</p>
+  </div>
+
+  <!-- Step Indicator -->
+  <div class="step-indicator" id="step-indicator">
+    <div class="step-dot active" data-step="1">1</div>
+    <div class="step-line"></div>
+    <div class="step-dot" data-step="2">2</div>
+    <div class="step-line"></div>
+    <div class="step-dot" data-step="3">3</div>
+  </div>
+
+  <!-- Form -->
+  <form id="apply-form" class="card border-0 p-4 p-md-5 shadow-sm">
+
+    <!-- Step 1: Personal Information -->
+    <div class="form-step active" id="step-1">
+      <h4 class="font-bold text-dark mb-4"><i class="fa-solid fa-user text-primary me-2"></i>Personal Information</h4>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label font-bold small">First Name *</label>
+          <input type="text" class="form-control rounded-pill" name="firstName" required placeholder="First name">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label font-bold small">Last Name *</label>
+          <input type="text" class="form-control rounded-pill" name="lastName" required placeholder="Last name">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label font-bold small">Date of Birth *</label>
+          <input type="date" class="form-control rounded-pill" name="dob" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label font-bold small">Gender *</label>
+          <select class="form-select rounded-pill" name="gender" required>
+            <option value="">Select gender</option>
+            <option>Male</option>
+            <option>Female</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label font-bold small">Nationality</label>
+          <input type="text" class="form-control rounded-pill" name="nationality" placeholder="e.g. Rwandan">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label font-bold small">Phone Number</label>
+          <input type="tel" class="form-control rounded-pill" name="phone" placeholder="+250 ...">
+        </div>
+        <div class="col-12">
+          <label class="form-label font-bold small">Email Address *</label>
+          <input type="email" class="form-control rounded-pill" name="email" required placeholder="you@example.com">
+        </div>
+        <div class="col-12">
+          <label class="form-label font-bold small">Address</label>
+          <input type="text" class="form-control rounded-pill" name="address" placeholder="Physical address">
+        </div>
+      </div>
+      <div class="d-flex justify-content-end mt-4">
+        <button type="button" class="btn btn-nca-blue rounded-pill px-4 next-step" data-next="2">Next <i class="fa-solid fa-arrow-right ms-1"></i></button>
+      </div>
+    </div>
+
+    <!-- Step 2: Academic Information -->
+    <div class="form-step" id="step-2">
+      <h4 class="font-bold text-dark mb-4"><i class="fa-solid fa-book text-success me-2"></i>Academic Information</h4>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label font-bold small">Level Applying For *</label>
+          <select class="form-select rounded-pill" name="level" required id="apply-level">
+            <option value="">Select level</option>
+            <option>Primary Education (P1\u2013P6)</option>
+            <option>Lower Secondary (S1\u2013S3)</option>
+            <option>Upper Secondary (S4\u2013S6)</option>
+            <option>TVET Programmes</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label font-bold small">Grade/Class Applying For</label>
+          <input type="text" class="form-control rounded-pill" name="gradeClass" placeholder="e.g. Primary 4, Senior 2">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label font-bold small">Previous School</label>
+          <input type="text" class="form-control rounded-pill" name="previousSchool" placeholder="Name of previous school">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label font-bold small">Previous Class/Grade</label>
+          <input type="text" class="form-control rounded-pill" name="previousGrade" placeholder="e.g. Primary 3, Senior 1">
+        </div>
+        <div class="col-md-6" id="combo-field" style="display:none">
+          <label class="form-label font-bold small">Preferred Combination (Upper Secondary)</label>
+          <select class="form-select rounded-pill" name="combination">
+            <option value="">Select combination</option>
+            <option>MPC - Mathematics, Physics, Computer Science</option>
+            <option>PCM - Physics, Chemistry, Mathematics</option>
+            <option>PCB - Physics, Chemistry, Biology</option>
+            <option>MCB - Mathematics, Chemistry, Biology</option>
+            <option>MPG - Mathematics, Physics, Geography</option>
+            <option>HEG - History, Economics, Geography</option>
+            <option>HGL - History, Geography, Literature</option>
+            <option>HEL - History, Economics, Literature</option>
+            <option>LEG - Literature, Economics, Geography</option>
+          </select>
+        </div>
+        <div class="col-md-6" id="tvet-field" style="display:none">
+          <label class="form-label font-bold small">Preferred TVET Programme</label>
+          <select class="form-select rounded-pill" name="tvetProgram">
+            <option value="">Select programme</option>
+            <option>Building Construction</option>
+            <option>Electrical Technology</option>
+            <option>Electronics</option>
+            <option>Software Development</option>
+            <option>Networking</option>
+            <option>Graphic Design</option>
+            <option>Accounting</option>
+            <option>Fashion Design</option>
+            <option>Hospitality</option>
+            <option>Agriculture</option>
+          </select>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between mt-4">
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-4 prev-step" data-prev="1"><i class="fa-solid fa-arrow-left me-1"></i> Back</button>
+        <button type="button" class="btn btn-nca-blue rounded-pill px-4 next-step" data-next="3">Next <i class="fa-solid fa-arrow-right ms-1"></i></button>
+      </div>
+    </div>
+
+    <!-- Step 3: Parent/Guardian & Documents -->
+    <div class="form-step" id="step-3">
+      <h4 class="font-bold text-dark mb-4"><i class="fa-solid fa-users text-warning me-2"></i>Parent/Guardian & Documents</h4>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label font-bold small">Parent/Guardian Name *</label>
+          <input type="text" class="form-control rounded-pill" name="parentName" required placeholder="Full name">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label font-bold small">Relationship *</label>
+          <select class="form-select rounded-pill" name="relationship" required>
+            <option value="">Select</option>
+            <option>Father</option>
+            <option>Mother</option>
+            <option>Guardian</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label font-bold small">Parent Phone *</label>
+          <input type="tel" class="form-control rounded-pill" name="parentPhone" required placeholder="+250 ...">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label font-bold small">Parent Email</label>
+          <input type="email" class="form-control rounded-pill" name="parentEmail" placeholder="parent@example.com">
+        </div>
+        <div class="col-12">
+          <label class="form-label font-bold small">Additional Notes</label>
+          <textarea class="form-control" name="notes" rows="3" placeholder="Any additional information..." style="border-radius:1rem"></textarea>
+        </div>
+      </div>
+
+      <!-- Document Upload Zone -->
+      <div class="mt-4">
+        <h6 class="font-bold mb-3">Upload Documents</h6>
+        <p class="small text-muted mb-3">Upload scanned copies of required documents (PDF, JPG, PNG). Max 5MB each.</p>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label small font-bold">Birth Certificate</label>
+            <div class="upload-zone" onclick="this.querySelector('input').click()">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <p class="small text-muted mb-0">Click to upload</p>
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" name="birthCert">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small font-bold">Previous Academic Report</label>
+            <div class="upload-zone" onclick="this.querySelector('input').click()">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <p class="small text-muted mb-0">Click to upload</p>
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" name="academicReport">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label small font-bold">Passport Photo</label>
+            <div class="upload-zone" onclick="this.querySelector('input').click()">
+              <i class="fa-solid fa-cloud-arrow-up"></i>
+              <p class="small text-muted mb-0">Click to upload</p>
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none" name="passportPhoto">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-check mt-4">
+        <input class="form-check-input" type="checkbox" id="agree-terms" required>
+        <label class="form-check-label small" for="agree-terms">I confirm that all information provided is accurate and I agree to the <a href="#" class="text-primary">terms and conditions</a> of HON-ACADEMY.</label>
+      </div>
+
+      <div class="d-flex justify-content-between mt-4">
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-4 prev-step" data-prev="2"><i class="fa-solid fa-arrow-left me-1"></i> Back</button>
+        <button type="submit" class="btn btn-nca-green rounded-pill px-5 font-bold"><i class="fa-solid fa-paper-plane me-2"></i>Submit Application</button>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- Success State -->
+  <div class="success-box d-none" id="apply-success">
+    <i class="fa-solid fa-circle-check"></i>
+    <h3 class="font-bold text-success mb-2">Application Submitted!</h3>
+    <p class="text-muted mb-4">Thank you for applying to HON-ACADEMY. Our admissions office will review your application and contact you within 5 business days.</p>
+    <div class="d-flex flex-wrap gap-3 justify-content-center">
+      <a href="index.html" class="btn btn-nca-blue rounded-pill px-4"><i class="fa-solid fa-house me-2"></i>Back to Home</a>
+      <a href="admissions.html" class="btn btn-outline-primary rounded-pill px-4"><i class="fa-solid fa-info-circle me-2"></i>View Admissions Info</a>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-footer"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/components.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const school = db.getSchoolInfo();
+  document.title = 'Apply Now - ' + school.name;
+  document.getElementById('apply-title').textContent = 'Apply to ' + school.name;
+
+  // Level change shows/hides combo/tvet fields
+  document.getElementById('apply-level').addEventListener('change', function() {
+    const v = this.value;
+    document.getElementById('combo-field').style.display = v.includes('Upper Secondary') ? 'block' : 'none';
+    document.getElementById('tvet-field').style.display = v.includes('TVET') ? 'block' : 'none';
+  });
+
+  // Step navigation
+  let currentStep = 1;
+  function goToStep(n) {
+    document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+    document.getElementById('step-' + n).classList.add('active');
+    document.querySelectorAll('.step-dot').forEach(d => {
+      const s = parseInt(d.dataset.step);
+      d.classList.remove('active', 'done');
+      if (s === n) d.classList.add('active');
+      if (s < n) d.classList.add('done');
+    });
+    document.querySelectorAll('.step-line').forEach((l, i) => {
+      l.classList.toggle('done', i < n - 1);
+    });
+    currentStep = n;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.querySelectorAll('.next-step').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const form = document.getElementById('apply-form');
+      const step = parseInt(btn.dataset.next);
+      // Basic validation for current step
+      const currentFields = document.getElementById('step-' + currentStep).querySelectorAll('[required]');
+      let valid = true;
+      currentFields.forEach(f => { if (!f.value.trim()) { f.classList.add('is-invalid'); valid = false; } else { f.classList.remove('is-invalid'); } });
+      if (!valid) { showToast('Please fill in all required fields.', 'error'); return; }
+      goToStep(step);
+    });
+  });
+
+  document.querySelectorAll('.prev-step').forEach(btn => {
+    btn.addEventListener('click', () => goToStep(parseInt(btn.dataset.prev)));
+  });
+
+  // Submit
+  document.getElementById('apply-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    this.style.display = 'none';
+    document.getElementById('step-indicator').style.display = 'none';
+    document.getElementById('apply-success').classList.remove('d-none');
+    showToast('Application submitted successfully!', 'success');
+  });
+});
+</script>
+</body>
+</html>

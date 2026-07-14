@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Our Teachers - HON-ACADEMY</title>
+<meta name="description" content="Meet the dedicated teaching staff at HON-ACADEMY." />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="animate-fade-in">
+<header class="site-header"></header>
+<section class="page-banner">
+<div class="container">
+<div class="breadcrumb-custom"><a href="index.html">Home</a><span>/</span><span class="current">Teachers</span></div>
+<h1>Our Teachers</h1>
+<p id="page-intro">Meet the dedicated educators shaping the future of our students.</p>
+</div>
+</section>
+<main class="container my-5">
+<div class="row g-4" id="teachers-grid"></div>
+</main>
+<footer class="site-footer"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/components.js"></script>
+<script>
+(function() {
+var school = window.db.getSchoolInfo();
+document.getElementById('page-intro').textContent = school.teachersIntro || 'Meet the dedicated educators shaping the future of students at ' + school.name + '.';
+var users = window.db.getUsers();
+var teachers = users.filter(function(u){ return u.role === 'teacher'; });
+var extraTeachers = [];
+try { extraTeachers = JSON.parse(localStorage.getItem('cms_featured_teachers')) || []; } catch(e) {}
+if (extraTeachers.length) { teachers = teachers.concat(extraTeachers); }
+var grid = document.getElementById('teachers-grid');
+if (teachers.length) {
+grid.innerHTML = teachers.map(function(t) {
+return '<div class="col-sm-6 col-lg-4 col-xl-3"><div class="card border-0 bg-white h-100 text-center"><div class="card-body p-4 d-flex flex-column align-items-center"><img src="'+(t.avatarUrl||'https://ui-avatars.com/api/?name='+encodeURIComponent(t.name)+'&background=1e3a8a&color=fff')+'" alt="'+t.name+'" class="rounded-circle border shadow-sm mb-3" style="width:96px;height:96px;object-fit:cover;"><h5 class="font-bold text-dark mb-1">'+t.name+'</h5><p class="small text-muted mb-3">'+(t.subjectSpecialty||'General Studies')+'</p><span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill mt-auto"><i class="fa-solid fa-award me-1"></i> '+(school.shortName||'HON-ACADEMY')+' Faculty</span></div></div></div>';
+}).join('');
+} else {
+grid.innerHTML = '<div class="col-12 text-center py-5"><i class="fa-solid fa-chalkboard-user fs-1 text-muted mb-3"></i><p class="text-muted">No teacher profiles available yet.</p></div>';
+}
+})();
+</script>
+</body>
+</html>

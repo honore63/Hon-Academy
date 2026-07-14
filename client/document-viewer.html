@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document Viewer — HonE-Learning Platform</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+*{box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#f8fafc;margin:0;padding:0;overflow-x:hidden}
+.viewer-header{height:56px;background:#fff;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:100}
+.viewer-header h6{margin:0;font-weight:700;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:400px}
+.viewer-toolbar{display:flex;align-items:center;gap:8px}
+.toolbar-btn{width:36px;height:36px;border-radius:8px;border:1.5px solid #e2e8f0;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#475569;transition:all .2s;font-size:14px}
+.toolbar-btn:hover{background:#f1f5f9;border-color:#cbd5e1}
+.toolbar-btn:disabled{opacity:.4;cursor:not-allowed}
+.viewer-body{display:flex;height:calc(100vh - 56px)}
+.preview-panel{flex:1;display:flex;align-items:center;justify-content:center;overflow:auto;padding:20px;background:#f1f5f9;position:relative}
+.preview-panel img{max-width:100%;max-height:calc(100vh - 120px);border-radius:8px;box-shadow:0 4px 24px rgba(0,0,0,.1);transition:transform .2s}
+.preview-panel .placeholder-icon{font-size:80px;color:#94a3b8;margin-bottom:16px}
+.preview-panel .placeholder-text{color:#64748b;max-width:400px;text-align:center}
+.side-panel{width:320px;background:#fff;border-left:1px solid #e2e8f0;overflow-y:auto;padding:20px}
+.side-panel h6{font-family:'Poppins',sans-serif;font-weight:700;font-size:14px;margin-bottom:16px}
+.meta-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:13px}
+.meta-row .label{color:#94a3b8;font-weight:600}
+.meta-row .value{color:#334155;font-weight:500;text-align:right;word-break:break-all}
+.zoom-control{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);background:#fff;border-radius:12px;padding:8px 16px;box-shadow:0 4px 16px rgba(0,0,0,.1);display:flex;align-items:center;gap:12px;z-index:10}
+.zoom-control span{font-size:13px;font-weight:600;color:#334155;min-width:48px;text-align:center}
+.share-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.simulated-doc{background:#fff;border-radius:12px;padding:40px 32px;max-width:700px;width:100%;box-shadow:0 2px 12px rgba(0,0,0,.06);max-height:calc(100vh - 140px);overflow-y:auto;font-size:14px;line-height:1.8;color:#334155}
+.simulated-doc h2{font-family:'Poppins',sans-serif;font-weight:700;font-size:20px;margin-bottom:16px}
+.simulated-doc p{margin-bottom:12px}
+@media(max-width:768px){.side-panel{display:none}.viewer-header h6{max-width:200px}}
+</style>
+</head>
+<body>
+<header class="viewer-header">
+<div style="display:flex;align-items:center;gap:12px;">
+<a href="documents-management.html" style="color:#64748b;text-decoration:none;font-size:13px;"><i class="fa-solid fa-arrow-left me-1"></i>Documents</a>
+<span style="color:#e2e8f0;">|</span>
+<h6 id="doc-title">Loading...</h6>
+</div>
+<div class="viewer-toolbar">
+<button class="toolbar-btn" onclick="zoomOut()" id="zoom-out-btn" title="Zoom Out"><i class="fa-solid fa-minus"></i></button>
+<span id="zoom-level">100%</span>
+<button class="toolbar-btn" onclick="zoomIn()" id="zoom-in-btn" title="Zoom In"><i class="fa-solid fa-plus"></i></button>
+<button class="toolbar-btn" onclick="downloadDoc()" title="Download"><i class="fa-solid fa-download"></i></button>
+</div>
+</header>
+<div class="viewer-body">
+<div class="preview-panel" id="preview-panel">
+<div id="preview-content">
+<div class="placeholder-icon"><i class="fa-solid fa-file"></i></div>
+<div class="placeholder-text">Loading document preview...</div>
+</div>
+<div class="zoom-control" id="zoom-control">
+<button class="toolbar-btn" onclick="zoomOut()"><i class="fa-solid fa-minus"></i></button>
+<span id="zoom-level-bottom">100%</span>
+<button class="toolbar-btn" onclick="zoomIn()"><i class="fa-solid fa-plus"></i></button>
+</div>
+</div>
+<aside class="side-panel" id="side-panel">
+<h6><i class="fa-solid fa-circle-info me-2 text-primary"></i>Document Info</h6>
+<div id="doc-meta"></div>
+<h6 class="mt-4"><i class="fa-solid fa-share-nodes me-2 text-primary"></i>Sharing</h6>
+<div id="doc-sharing"></div>
+<h6 class="mt-4"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Version History</h6>
+<div id="doc-versions"></div>
+</aside>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+    <script src="js/db-extension.js"></script>
+    <script src="js/components.js"></script>
+<script>
+(function() {
+  const currentUser = window.db.getCurrentUser();
+  if (!currentUser) { window.location.href = 'index.html'; return; }
+
+  const params = new URLSearchParams(window.location.search);
+  const docId = parseInt(params.get('id'));
+  let zoom = 100;
+  const doc = window.db.getDocument(docId);
+
+  if (!doc) {
+    document.getElementById('doc-title').textContent = 'Document not found';
+    document.getElementById('preview-content').innerHTML = '<div class="placeholder-icon"><i class="fa-solid fa-circle-exclamation" style="color:#ef4444;"></i></div><div class="placeholder-text">This document could not be found or has been deleted.</div>';
+    document.getElementById('zoom-control').style.display = 'none';
+    return;
+  }
+
+  document.getElementById('doc-title').textContent = doc.title;
+
+  function renderMeta() {
+    const meta = [
+      ['Title', doc.title],
+      ['Description', doc.description || '-'],
+      ['Category', doc.category || '-'],
+      ['Subject', doc.subject || '-'],
+      ['Class', doc.class || '-'],
+      ['Academic Year', doc.academicYear || '-'],
+      ['Term', doc.term || '-'],
+      ['Uploaded By', doc.uploadedBy || '-'],
+      ['Upload Date', new Date(doc.createdAt).toLocaleDateString()],
+      ['Last Updated', new Date(doc.updatedAt || doc.createdAt).toLocaleDateString()],
+      ['File Type', (doc.fileType||'').toUpperCase()],
+      ['File Size', doc.fileSize || '-'],
+      ['Version', `v${doc.version || 1}`],
+      ['Downloads', doc.downloads || 0]
+    ];
+    document.getElementById('doc-meta').innerHTML = meta.map(([l,v]) => `<div class="meta-row"><span class="label">${l}</span><span class="value">${v}</span></div>`).join('');
+
+    const vis = doc.visibility || 'private';
+    const visColors = {private:'#fee2e2;color:#991b1b',shared:'#dbeafe;color:#1e40af',public:'#dcfce7;color:#166534'};
+    document.getElementById('doc-sharing').innerHTML = `
+      <div class="meta-row"><span class="label">Visibility</span><span class="share-badge" style="background:${visColors[vis]||visColors.private}">${vis}</span></div>
+      <div class="meta-row"><span class="label">Status</span><span class="share-badge" style="background:${doc.status==='archived'?'#fef3c7;color:#92400e':'#dcfce7;color:#166534'}">${doc.status||'active'}</span></div>`;
+  }
+
+  function renderVersions() {
+    const versions = window.db.getVersionsForDocument(doc.id);
+    const container = document.getElementById('doc-versions');
+    if (!versions.length) { container.innerHTML = '<p style="font-size:13px;color:#94a3b8;">No previous versions.</p>'; return; }
+    container.innerHTML = versions.map(v => `<div class="meta-row"><span class="label">v${v.version||'?'}</span><span class="value" style="font-size:11px;">${new Date(v.archivedAt).toLocaleDateString()}</span></div>`).join('');
+  }
+
+  const PLACEHOLDER_IMAGES = {
+    'school':'https://images.unsplash.com/photo-1586339949916-3e5487e5e09f?w=800&h=600&fit=crop',
+    'notes':'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&h=600&fit=crop',
+    'exam':'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=600&fit=crop',
+    'report':'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&h=600&fit=crop',
+    'default':'https://images.unsplash.com/photo-1586339949916-3e5487e5e09f?w=800&h=600&fit=crop'
+  };
+  function getPlaceholder(key) { return PLACEHOLDER_IMAGES[key] || PLACEHOLDER_IMAGES.default; }
+
+  function generateDocContent(ft, isDownload) {
+    const title = doc.title || 'Untitled';
+    const desc = doc.description || 'No description provided.';
+    const category = doc.category || 'General';
+    const subject = doc.subject || 'General';
+    const uploader = doc.uploadedBy || 'Unknown';
+    const date = new Date(doc.createdAt).toLocaleDateString();
+    const fileName = doc.fileName || 'document.' + ft;
+    const newline = isDownload ? '\r\n' : '<br>';
+    const bold = isDownload ? '' : '<strong>';
+    const boldEnd = isDownload ? '' : '</strong>';
+
+    if (isDownload) {
+      let content = `=== HonE-Learning Platform - Document Download ===\r\n\r\n`;
+      content += `Title: ${title}\r\n`;
+      content += `Description: ${desc}\r\n`;
+      content += `Category: ${category}\r\n`;
+      content += `Subject: ${subject}\r\n`;
+      content += `Class: ${doc.class || 'N/A'}\r\n`;
+      content += `Academic Year: ${doc.academicYear || 'N/A'}\r\n`;
+      content += `Term: ${doc.term || 'N/A'}\r\n`;
+      content += `Uploaded By: ${uploader}\r\n`;
+      content += `Upload Date: ${date}\r\n`;
+      content += `File: ${fileName}\r\n`;
+      content += `File Type: ${ft.toUpperCase()}\r\n`;
+      content += `File Size: ${doc.fileSize || '~125 KB'}\r\n`;
+      content += `Version: v${doc.version || 1}\r\n`;
+      content += `\r\n--- Content Preview ---\r\n\r\n`;
+      content += `This is a simulated download of "${title}".\r\n`;
+      content += `In the production environment, the actual file "${fileName}" would be served here.\r\n`;
+      return content;
+    }
+
+    // HTML preview
+    const borderColors = {pdf:'#ef4444',doc:'#2563eb',docx:'#2563eb',xls:'#16a34a',xlsx:'#16a34a',ppt:'#f97316',pptx:'#f97316',jpg:'#8b5cf6',jpeg:'#8b5cf6',png:'#8b5cf6',zip:'#64748b',txt:'#94a3b8'};
+    const color = borderColors[ft] || '#94a3b8';
+
+    if (['jpg','jpeg','png'].includes(ft)) {
+      return `<img src="${getPlaceholder(category.toLowerCase().includes('report')?'report':category.toLowerCase().includes('exam')?'exam':'notes')}" alt="${title}" style="transform:scale(${zoom/100});border-radius:8px;max-width:100%;">`;
+    }
+
+    return `<div class="simulated-doc" style="transform:scale(${zoom/100});transform-origin:top center;"><h2>${title}</h2>
+      <div style="background:#f8fafc;border-radius:8px;padding:16px;margin-bottom:16px;border-left:4px solid ${color};">
+        <strong>${ft.toUpperCase()} Document</strong><br><small style="color:#64748b;">${fileName}</small></div>
+      <p>${desc}</p>
+      <hr style="border-color:#f1f5f9;margin:16px 0;">
+      <table style="width:100%;font-size:13px;color:#64748b;"><tr>
+        <td style="padding:4px 0;"><strong>Category:</strong> ${category}</td>
+        <td style="padding:4px 0;"><strong>Subject:</strong> ${subject}</td>
+      </tr><tr>
+        <td style="padding:4px 0;"><strong>Uploaded:</strong> ${uploader}</td>
+        <td style="padding:4px 0;"><strong>Date:</strong> ${date}</td>
+      </tr><tr>
+        <td style="padding:4px 0;"><strong>Size:</strong> ${doc.fileSize || '~125 KB'}</td>
+        <td style="padding:4px 0;"><strong>Version:</strong> v${doc.version || 1}</td>
+      </tr></table>
+      ${ft === 'zip' ? `<div style="text-align:center;padding:20px;color:#94a3b8;"><i class="fa-solid fa-file-zipper" style="font-size:36px;display:block;margin-bottom:8px;"></i>ZIP Archive — download to extract contents.</div>` : ''}
+      <p style="color:#94a3b8;font-style:italic;font-size:12px;margin-top:16px;">This is a browser-based preview. Click Download to get the actual file.</p>
+    </div>`;
+  }
+
+  function renderPreview() {
+    const ft = (doc.fileType || '').toLowerCase();
+    const container = document.getElementById('preview-content');
+    container.innerHTML = generateDocContent(ft, false);
+  }
+
+  function zoomIn() {
+    if (zoom >= 200) return;
+    zoom += 10;
+    updateZoom();
+  }
+
+  function zoomOut() {
+    if (zoom <= 30) return;
+    zoom -= 10;
+    updateZoom();
+  }
+
+  function updateZoom() {
+    document.getElementById('zoom-level').textContent = zoom + '%';
+    document.getElementById('zoom-level-bottom').textContent = zoom + '%';
+    document.getElementById('zoom-in-btn').disabled = zoom >= 200;
+    document.getElementById('zoom-out-btn').disabled = zoom <= 30;
+    const zoomEls = document.querySelectorAll('#preview-content img, #preview-content .simulated-doc');
+    zoomEls.forEach(el => el.style.transform = `scale(${zoom/100})`);
+  }
+
+  function downloadDoc() {
+    window.db.logDocumentDownload(docId, currentUser.id);
+    const ft = (doc.fileType || 'txt').toLowerCase();
+    const content = generateDocContent(ft, true);
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = doc.fileName || `${doc.title.replace(/[^a-z0-9]/gi,'_').toLowerCase()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    window.showToast(`"${doc.title}" downloaded`, 'success');
+    renderMeta();
+  }
+
+  renderMeta();
+  renderVersions();
+  renderPreview();
+  updateZoom();
+
+  window.zoomIn = zoomIn;
+  window.zoomOut = zoomOut;
+  window.downloadDoc = downloadDoc;
+})();
+</script>
+</body>
+</html>

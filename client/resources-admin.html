@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resource Management — HonE-Learning Platform</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--portal-primary:#1e3a8a;--nav-main-w:80px;--nav-sub-w:220px}
+*{box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#f0f4f8;margin:0;padding:0;overflow-x:hidden}
+.portal-sidebar-main{position:fixed;top:0;left:0;bottom:0;width:var(--nav-main-w);background:#0f172a;z-index:1050;display:flex;flex-direction:column;align-items:center;padding:16px 0}
+.nav-brand-icon{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--portal-primary),#6366f1);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;margin-bottom:24px}
+.nav-main-item{width:64px;height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,0.5);text-decoration:none;border-radius:12px;margin-bottom:8px;cursor:pointer;transition:all .2s;border:none;background:transparent}
+.nav-main-item:hover{background:rgba(255,255,255,0.08);color:#fff}
+.nav-main-item.active{background:rgba(59,130,246,0.15);color:#3b82f6}
+.nav-main-item i{font-size:18px;margin-bottom:4px}
+.nav-main-item span{font-size:10px;font-weight:600;line-height:1.1;text-align:center}
+.portal-sidebar-sub{position:fixed;top:0;left:var(--nav-main-w);bottom:0;width:var(--nav-sub-w);background:#fff;z-index:1040;border-right:1px solid #e2e8f0;display:flex;flex-direction:column}
+.sub-brand-text{height:64px;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid #f1f5f9;font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;color:#0f172a}
+.portal-main{margin-left:calc(var(--nav-main-w) + var(--nav-sub-w));min-height:100vh}
+.portal-topbar{height:64px;background:#fff;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:100}
+.portal-content{padding:24px 28px}
+.section-card{background:#fff;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,.06);margin-bottom:24px;overflow:hidden}
+.section-card-header{padding:20px 24px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.section-card-title{font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;color:#0f172a;margin:0}
+.section-card-body{padding:24px}
+.portal-input{width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;color:#0f172a;background:#fff;transition:border-color .2s;font-family:'Inter',sans-serif}
+.portal-input:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.portal-input-sm{padding:8px 12px;font-size:12px;width:auto}
+.portal-btn{padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;font-family:'Inter',sans-serif}
+.portal-btn-primary{background:#1e3a8a;color:#fff}
+.portal-btn-success{background:#166534;color:#fff}
+.portal-btn-danger{background:#dc2626;color:#fff}
+.portal-btn-warning{background:#f59e0b;color:#fff}
+.portal-btn-outline{background:transparent;color:#475569;border:1.5px solid #e2e8f0}
+.portal-btn-sm{padding:6px 12px;font-size:12px}
+.portal-table{width:100%;border-collapse:collapse}
+.portal-table th{padding:10px 14px;background:#f8fafc;color:#64748b;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #e2e8f0;text-align:left}
+.portal-table td{padding:12px 14px;font-size:13px;color:#334155;border-bottom:1px solid #f1f5f9}
+.role-pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.stat-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
+.stat-mini{background:#fff;border-radius:12px;padding:16px;text-align:center;border:1.5px solid #e2e8f0}
+.stat-mini .num{font-size:20px;font-weight:800;color:#1e3a8a;font-family:'Poppins',sans-serif}
+.stat-mini .lbl{font-size:11px;color:#94a3b8;margin-top:2px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal-box{background:#fff;border-radius:16px;width:90%;max-width:700px;max-height:90vh;overflow-y:auto;padding:28px}
+.modal-box h5{font-family:'Poppins',sans-serif;font-weight:700;margin-bottom:20px}
+.filter-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.filter-bar select,.filter-bar input{width:auto;min-width:130px;padding:8px 12px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;background:#fff;font-family:'Inter',sans-serif}
+.filter-bar select:focus,.filter-bar input:focus{outline:none;border-color:#3b82f6}
+@media(max-width:900px){.portal-sidebar-main,.portal-sidebar-sub{display:none}.portal-main{margin-left:0}}
+</style>
+</head>
+<body>
+<nav class="portal-sidebar-main">
+<a href="admin-dashboard.html" class="nav-brand-icon" title="Dashboard"><i class="fa-solid fa-graduation-cap"></i></a>
+<a href="admin-dashboard.html" class="nav-main-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+<a href="resources-admin.html" class="nav-main-item active"><i class="fa-solid fa-globe"></i><span>Resources</span></a>
+<a href="documents-management.html" class="nav-main-item"><i class="fa-solid fa-folder-open"></i><span>Docs</span></a>
+<a href="courses-management.html" class="nav-main-item"><i class="fa-solid fa-book"></i><span>Courses</span></a>
+<a href="system-settings.html" class="nav-main-item"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+</nav>
+<aside class="portal-sidebar-sub">
+<div class="sub-brand-text"><i class="fa-solid fa-globe me-2" style="color:#3b82f6;"></i>Resources</div>
+<div style="flex:1;overflow-y:auto;padding:20px 14px;">
+<div class="sub-nav-title">Manage</div>
+<ul class="sub-nav-list" style="list-style:none;padding:0;margin:0;">
+<li><a href="#" onclick="openUploadModal();return false;" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#475569;font-size:13px;font-weight:500;text-decoration:none;"><i class="fa-solid fa-upload"></i>Upload Resource</a></li>
+<li><a href="#" onclick="showArchived();return false;" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#475569;font-size:13px;font-weight:500;text-decoration:none;"><i class="fa-solid fa-box-archive"></i>Archived (${window.db.getArchivedResources().length})</a></li>
+<li><a href="#" onclick="showAudit();return false;" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:#475569;font-size:13px;font-weight:500;text-decoration:none;"><i class="fa-solid fa-clock-rotate-left"></i>Audit Log</a></li>
+</ul>
+<div class="sub-nav-title" style="margin-top:20px;">Categories</div>
+<ul class="sub-nav-list" style="list-style:none;padding:0;margin:0;" id="categories-list"></ul>
+</div>
+</aside>
+<main class="portal-main">
+<header class="portal-topbar">
+<div><h5 style="margin:0;font-weight:700;">Public Resource Management</h5><small style="color:#94a3b8;">Manage public website downloads & resources</small></div>
+<button class="portal-btn portal-btn-primary" onclick="openUploadModal()"><i class="fa-solid fa-upload"></i>Upload</button>
+</header>
+<div class="portal-content">
+<div class="stat-cards" id="stats-cards"></div>
+<div class="section-card">
+<div class="section-card-header">
+<h5 class="section-card-title"><i class="fa-solid fa-globe me-2 text-primary"></i>All Resources</h5>
+<div class="filter-bar">
+<select id="filter-vis" onchange="renderTable()"><option value="">All Visibility</option><option value="public">Public</option><option value="internal">Internal</option><option value="teacher-only">Teacher Only</option><option value="student-only">Student Only</option></select>
+<select id="filter-cat" onchange="renderTable()"><option value="">All Categories</option></select>
+<input type="text" id="search-input" placeholder="Search..." oninput="renderTable()" style="min-width:160px;">
+</div>
+</div>
+<div class="section-card-body" style="overflow-x:auto;">
+<table class="portal-table"><thead><tr><th>Title</th><th>Category</th><th>Type</th><th>Visibility</th><th>Views</th><th>Downloads</th><th>Status</th><th>Actions</th></tr></thead><tbody id="resources-tbody"></tbody></table>
+</div>
+</div>
+</div>
+</main>
+<!-- Upload/Edit Modal -->
+<div class="modal-overlay" id="upload-modal">
+<div class="modal-box">
+<h5 id="modal-title"><i class="fa-solid fa-upload text-primary me-2"></i>Upload Resource</h5>
+<form id="resource-form" onsubmit="saveResource(event)">
+<div class="row g-3">
+<div class="col-12"><label style="font-size:12px;font-weight:600;color:#64748b;">Title *</label><input type="text" class="portal-input" id="res-title" required></div>
+<div class="col-12"><label style="font-size:12px;font-weight:600;color:#64748b;">Description</label><textarea class="portal-input" id="res-desc" rows="2"></textarea></div>
+<div class="col-md-6"><label style="font-size:12px;font-weight:600;color:#64748b;">Category *</label><select class="portal-input" id="res-category" required></select></div>
+<div class="col-md-6"><label style="font-size:12px;font-weight:600;color:#64748b;">File Type *</label><select class="portal-input" id="res-filetype" required></select></div>
+<div class="col-md-4"><label style="font-size:12px;font-weight:600;color:#64748b;">File Size</label><input type="text" class="portal-input" id="res-size" placeholder="e.g. 2.5 MB"></div>
+<div class="col-md-4"><label style="font-size:12px;font-weight:600;color:#64748b;">File Name</label><input type="text" class="portal-input" id="res-filename" placeholder="e.g. document.pdf"></div>
+<div class="col-md-4"><label style="font-size:12px;font-weight:600;color:#64748b;">Duration (video/audio)</label><input type="text" class="portal-input" id="res-duration" placeholder="e.g. 4:32"></div>
+<div class="col-md-4"><label style="font-size:12px;font-weight:600;color:#64748b;">Visibility</label><select class="portal-input" id="res-visibility"><option value="public">Public</option><option value="internal">Internal</option><option value="teacher-only">Teacher Only</option><option value="student-only">Student Only</option></select></div>
+<div class="col-md-4"><label style="font-size:12px;font-weight:600;color:#64748b;">Download Option</label><select class="portal-input" id="res-download-opt"><option value="true">Enabled</option><option value="false">Disabled</option></select></div>
+<div class="col-md-4"><label style="font-size:12px;font-weight:600;color:#64748b;">Preview</label><select class="portal-input" id="res-preview-opt"><option value="true">Enabled</option><option value="false">Disabled</option></select></div>
+<div class="col-6"><label class="d-flex align-items-center gap-2" style="font-size:13px;"><input type="checkbox" id="res-featured"> <span>Mark as Featured</span></label></div>
+<div class="col-6"><label class="d-flex align-items-center gap-2" style="font-size:13px;"><input type="checkbox" id="res-pinned"> <span>Pin to top</span></label></div>
+<div class="col-12" style="display:flex;gap:8px;justify-content:flex-end;">
+<button type="button" class="portal-btn portal-btn-outline" onclick="closeUploadModal()">Cancel</button>
+<button type="submit" class="portal-btn portal-btn-primary"><i class="fa-solid fa-save"></i>Save Resource</button>
+</div>
+</div>
+</form>
+</div>
+</div>
+<!-- Archive Modal -->
+<div class="modal-overlay" id="archive-modal"><div class="modal-box" style="max-width:600px;"><h5><i class="fa-solid fa-box-archive text-warning me-2"></i>Archived Resources</h5><div id="archived-list"></div><button class="portal-btn portal-btn-outline mt-3" onclick="document.getElementById('archive-modal').classList.remove('show')">Close</button></div></div>
+<!-- Audit Modal -->
+<div class="modal-overlay" id="audit-modal"><div class="modal-box" style="max-width:700px;max-height:85vh;"><h5><i class="fa-solid fa-clock-rotate-left text-primary me-2"></i>Resource Audit Log</h5><div style="max-height:60vh;overflow-y:auto;" id="audit-content"></div><button class="portal-btn portal-btn-outline mt-3" onclick="document.getElementById('audit-modal').classList.remove('show')">Close</button></div></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+    <script src="js/db-extension.js"></script>
+    <script src="js/components.js"></script>
+<script>
+(function() {
+  const currentUser = window.db.getCurrentUser();
+  if (!currentUser || currentUser.role !== 'admin') { window.location.href = 'index.html'; return; }
+
+  let editingId = null;
+
+  function init() {
+    const catSel = document.getElementById('res-category');
+    const filterCat = document.getElementById('filter-cat');
+    const ftSel = document.getElementById('res-filetype');
+    const cats = window.db.getResourceCategories();
+    cats.forEach(c => { catSel.innerHTML += `<option value="${c}">${c}</option>`; filterCat.innerHTML += `<option value="${c}">${c}</option>`; });
+    const allTypes = [...new Set(Object.values(window.db.RESOURCE_FILE_TYPES).flat())].sort();
+    allTypes.forEach(t => ftSel.innerHTML += `<option value="${t}">${t.toUpperCase()}</option>`);
+    renderStats();
+    renderTable();
+    renderCategories();
+  }
+
+  function renderStats() {
+    const s = window.db.getResourceStats();
+    document.getElementById('stats-cards').innerHTML = `
+      <div class="stat-mini"><div class="num">${s.total}</div><div class="lbl">Total Resources</div></div>
+      <div class="stat-mini"><div class="num">${s.public}</div><div class="lbl">Public</div></div>
+      <div class="stat-mini"><div class="num">${s.totalViews}</div><div class="lbl">Total Views</div></div>
+      <div class="stat-mini"><div class="num">${s.totalDownloads}</div><div class="lbl">Total Downloads</div></div>
+      <div class="stat-mini"><div class="num">${s.featured}</div><div class="lbl">Featured</div></div>
+      <div class="stat-mini"><div class="num">${s.archived}</div><div class="lbl">Archived</div></div>`;
+  }
+
+  function renderTable() {
+    let resources = window.db.getAllResources().filter(r => r.status !== 'archived');
+    const vis = document.getElementById('filter-vis').value;
+    if (vis) resources = resources.filter(r => r.visibility === vis);
+    const cat = document.getElementById('filter-cat').value;
+    if (cat) resources = resources.filter(r => r.category === cat);
+    const q = document.getElementById('search-input').value.toLowerCase().trim();
+    if (q) resources = resources.filter(r => (r.title||'').toLowerCase().includes(q) || (r.category||'').toLowerCase().includes(q));
+    resources.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const visColors = {public:'#dcfce7;color:#166534',internal:'#dbeafe;color:#1e40af','teacher-only':'#fef3c7;color:#92400e','student-only':'#ede9fe;color:#5b21b6'};
+    document.getElementById('resources-tbody').innerHTML = resources.length ? resources.map(r => `<tr>
+      <td><div><strong>${r.title}</strong>${r.featured?' <span class="role-pill" style="background:#fef3c7;color:#92400e;font-size:10px;">Featured</span>':''}${r.pinned?' <i class="fa-solid fa-thumbtack" style="color:#f59e0b;font-size:11px;"></i>':''}</div></td>
+      <td>${r.category||'-'}</td>
+      <td><span class="role-pill" style="background:#f1f5f9;color:#475569;">${(r.fileType||'').toUpperCase()}</span></td>
+      <td><span class="role-pill" style="background:${visColors[r.visibility]||visColors.public}">${r.visibility||'public'}</span></td>
+      <td>${r.views||0}</td><td>${r.downloads||0}</td>
+      <td><span class="role-pill" style="background:#dcfce7;color:#166534;">${r.status||'active'}</span></td>
+      <td><div style="display:flex;gap:4px;">
+        <button class="portal-btn portal-btn-sm portal-btn-primary" onclick="window.open('public-resource-view.html?id=${r.id}','_blank')"><i class="fa-solid fa-eye"></i></button>
+        <button class="portal-btn portal-btn-sm portal-btn-outline" onclick="editResource(${r.id})"><i class="fa-solid fa-pen"></i></button>
+        <button class="portal-btn portal-btn-sm ${r.featured?'portal-btn-warning':'portal-btn-outline'}" onclick="toggleFeatured(${r.id})"><i class="fa-solid ${r.featured?'fa-star':'fa-star'}"></i></button>
+        <button class="portal-btn portal-btn-sm portal-btn-outline" onclick="window.db.archiveResource(${r.id});renderTable();renderStats();"><i class="fa-solid fa-box-archive"></i></button>
+        <button class="portal-btn portal-btn-sm portal-btn-danger" onclick="deleteResource(${r.id})"><i class="fa-solid fa-trash"></i></button>
+      </div></td>
+    </tr>`).join('') : '<tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:20px;">No resources found.</td></tr>';
+  }
+
+  function renderCategories() {
+    const cats = window.db.getResourceCategories();
+    const list = document.getElementById('categories-list');
+    list.innerHTML = cats.map(c => `<li style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;font-size:13px;color:#475569;"><span>${c}</span></li>`).join('') +
+      `<li style="display:flex;gap:4px;padding:8px 0;"><input type="text" id="new-cat-input" class="portal-input portal-input-sm" style="min-width:0;flex:1;padding:6px 10px;" placeholder="Add category...">
+      <button class="portal-btn portal-btn-sm portal-btn-primary" onclick="addCategory()"><i class="fa-solid fa-plus"></i></button></li>`;
+  }
+
+  function openUploadModal() { editingId = null; document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-upload text-primary me-2"></i>Upload Resource'; document.getElementById('resource-form').reset(); document.getElementById('res-featured').checked = false; document.getElementById('res-pinned').checked = false; document.getElementById('upload-modal').classList.add('show'); }
+  function closeUploadModal() { document.getElementById('upload-modal').classList.remove('show'); }
+
+  function saveResource(e) {
+    e.preventDefault();
+    const title = document.getElementById('res-title').value.trim();
+    const desc = document.getElementById('res-desc').value.trim();
+    const category = document.getElementById('res-category').value;
+    const fileType = document.getElementById('res-filetype').value;
+    const fileSize = document.getElementById('res-size').value.trim() || '~100 KB';
+    const fileName = document.getElementById('res-filename').value.trim() || `resource.${fileType}`;
+    const duration = document.getElementById('res-duration').value.trim();
+    const visibility = document.getElementById('res-visibility').value;
+    const downloadsEnabled = document.getElementById('res-download-opt').value === 'true';
+    const previewEnabled = document.getElementById('res-preview-opt').value === 'true';
+    const featured = document.getElementById('res-featured').checked;
+    const pinned = document.getElementById('res-pinned').checked;
+    if (!title) { window.showToast('Title is required','error'); return; }
+    if (!category) { window.showToast('Category is required','error'); return; }
+
+    const data = { title, description: desc, category, fileType, fileSize, fileName, duration, visibility, downloadsEnabled, previewEnabled, featured, pinned, uploadedBy: currentUser.name, uploadedById: currentUser.id };
+
+    if (editingId) {
+      window.db.updateResource(editingId, data);
+      window.showToast('Resource updated','success');
+    } else {
+      window.db.createResource(data);
+      window.showToast('Resource uploaded','success');
+    }
+    closeUploadModal();
+    renderTable(); renderStats();
+  }
+
+  function editResource(id) {
+    const r = window.db.getResource(id);
+    if (!r) return;
+    editingId = id;
+    document.getElementById('modal-title').innerHTML = '<i class="fa-solid fa-pen text-primary me-2"></i>Edit Resource';
+    document.getElementById('res-title').value = r.title;
+    document.getElementById('res-desc').value = r.description || '';
+    document.getElementById('res-category').value = r.category || '';
+    document.getElementById('res-filetype').value = r.fileType || 'pdf';
+    document.getElementById('res-size').value = r.fileSize || '';
+    document.getElementById('res-filename').value = r.fileName || '';
+    document.getElementById('res-duration').value = r.duration || '';
+    document.getElementById('res-visibility').value = r.visibility || 'public';
+    document.getElementById('res-download-opt').value = r.downloadsEnabled !== false ? 'true' : 'false';
+    document.getElementById('res-preview-opt').value = r.previewEnabled !== false ? 'true' : 'false';
+    document.getElementById('res-featured').checked = !!r.featured;
+    document.getElementById('res-pinned').checked = !!r.pinned;
+    document.getElementById('upload-modal').classList.add('show');
+  }
+
+  function toggleFeatured(id) { window.db.toggleFeatured(id); renderTable(); renderStats(); }
+  function deleteResource(id) { if (!confirm('Permanently delete this resource?')) return; window.db.deleteResource(id); renderTable(); renderStats(); }
+  function addCategory() { const inp = document.getElementById('new-cat-input'); if (!inp.value.trim()) return; window.db.addResourceCategory(inp.value.trim()); inp.value = ''; renderCategories(); }
+  function showArchived() { const archived = window.db.getArchivedResources(); document.getElementById('archived-list').innerHTML = archived.length ? archived.map(r => `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f1f5f9;"><span>${r.title} <small style="color:#94a3b8;">(${r.category||'N/A'})</small></span><button class="portal-btn portal-btn-sm portal-btn-success" onclick="window.db.restoreResource(${r.id});showArchived();renderTable();renderStats();"><i class="fa-solid fa-box-open"></i> Restore</button></div>`).join('') : '<p style="color:#94a3b8;text-align:center;padding:20px;">No archived resources.</p>'; document.getElementById('archive-modal').classList.add('show'); }
+  function showAudit() { const log = window.db.getResourceAuditLog(); document.getElementById('audit-content').innerHTML = log.length ? `<table class="portal-table"><thead><tr><th>Time</th><th>Action</th><th>Details</th></tr></thead><tbody>${log.map(l => `<tr><td style="font-size:12px;color:#94a3b8;">${new Date(l.timestamp).toLocaleString()}</td><td><span class="role-pill" style="background:${l.action==='delete'?'#fee2e2;color:#991b1b':l.action==='upload'?'#dcfce7;color:#166534':'#dbeafe;color:#1e40af'}">${l.action}</span></td><td>${l.details||''}</td></tr>`).join('')}</tbody></table>` : '<p style="color:#94a3b8;text-align:center;">No audit log entries.</p>'; document.getElementById('audit-modal').classList.add('show'); }
+
+  window.openUploadModal = openUploadModal; window.closeUploadModal = closeUploadModal; window.saveResource = saveResource; window.editResource = editResource;
+  window.toggleFeatured = toggleFeatured; window.deleteResource = deleteResource; window.addCategory = addCategory; window.showArchived = showArchived; window.showAudit = showAudit; window.renderTable = renderTable;
+  init();
+})();
+</script>
+</body>
+</html>

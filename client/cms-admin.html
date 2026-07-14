@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Management — HonE-Learning Platform</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/style.css" />
+<style>
+body { background: #f0f4f8; font-family: 'Inter', sans-serif; }
+.cms-container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+.cms-sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 220px; background: #0f172a; color: #fff; padding: 16px; overflow-y: auto; z-index: 100; }
+.cms-sidebar h5 { font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; padding: 12px 0 6px; }
+.cms-sidebar a { display: flex; align-items: center; gap: 10px; padding: 8px 12px; color: #94a3b8; text-decoration: none; border-radius: 8px; font-size: 13px; transition: all 0.2s; }
+.cms-sidebar a:hover, .cms-sidebar a.active { background: rgba(59,130,246,0.15); color: #3b82f6; }
+.cms-main { margin-left: 220px; padding: 20px; }
+.cms-tab { display: none; }
+.cms-tab.active { display: block; }
+.card-cms { border: 0; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); background: #fff; padding: 24px; margin-bottom: 20px; }
+.table-cms th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: #64748b; font-weight: 700; }
+.table-cms td { font-size: 13px; vertical-align: middle; }
+.table-cms img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; }
+.form-cms label { font-size: 12px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.3px; }
+.form-cms .form-control, .form-cms .form-select { border-radius: 8px; font-size: 14px; border: 1px solid #e2e8f0; padding: 8px 12px; }
+.form-cms .form-control:focus, .form-cms .form-select:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+.status-badge { font-size: 10px; padding: 3px 8px; border-radius: 20px; font-weight: 700; text-transform: uppercase; }
+.empty-state { text-align: center; padding: 40px 20px; color: #94a3b8; }
+.empty-state i { font-size: 2.5rem; margin-bottom: 12px; }
+.cms-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.cms-header h2 { font-weight: 800; color: #0f172a; margin: 0; }
+</style>
+</head>
+<body>
+<div class="cms-sidebar">
+<div class="d-flex align-items-center gap-2 mb-4 pb-3 border-bottom border-white border-opacity-10">
+<i class="fa-solid fa-graduation-cap fs-4 text-primary"></i>
+<div><h6 class="mb-0 text-white font-bold" style="font-size:13px;">CMS Admin</h6><span class="text-muted" style="font-size:10px;">Content Management</span></div>
+</div>
+<h5>Content</h5>
+<a href="#" class="active" data-tab="school"><i class="fa-solid fa-school"></i> School Info</a>
+<a href="#" data-tab="news"><i class="fa-solid fa-newspaper"></i> News</a>
+<a href="#" data-tab="events"><i class="fa-solid fa-calendar"></i> Events</a>
+<a href="#" data-tab="testimonials"><i class="fa-solid fa-quote-right"></i> Testimonials</a>
+<a href="#" data-tab="leadership"><i class="fa-solid fa-users"></i> Leadership</a>
+<a href="#" data-tab="programs"><i class="fa-solid fa-medal"></i> Programs</a>
+<a href="#" data-tab="partners"><i class="fa-solid fa-handshake"></i> Partners</a>
+<a href="#" data-tab="subjects"><i class="fa-solid fa-book"></i> Subjects</a>
+<a href="#" data-tab="combinations"><i class="fa-solid fa-layer-group"></i> Combinations</a>
+<a href="#" data-tab="gallery"><i class="fa-solid fa-images"></i> Gallery</a>
+<a href="#" data-tab="settings"><i class="fa-solid fa-gears"></i> Settings</a>
+<hr class="border-white border-opacity-10 my-3">
+<a href="admin-dashboard.html"><i class="fa-solid fa-arrow-left"></i> Back to Admin</a>
+</div>
+<div class="cms-main">
+<!-- School Info Tab -->
+<div class="cms-tab active" id="tab-school">
+<div class="cms-header"><h2><i class="fa-solid fa-school text-primary me-2"></i>School Information</h2></div>
+<form class="card-cms form-cms" id="form-school">
+<div class="row g-3">
+<div class="col-md-6"><label>School Name</label><input class="form-control" name="name" required></div>
+<div class="col-md-3"><label>Short Name</label><input class="form-control" name="shortName"></div>
+<div class="col-md-3"><label>Established Year</label><input class="form-control" name="established"></div>
+<div class="col-md-6"><label>Motto</label><input class="form-control" name="motto"></div>
+<div class="col-md-6"><label>Phone</label><input class="form-control" name="phone"></div>
+<div class="col-md-6"><label>Email</label><input class="form-control" name="email"></div>
+<div class="col-md-6"><label>Website</label><input class="form-control" name="website"></div>
+<div class="col-12"><label>Address</label><input class="form-control" name="address"></div>
+<div class="col-12"><label>About Intro</label><textarea class="form-control" name="aboutIntro" rows="2"></textarea></div>
+<div class="col-12"><label>School History</label><textarea class="form-control" name="schoolHistory" rows="3"></textarea></div>
+<div class="col-md-6"><label>Mission</label><textarea class="form-control" name="mission" rows="3"></textarea></div>
+<div class="col-md-6"><label>Vision</label><textarea class="form-control" name="vision" rows="3"></textarea></div>
+<div class="col-md-6"><label>Principal Message</label><textarea class="form-control" name="principalMessage" rows="3"></textarea></div>
+<div class="col-md-6"><label>Core Values (Format: Name: Description. Name2: Desc2.)</label><textarea class="form-control" name="coreValues" rows="3" placeholder="Excellence: We strive... Innovation: We embrace..."></textarea></div>
+<div class="col-12"><label>Facilities (comma separated)</label><input class="form-control" name="facilities" placeholder="Computer Lab, Science Lab, Library..."></div>
+<div class="col-12"><label>Hero Title</label><input class="form-control" name="heroTitle"></div>
+<div class="col-md-6"><label>Hero Subtitle</label><input class="form-control" name="heroSubtitle"></div>
+<div class="col-md-6"><label>Badge</label><input class="form-control" name="badge"></div>
+            <div class="col-12"><label>Hero Description</label><textarea class="form-control" name="heroDescription" rows="2"></textarea></div>
+            <div class="col-md-6"><label>Login Page Description</label><textarea class="form-control" name="loginDescription" rows="2"></textarea></div>
+            <div class="col-md-6"><label>Contact Intro</label><textarea class="form-control" name="contactIntro" rows="2"></textarea></div>
+            <div class="col-md-6"><label>Announcements Intro</label><textarea class="form-control" name="announcementsIntro" rows="2"></textarea></div>
+            <div class="col-md-6"><label>Gallery Intro</label><textarea class="form-control" name="galleryIntro" rows="2"></textarea></div>
+            <div class="col-md-6"><label>Teachers Page Intro</label><textarea class="form-control" name="teachersIntro" rows="2"></textarea></div>
+            <div class="col-md-6"><label>Books/Library Intro</label><textarea class="form-control" name="booksIntro" rows="2"></textarea></div>
+            <div class="col-12"><label>Admissions Content</label><textarea class="form-control" name="admissionsContent" rows="3"></textarea></div>
+            <div class="col-12"><label>Admission Requirements (comma separated)</label><input class="form-control" name="admissionRequirements" placeholder="Completed form, Reports, Birth certificate..."></div>
+</div>
+<div class="mt-4"><button type="submit" class="btn btn-primary px-4"><i class="fa-solid fa-save me-2"></i>Save School Info</button></div>
+</form>
+</div>
+<!-- News Tab -->
+<div class="cms-tab" id="tab-news">
+<div class="cms-header"><h2><i class="fa-solid fa-newspaper text-primary me-2"></i>News & Articles</h2><button class="btn btn-primary" onclick="openNewsModal()"><i class="fa-solid fa-plus me-1"></i>Add News</button></div>
+<div class="card-cms">
+<table class="table table-cms table-hover mb-0">
+<thead><tr><th>Title</th><th>Status</th><th>Views</th><th>Date</th><th style="width:140px;">Actions</th></tr></thead>
+<tbody id="news-table-body"></tbody>
+</table>
+<div id="news-empty" class="empty-state" style="display:none;"><i class="fa-solid fa-newspaper"></i><p>No news articles yet.</p></div>
+</div>
+</div>
+<!-- Events Tab -->
+<div class="cms-tab" id="tab-events">
+<div class="cms-header"><h2><i class="fa-solid fa-calendar text-primary me-2"></i>Events</h2><button class="btn btn-primary" onclick="openEventModal()"><i class="fa-solid fa-plus me-1"></i>Add Event</button></div>
+<div class="card-cms">
+<table class="table table-cms table-hover mb-0">
+<thead><tr><th>Title</th><th>Date</th><th>Status</th><th style="width:140px;">Actions</th></tr></thead>
+<tbody id="events-table-body"></tbody>
+</table>
+<div id="events-empty" class="empty-state" style="display:none;"><i class="fa-solid fa-calendar"></i><p>No events yet.</p></div>
+</div>
+</div>
+<!-- Testimonials Tab -->
+<div class="cms-tab" id="tab-testimonials">
+<div class="cms-header"><h2><i class="fa-solid fa-quote-right text-primary me-2"></i>Testimonials</h2><button class="btn btn-primary" onclick="openTestimonialModal()"><i class="fa-solid fa-plus me-1"></i>Add Testimonial</button></div>
+<div class="card-cms">
+<table class="table table-cms table-hover mb-0">
+<thead><tr><th>Name</th><th>Quote</th><th>Status</th><th style="width:140px;">Actions</th></tr></thead>
+<tbody id="testimonials-table-body"></tbody>
+</table>
+<div id="testimonials-empty" class="empty-state" style="display:none;"><i class="fa-solid fa-quote-right"></i><p>No testimonials yet.</p></div>
+</div>
+</div>
+<!-- Leadership Tab -->
+<div class="cms-tab" id="tab-leadership">
+<div class="cms-header"><h2><i class="fa-solid fa-users text-primary me-2"></i>Leadership Team</h2><button class="btn btn-primary" onclick="openLeaderModal()"><i class="fa-solid fa-plus me-1"></i>Add Leader</button></div>
+<div class="card-cms">
+<table class="table table-cms table-hover mb-0">
+<thead><tr><th>Photo</th><th>Name</th><th>Title</th><th style="width:140px;">Actions</th></tr></thead>
+<tbody id="leadership-table-body"></tbody>
+</table>
+<div id="leadership-empty" class="empty-state" style="display:none;"><i class="fa-solid fa-users"></i><p>No leadership members yet.</p></div>
+</div>
+</div>
+<!-- Programs Tab -->
+<div class="cms-tab" id="tab-programs">
+<div class="cms-header"><h2><i class="fa-solid fa-medal text-primary me-2"></i>Featured Programs</h2><button class="btn btn-primary" onclick="openProgramModal()"><i class="fa-solid fa-plus me-1"></i>Add Program</button></div>
+<div class="card-cms">
+<table class="table table-cms table-hover mb-0">
+<thead><tr><th>Icon</th><th>Title</th><th>Description</th><th style="width:140px;">Actions</th></tr></thead>
+<tbody id="programs-table-body"></tbody>
+</table>
+<div id="programs-empty" class="empty-state" style="display:none;"><i class="fa-solid fa-medal"></i><p>No programs yet.</p></div>
+</div>
+</div>
+<!-- Partners Tab -->
+<div class="cms-tab" id="tab-partners">
+<div class="cms-header"><h2><i class="fa-solid fa-handshake text-primary me-2"></i>Partners</h2><button class="btn btn-primary" onclick="openPartnerModal()"><i class="fa-solid fa-plus me-1"></i>Add Partner</button></div>
+<div class="card-cms">
+<table class="table table-cms table-hover mb-0">
+<thead><tr><th>Name</th><th>Website</th><th>Order</th><th style="width:140px;">Actions</th></tr></thead>
+<tbody id="partners-table-body"></tbody>
+</table>
+<div id="partners-empty" class="empty-state" style="display:none;"><i class="fa-solid fa-handshake"></i><p>No partners yet.</p></div>
+</div>
+</div>
+<!-- Gallery Tab -->
+<div class="cms-tab" id="tab-gallery">
+<div class="cms-header"><h2><i class="fa-solid fa-images text-primary me-2"></i>Gallery Photos</h2><button class="btn btn-primary" onclick="openGalleryModal()"><i class="fa-solid fa-plus me-1"></i>Add Photo</button></div>
+<div class="card-cms">
+<table class="table table-cms table-hover mb-0">
+<thead><tr><th>Photo</th><th>Title</th><th>Category</th><th style="width:140px;">Actions</th></tr></thead>
+<tbody id="gallery-table-body"></tbody>
+</table>
+<div id="gallery-empty" class="empty-state" style="display:none;"><i class="fa-solid fa-images"></i><p>No gallery photos yet.</p></div>
+</div>
+</div>
+<!-- Subjects Tab -->
+<div class="cms-tab" id="tab-subjects">
+<div class="cms-header"><h2><i class="fa-solid fa-book text-primary me-2"></i>Academic Subjects</h2><button class="btn btn-primary" onclick="openSubjectModal()"><i class="fa-solid fa-plus me-1"></i>Add Subject</button></div>
+<div class="card-cms">
+<div class="row g-2 mb-3">
+<div class="col-md-3"><select class="form-select form-select-sm" id="filter-subject-level"><option value="">All Levels</option><option>Primary</option><option>Lower Secondary</option><option>Upper Secondary</option><option>TVET</option></select></div>
+<div class="col-md-3"><select class="form-select form-select-sm" id="filter-subject-cat"><option value="">All Categories</option><option>languages</option><option>sciences</option><option>humanities</option><option>science</option><option>arts</option><option>sports</option><option>ict</option><option>business</option><option>common</option><option>engineering</option><option>hospitality</option><option>agriculture</option><option>creative</option></select></div>
+<div class="col-md-3"><input class="form-control form-control-sm" id="filter-subject-search" placeholder="Search subjects..."></div>
+</div>
+<table class="table table-cms table-hover mb-0">
+<thead><tr><th>Code</th><th>Title</th><th>Level</th><th>Category</th><th style="width:140px;">Actions</th></tr></thead>
+<tbody id="subjects-table-body"></tbody>
+</table>
+<div id="subjects-empty" class="empty-state" style="display:none;"><i class="fa-solid fa-book"></i><p>No subjects yet.</p></div>
+</div>
+</div>
+<!-- Combinations Tab -->
+<div class="cms-tab" id="tab-combinations">
+<div class="cms-header"><h2><i class="fa-solid fa-layer-group text-primary me-2"></i>Subject Combinations</h2><button class="btn btn-primary" onclick="openComboModal()"><i class="fa-solid fa-plus me-1"></i>Add Combination</button></div>
+<div class="card-cms">
+<table class="table table-cms table-hover mb-0">
+<thead><tr><th>Name</th><th>Full Name</th><th>Stream</th><th>Subjects</th><th style="width:140px;">Actions</th></tr></thead>
+<tbody id="combinations-table-body"></tbody>
+</table>
+<div id="combinations-empty" class="empty-state" style="display:none;"><i class="fa-solid fa-layer-group"></i><p>No combinations yet.</p></div>
+</div>
+</div>
+<!-- Settings Tab -->
+<div class="cms-tab" id="tab-settings">
+<div class="cms-header"><h2><i class="fa-solid fa-gears text-primary me-2"></i>Site Settings</h2></div>
+<form class="card-cms form-cms" id="form-settings">
+<div class="row g-3">
+<div class="col-md-6"><label>Office Hours</label><input class="form-control" name="officeHours" placeholder="Mon - Fri, 7:30 AM - 5:00 PM"></div>
+<div class="col-md-6"><label>Contact Intro</label><input class="form-control" name="contactIntro" placeholder="Get in touch with us"></div>
+<div class="col-12"><label>Facebook URL</label><input class="form-control" name="facebook"></div>
+<div class="col-md-6"><label>Twitter / X URL</label><input class="form-control" name="twitter"></div>
+<div class="col-md-6"><label>YouTube URL</label><input class="form-control" name="youtube"></div>
+<div class="col-md-6"><label>LinkedIn URL</label><input class="form-control" name="linkedin"></div>
+<div class="col-md-6"><label>Instagram URL</label><input class="form-control" name="instagram"></div>
+<div class="col-12"><label>Trust Badges (comma separated)</label><input class="form-control" name="trustBadges" placeholder="REB Certified, Secure & Private, Rwanda Compliant"></div>
+<div class="col-md-4"><div class="form-check"><input class="form-check-input" type="checkbox" name="announcementBar" id="set-ann-bar"><label class="form-check-label" for="set-ann-bar">Show Announcement Bar</label></div></div>
+<div class="col-md-4"><div class="form-check"><input class="form-check-input" type="checkbox" name="approvalWorkflow" id="set-approval"><label class="form-check-label" for="set-approval">Enable Approval Workflow</label></div></div>
+<div class="col-md-4"><div class="form-check"><input class="form-check-input" type="checkbox" name="maintenanceMode" id="set-maint"><label class="form-check-label" for="set-maint">Maintenance Mode</label></div></div>
+</div>
+<div class="mt-4"><button type="submit" class="btn btn-primary px-4"><i class="fa-solid fa-save me-2"></i>Save Settings</button></div>
+</form>
+</div>
+</div>
+<!-- Modals -->
+<div class="modal fade" id="cms-modal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="cms-modal-title">Modal</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body" id="cms-modal-body"></div></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+    <script src="js/db-extension.js"></script>
+    <script src="js/components.js"></script>
+<script>
+var db = window.db;
+var bsModal = null;
+document.addEventListener('DOMContentLoaded', function() {
+  loadSchoolInfo();
+  loadNews(); loadEvents(); loadTestimonials(); loadLeadership(); loadPrograms(); loadPartners(); loadSubjects(); loadCombinations(); loadGallery(); loadSettings();
+  // Tab switching
+  document.querySelectorAll('.cms-sidebar a[data-tab]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      document.querySelectorAll('.cms-sidebar a[data-tab]').forEach(function(x){ x.classList.remove('active'); });
+      document.querySelectorAll('.cms-tab').forEach(function(t){ t.classList.remove('active'); });
+      a.classList.add('active');
+      document.getElementById('tab-' + a.dataset.tab).classList.add('active');
+    });
+  });
+  // School form submit
+  document.getElementById('form-school').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var data = {};
+    var fd = new FormData(this);
+    fd.forEach(function(v, k) {
+      if (k === 'facilities' || k === 'admissionRequirements') { data[k] = v.split(',').map(function(s){ return s.trim(); }).filter(Boolean); }
+      else { data[k] = v; }
+    });
+    db.updateSchoolInfo(data);
+    window.showToast('School information saved!', 'success');
+  });
+  // Settings form submit
+  document.getElementById('form-settings').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var data = {};
+    var fd = new FormData(this);
+    fd.forEach(function(v, k) {
+      if (k === 'announcementBar' || k === 'approvalWorkflow' || k === 'maintenanceMode') { data[k] = true; }
+      else if (k === 'trustBadges') { data[k] = v.split(',').map(function(s){ return s.trim(); }).filter(Boolean); }
+      else if (['facebook','twitter','youtube','linkedin','instagram'].includes(k)) {
+        if (!data.socialLinks) data.socialLinks = {};
+        data.socialLinks[k === 'facebook' ? 'facebook' : k === 'twitter' ? 'twitter' : k === 'youtube' ? 'youtube' : k === 'linkedin' ? 'linkedin' : 'instagram'] = v;
+      }
+      else { data[k] = v; }
+    });
+    db.updateSiteSettings(data);
+    window.showToast('Settings saved!', 'success');
+  });
+});
+function loadSchoolInfo() {
+  var info = db.getSchoolInfo();
+  var form = document.getElementById('form-school');
+  form.querySelector('[name="name"]').value = info.name || '';
+  form.querySelector('[name="shortName"]').value = info.shortName || '';
+  form.querySelector('[name="motto"]').value = info.motto || '';
+  form.querySelector('[name="established"]').value = info.established || '';
+  form.querySelector('[name="phone"]').value = info.phone || '';
+  form.querySelector('[name="email"]').value = info.email || '';
+  form.querySelector('[name="website"]').value = info.website || '';
+  form.querySelector('[name="address"]').value = info.address || '';
+  form.querySelector('[name="aboutIntro"]').value = info.aboutIntro || '';
+  form.querySelector('[name="schoolHistory"]').value = info.schoolHistory || '';
+  form.querySelector('[name="mission"]').value = info.mission || '';
+  form.querySelector('[name="vision"]').value = info.vision || '';
+  form.querySelector('[name="principalMessage"]').value = info.principalMessage || '';
+  form.querySelector('[name="coreValues"]').value = info.coreValues || '';
+  form.querySelector('[name="facilities"]').value = (info.facilities||[]).join(', ');
+  form.querySelector('[name="heroTitle"]').value = info.heroTitle || '';
+  form.querySelector('[name="heroSubtitle"]').value = info.heroSubtitle || '';
+  form.querySelector('[name="badge"]').value = info.badge || '';
+  form.querySelector('[name="heroDescription"]').value = info.heroDescription || '';
+  form.querySelector('[name="loginDescription"]').value = info.loginDescription || '';
+  form.querySelector('[name="contactIntro"]').value = info.contactIntro || '';
+  form.querySelector('[name="announcementsIntro"]').value = info.announcementsIntro || '';
+  form.querySelector('[name="galleryIntro"]').value = info.galleryIntro || '';
+  form.querySelector('[name="teachersIntro"]').value = info.teachersIntro || '';
+  form.querySelector('[name="booksIntro"]').value = info.booksIntro || '';
+  form.querySelector('[name="admissionsContent"]').value = info.admissionsContent || '';
+  form.querySelector('[name="admissionRequirements"]').value = (info.admissionRequirements||[]).join(', ');
+}
+function loadSettings() {
+  var s = db.getSiteSettings();
+  document.getElementById('form-settings').querySelector('[name="officeHours"]').value = s.officeHours || '';
+  document.getElementById('form-settings').querySelector('[name="contactIntro"]').value = s.contactIntro || '';
+  document.getElementById('form-settings').querySelector('[name="facebook"]').value = (s.socialLinks&&s.socialLinks.facebook)||'';
+  document.getElementById('form-settings').querySelector('[name="twitter"]').value = (s.socialLinks&&s.socialLinks.twitter)||'';
+  document.getElementById('form-settings').querySelector('[name="youtube"]').value = (s.socialLinks&&s.socialLinks.youtube)||'';
+  document.getElementById('form-settings').querySelector('[name="linkedin"]').value = (s.socialLinks&&s.socialLinks.linkedin)||'';
+  document.getElementById('form-settings').querySelector('[name="instagram"]').value = (s.socialLinks&&s.socialLinks.instagram)||'';
+  document.getElementById('form-settings').querySelector('[name="trustBadges"]').value = (s.trustBadges||[]).join(', ');
+  document.getElementById('set-ann-bar').checked = s.announcementBar !== false;
+  document.getElementById('set-approval').checked = s.approvalWorkflow === true;
+  document.getElementById('set-maint').checked = s.maintenanceMode === true;
+}
+function renderTable(id, items, renderRow, emptyId) {
+  var tbody = document.getElementById(id);
+  var empty = document.getElementById(emptyId);
+  if (!items.length) { tbody.innerHTML = ''; if(empty) empty.style.display = 'block'; return; }
+  if(empty) empty.style.display = 'none';
+  tbody.innerHTML = items.map(renderRow).join('');
+}
+// News
+function loadNews() {
+  var items = db.getNews();
+  renderTable('news-table-body', items, function(n) {
+    var statusClass = n.status === 'published' ? 'bg-success' : n.status === 'pending' ? 'bg-warning text-dark' : 'bg-secondary';
+    return '<tr><td class="font-bold">'+n.title+'</td><td><span class="status-badge '+statusClass+'">'+(n.status||'draft')+'</span></td><td>'+(n.views||0)+'</td><td class="small text-muted">'+new Date(n.createdAt).toLocaleDateString()+'</td><td><button class="btn btn-sm btn-outline-primary me-1" onclick="editNews('+n.id+')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteNews('+n.id+')"><i class="fa-solid fa-trash"></i></button>'+(n.status==='pending'?' <button class="btn btn-sm btn-outline-success" onclick="approveNews('+n.id+')"><i class="fa-solid fa-check"></i></button>':'')+'</td></tr>';
+  }, 'news-empty');
+}
+function openNewsModal(data) {
+  data = data || {};
+  document.getElementById('cms-modal-title').textContent = data.id ? 'Edit News' : 'Add News Article';
+  document.getElementById('cms-modal-body').innerHTML = '<form id="cms-modal-form"><div class="row g-3"><div class="col-12"><label class="form-label font-bold small">Title</label><input class="form-control" name="title" value="'+(data.title||'')+'" required></div><div class="col-12"><label class="form-label font-bold small">Content</label><textarea class="form-control" name="content" rows="5">'+(data.content||'')+'</textarea></div><div class="col-md-6"><label class="form-label font-bold small">Category</label><input class="form-control" name="category" value="'+(data.category||'School News')+'"></div><div class="col-md-6"><label class="form-label font-bold small">Status</label><select class="form-select" name="status"><option value="published"'+(data.status==='published'?' selected':'')+'>Published</option><option value="pending"'+(data.status==='pending'?' selected':'')+'>Pending</option><option value="draft"'+(data.status==='draft'?' selected':'')+'>Draft</option></select></div><div class="col-md-6"><label class="form-label font-bold small">Image URL</label><input class="form-control" name="image" value="'+(data.image||'')+'"></div><div class="col-md-6"><label class="form-label font-bold small">Author</label><input class="form-control" name="author" value="'+(data.author||'Admin')+'"></div></div></form>';
+  var modal = new bootstrap.Modal(document.getElementById('cms-modal'));
+  modal.show();
+  document.getElementById('cms-modal-form').onsubmit = function(e) {
+    e.preventDefault();
+    var fd = new FormData(this);
+    var obj = {};
+    fd.forEach(function(v,k){ obj[k]=v; });
+    if (data.id) { db.updateNews(data.id, obj); } else { db.createNews(obj); }
+    modal.hide();
+    loadNews();
+    window.showToast('News '+(data.id?'updated':'created')+'!','success');
+  };
+}
+function editNews(id) { var n = db.getNewsArticle(id); if(n) openNewsModal(n); }
+function deleteNews(id) { if(confirm('Delete this article?')){ db.deleteNews(id); loadNews(); window.showToast('Deleted!','error'); } }
+function approveNews(id) { db.approveNews(id); loadNews(); window.showToast('Article approved!','success'); }
+// Events
+function loadEvents() {
+  var items = db.getEvents();
+  renderTable('events-table-body', items, function(e) {
+    var statusClass = e.status === 'published' ? 'bg-success' : e.status === 'pending' ? 'bg-warning text-dark' : 'bg-secondary';
+    return '<tr><td class="font-bold">'+e.title+'</td><td class="small">'+new Date(e.date||e.createdAt).toLocaleDateString()+'</td><td><span class="status-badge '+statusClass+'">'+(e.status||'draft')+'</span></td><td><button class="btn btn-sm btn-outline-primary me-1" onclick="editEvent('+e.id+')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteEvent('+e.id+')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+  }, 'events-empty');
+}
+function openEventModal(data) {
+  data = data || {};
+  document.getElementById('cms-modal-title').textContent = data.id ? 'Edit Event' : 'Add Event';
+  document.getElementById('cms-modal-body').innerHTML = '<form id="cms-modal-form"><div class="row g-3"><div class="col-12"><label class="form-label font-bold small">Title</label><input class="form-control" name="title" value="'+(data.title||'')+'" required></div><div class="col-12"><label class="form-label font-bold small">Description</label><textarea class="form-control" name="description" rows="3">'+(data.description||'')+'</textarea></div><div class="col-md-6"><label class="form-label font-bold small">Date</label><input class="form-control" type="date" name="date" value="'+(data.date||'')+'"></div><div class="col-md-6"><label class="form-label font-bold small">Location</label><input class="form-control" name="location" value="'+(data.location||'')+'"></div><div class="col-md-6"><label class="form-label font-bold small">Status</label><select class="form-select" name="status"><option value="published"'+(data.status==='published'?' selected':'')+'>Published</option><option value="pending"'+(data.status==='pending'?' selected':'')+'>Pending</option><option value="draft"'+(data.status==='draft'?' selected':'')+'>Draft</option></select></div><div class="col-md-6"><label class="form-label font-bold small">Image URL</label><input class="form-control" name="image" value="'+(data.image||'')+'"></div></div></form>';
+  var modal = new bootstrap.Modal(document.getElementById('cms-modal'));
+  modal.show();
+  document.getElementById('cms-modal-form').onsubmit = function(e) {
+    e.preventDefault();
+    var fd = new FormData(this);
+    var obj = {};
+    fd.forEach(function(v,k){ obj[k]=v; });
+    if (data.id) { db.updateEvent(data.id, obj); } else { db.createEvent(obj); }
+    modal.hide();
+    loadEvents();
+    window.showToast('Event '+(data.id?'updated':'created')+'!','success');
+  };
+}
+function editEvent(id) { var e = db.getEvent(id); if(e) openEventModal(e); }
+function deleteEvent(id) { if(confirm('Delete this event?')){ db.deleteEvent(id); loadEvents(); window.showToast('Deleted!','error'); } }
+// Testimonials
+function loadTestimonials() {
+  var items = db.getTestimonials();
+  renderTable('testimonials-table-body', items, function(t) {
+    return '<tr><td class="font-bold">'+t.name+'</td><td class="small text-muted">'+(t.content||t.text||'').substring(0,60)+'...</td><td><span class="status-badge '+(t.status==='published'?'bg-success':'bg-warning text-dark')+'">'+(t.status||'draft')+'</span></td><td><button class="btn btn-sm btn-outline-primary me-1" onclick="editTestimonial('+t.id+')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteTestimonial('+t.id+')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+  }, 'testimonials-empty');
+}
+function openTestimonialModal(data) {
+  data = data || {};
+  document.getElementById('cms-modal-title').textContent = data.id ? 'Edit Testimonial' : 'Add Testimonial';
+  document.getElementById('cms-modal-body').innerHTML = '<form id="cms-modal-form"><div class="row g-3"><div class="col-md-6"><label class="form-label font-bold small">Name</label><input class="form-control" name="name" value="'+(data.name||'')+'" required></div><div class="col-md-6"><label class="form-label font-bold small">Role</label><input class="form-control" name="role" value="'+(data.role||'')+'"></div><div class="col-12"><label class="form-label font-bold small">Quote / Content</label><textarea class="form-control" name="content" rows="3">'+(data.content||data.text||'')+'</textarea></div><div class="col-md-6"><label class="form-label font-bold small">Avatar URL</label><input class="form-control" name="avatar" value="'+(data.avatar||'')+'"></div><div class="col-md-6"><label class="form-label font-bold small">Status</label><select class="form-select" name="status"><option value="published"'+(data.status==='published'?' selected':'')+'>Published</option><option value="draft"'+(data.status==='draft'?' selected':'')+'>Draft</option></select></div></div></form>';
+  var modal = new bootstrap.Modal(document.getElementById('cms-modal'));
+  modal.show();
+  document.getElementById('cms-modal-form').onsubmit = function(e) {
+    e.preventDefault();
+    var fd = new FormData(this);
+    var obj = {};
+    fd.forEach(function(v,k){ obj[k]=v; });
+    if (data.id) { db.updateTestimonial(data.id, obj); } else { db.createTestimonial(obj); }
+    modal.hide();
+    loadTestimonials();
+    window.showToast('Testimonial '+(data.id?'updated':'created')+'!','success');
+  };
+}
+function editTestimonial(id) { var t = db.getTestimonials().find(function(x){return x.id===Number(id);}); if(t) openTestimonialModal(t); }
+function deleteTestimonial(id) { if(confirm('Delete this testimonial?')){ db.deleteTestimonial(id); loadTestimonials(); window.showToast('Deleted!','error'); } }
+// Leadership
+function loadLeadership() {
+  var items = db.getLeadership();
+  renderTable('leadership-table-body', items, function(l) {
+    return '<tr><td><img src="'+(l.avatar||'https://ui-avatars.com/api/?name='+encodeURIComponent(l.name)+'&background=1e3a8a&color=fff')+'" alt="'+l.name+'"></td><td class="font-bold">'+l.name+'</td><td class="small text-muted">'+l.title+'</td><td><button class="btn btn-sm btn-outline-primary me-1" onclick="editLeader('+l.id+')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteLeader('+l.id+')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+  }, 'leadership-empty');
+}
+function openLeaderModal(data) {
+  data = data || {};
+  document.getElementById('cms-modal-title').textContent = data.id ? 'Edit Leader' : 'Add Leader';
+  document.getElementById('cms-modal-body').innerHTML = '<form id="cms-modal-form"><div class="row g-3"><div class="col-md-6"><label class="form-label font-bold small">Name</label><input class="form-control" name="name" value="'+(data.name||'')+'" required></div><div class="col-md-6"><label class="form-label font-bold small">Title</label><input class="form-control" name="title" value="'+(data.title||'')+'"></div><div class="col-12"><label class="form-label font-bold small">Bio</label><textarea class="form-control" name="bio" rows="2">'+(data.bio||'')+'</textarea></div><div class="col-12"><label class="form-label font-bold small">Avatar URL</label><input class="form-control" name="avatar" value="'+(data.avatar||'')+'"></div></div></form>';
+  var modal = new bootstrap.Modal(document.getElementById('cms-modal'));
+  modal.show();
+  document.getElementById('cms-modal-form').onsubmit = function(e) {
+    e.preventDefault();
+    var fd = new FormData(this);
+    var obj = {};
+    fd.forEach(function(v,k){ obj[k]=v; });
+    if (data.id) { db.updateLeader(data.id, obj); } else { db.createLeader(obj); }
+    modal.hide();
+    loadLeadership();
+    window.showToast('Leader '+(data.id?'updated':'added')+'!','success');
+  };
+}
+function editLeader(id) { var l = db.getLeadership().find(function(x){return x.id===Number(id);}); if(l) openLeaderModal(l); }
+function deleteLeader(id) { if(confirm('Remove this leader?')){ db.deleteLeadership(id); loadLeadership(); window.showToast('Removed!','error'); } }
+// Programs
+function loadPrograms() {
+  var items = db.getFeaturedPrograms();
+  renderTable('programs-table-body', items, function(p) {
+    return '<tr><td><i class="fa-solid '+(p.icon||'fa-medal')+' text-primary"></i></td><td class="font-bold">'+p.title+'</td><td class="small text-muted">'+(p.description||'').substring(0,60)+'...</td><td><button class="btn btn-sm btn-outline-primary me-1" onclick="editProgram('+p.id+')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deleteProgram('+p.id+')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+  }, 'programs-empty');
+}
+function openProgramModal(data) {
+  data = data || {};
+  document.getElementById('cms-modal-title').textContent = data.id ? 'Edit Program' : 'Add Program';
+  document.getElementById('cms-modal-body').innerHTML = '<form id="cms-modal-form"><div class="row g-3"><div class="col-md-6"><label class="form-label font-bold small">Title</label><input class="form-control" name="title" value="'+(data.title||'')+'" required></div><div class="col-md-6"><label class="form-label font-bold small">Icon (FontAwesome class)</label><input class="form-control" name="icon" value="'+(data.icon||'fa-medal')+'"></div><div class="col-12"><label class="form-label font-bold small">Description</label><textarea class="form-control" name="description" rows="3">'+(data.description||'')+'</textarea></div><div class="col-md-6"><label class="form-label font-bold small">Color</label><input class="form-control" name="color" value="'+(data.color||'primary')+'"></div><div class="col-md-6"><label class="form-label font-bold small">Link URL</label><input class="form-control" name="link" value="'+(data.link||'')+'"></div></div></form>';
+  var modal = new bootstrap.Modal(document.getElementById('cms-modal'));
+  modal.show();
+  document.getElementById('cms-modal-form').onsubmit = function(e) {
+    e.preventDefault();
+    var fd = new FormData(this);
+    var obj = {};
+    fd.forEach(function(v,k){ obj[k]=v; });
+    if (data.id) { db.updateProgram(data.id, obj); } else { db.createProgram(obj); }
+    modal.hide();
+    loadPrograms();
+    window.showToast('Program '+(data.id?'updated':'created')+'!','success');
+  };
+}
+function editProgram(id) { var p = db.getFeaturedPrograms().find(function(x){return x.id===Number(id);}); if(p) openProgramModal(p); }
+function deleteProgram(id) { if(confirm('Delete this program?')){ db.deleteProgram(id); loadPrograms(); window.showToast('Deleted!','error'); } }
+// Partners
+function loadPartners() {
+  var items = db.getPartners();
+  renderTable('partners-table-body', items, function(p) {
+    return '<tr><td class="font-bold">'+p.name+'</td><td class="small text-muted">'+(p.website||'-')+'</td><td>'+(p.order||'')+'</td><td><button class="btn btn-sm btn-outline-primary me-1" onclick="editPartner('+p.id+')"><i class="fa-solid fa-pen"></i></button><button class="btn btn-sm btn-outline-danger" onclick="deletePartner('+p.id+')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+  }, 'partners-empty');
+}
+function openPartnerModal(data) {
+  data = data || {};
+  document.getElementById('cms-modal-title').textContent = data.id ? 'Edit Partner' : 'Add Partner';
+  document.getElementById('cms-modal-body').innerHTML = '<form id="cms-modal-form"><div class="row g-3"><div class="col-md-6"><label class="form-label font-bold small">Name</label><input class="form-control" name="name" value="'+(data.name||'')+'" required></div><div class="col-md-6"><label class="form-label font-bold small">Website</label><input class="form-control" name="website" value="'+(data.website||'')+'"></div><div class="col-md-6"><label class="form-label font-bold small">Logo URL</label><input class="form-control" name="logo" value="'+(data.logo||'')+'"></div><div class="col-md-6"><label class="form-label font-bold small">Order</label><input class="form-control" type="number" name="order" value="'+(data.order||'')+'"></div></div></form>';
+  var modal = new bootstrap.Modal(document.getElementById('cms-modal'));
+  modal.show();
+  document.getElementById('cms-modal-form').onsubmit = function(e) {
+    e.preventDefault();
+    var fd = new FormData(this);
+    var obj = {};
+    fd.forEach(function(v,k){ obj[k]=v; });
+    if (data.id) { db.updatePartner(data.id, obj); } else { db.createPartner(obj); }
+    modal.hide();
+    loadPartners();
+    window.showToast('Partner '+(data.id?'updated':'added')+'!','success');
+  };
+}
+function editPartner(id) { var p = db.getPartners().find(function(x){return x.id===Number(id);}); if(p) openPartnerModal(p); }
+function deletePartner(id) { if(confirm('Remove this partner?')){ db.deletePartner(id); loadPartners(); window.showToast('Removed!','error'); } }
+// Gallery
+function loadGallery() {
+  var items = [];
+  try { items = JSON.parse(localStorage.getItem('cms_gallery_photos')) || []; } catch(e) {}
+  renderTable('gallery-table-body', items, function(p) {
+    return '<tr><td><img src="'+p.url+'" alt="'+p.title+'" style="width:48px;height:36px;border-radius:6px;object-fit:cover;"></td><td>'+p.title+'</td><td><span class="badge bg-secondary">'+p.category+'</span></td><td><button class="btn btn-sm btn-outline-danger" onclick="deleteGalleryPhoto('+p.id+')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+  }, 'gallery-empty');
+}
+function openGalleryModal() {
+  var cats = (db.getGalleryCategories ? db.getGalleryCategories() : ['Academics','Sports','Events']).map(function(c){ return '<option value="'+c.toLowerCase()+'">'+c+'</option>'; }).join('');
+  document.getElementById('cms-modal-title').textContent = 'Add Gallery Photo';
+  document.getElementById('cms-modal-body').innerHTML = '<form id="cms-modal-form"><div class="row g-3"><div class="col-md-6"><label class="form-label font-bold small">Title</label><input class="form-control" name="title" required></div><div class="col-md-6"><label class="form-label font-bold small">Category</label><select class="form-select" name="category">'+cats+'</select></div><div class="col-12"><label class="form-label font-bold small">Image URL</label><input class="form-control" name="url" required placeholder="https://..."></div></div></form>';
+  var modal = new bootstrap.Modal(document.getElementById('cms-modal'));
+  modal.show();
+  document.getElementById('cms-modal-form').onsubmit = function(e) {
+    e.preventDefault();
+    var fd = new FormData(this);
+    var obj = {};
+    fd.forEach(function(v,k){ obj[k]=v; });
+    var photos = [];
+    try { photos = JSON.parse(localStorage.getItem('cms_gallery_photos')) || []; } catch(e) {}
+    obj.id = photos.length > 0 ? Math.max.apply(null, photos.map(function(x){return x.id;})) + 1 : 1;
+    photos.push(obj);
+    localStorage.setItem('cms_gallery_photos', JSON.stringify(photos));
+    modal.hide();
+    loadGallery();
+    window.showToast('Photo added!','success');
+  };
+}
+function deleteGalleryPhoto(id) {
+  if(!confirm('Remove this photo?')) return;
+  var photos = [];
+  try { photos = JSON.parse(localStorage.getItem('cms_gallery_photos')) || []; } catch(e) {}
+  photos = photos.filter(function(p){ return p.id !== id; });
+  localStorage.setItem('cms_gallery_photos', JSON.stringify(photos));
+  loadGallery();
+  window.showToast('Removed!','error');
+}
+// ── Subjects ──
+function loadSubjects() {
+  var items = db.getSubjects();
+  var level = document.getElementById('filter-subject-level').value;
+  var cat   = document.getElementById('filter-subject-cat').value;
+  var q     = document.getElementById('filter-subject-search').value.toLowerCase();
+  if (level) items = items.filter(function(s){ return s.level === level; });
+  if (cat)   items = items.filter(function(s){ return s.category === cat; });
+  if (q)     items = items.filter(function(s){ return (s.title||'').toLowerCase().includes(q) || (s.code||'').toLowerCase().includes(q); });
+  renderTable('subjects-table-body', items, function(s) {
+    var lvlClass = s.level==='Primary'?'success':s.level==='Lower Secondary'?'info':s.level==='Upper Secondary'?'primary':'warning';
+    return '<tr><td><code>'+s.code+'</code></td><td class="font-bold">'+s.title+'</td>'
+      +'<td><span class="badge bg-'+lvlClass+'">'+s.level+'</span></td>'
+      +'<td><span class="badge bg-secondary bg-opacity-10 text-secondary">'+s.category+'</span></td>'
+      +'<td><button class="btn btn-sm btn-outline-primary me-1" onclick="editSubject('+s.id+')"><i class="fa-solid fa-pen"></i></button>'
+      +'<button class="btn btn-sm btn-outline-danger" onclick="deleteSubject('+s.id+')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+  }, 'subjects-empty');
+}
+function openSubjectModal(data) {
+  data = data || {};
+  var levels = ['Primary','Lower Secondary','Upper Secondary','TVET'];
+  var cats = ['languages','sciences','humanities','science','arts','sports','ict','business','common','engineering','hospitality','agriculture','creative'];
+  document.getElementById('cms-modal-title').textContent = data.id ? 'Edit Subject' : 'Add Subject';
+  document.getElementById('cms-modal-body').innerHTML = '<form id="cms-modal-form"><div class="row g-3">'
+    +'<div class="col-md-6"><label class="form-label font-bold small">Title</label><input class="form-control" name="title" value="'+(data.title||'')+'" required></div>'
+    +'<div class="col-md-3"><label class="form-label font-bold small">Code</label><input class="form-control" name="code" value="'+(data.code||'')+'" placeholder="MAT-PRI"></div>'
+    +'<div class="col-md-3"><label class="form-label font-bold small">Level</label><select class="form-select" name="level">'+levels.map(function(l){return '<option'+(data.level===l?' selected':'')+'>'+l+'</option>';}).join('')+'</select></div>'
+    +'<div class="col-md-6"><label class="form-label font-bold small">Category</label><select class="form-select" name="category">'+cats.map(function(c){return '<option'+(data.category===c?' selected':'')+'>'+c+'</option>';}).join('')+'</select></div>'
+    +'<div class="col-12"><label class="form-label font-bold small">Description</label><textarea class="form-control" name="description" rows="3">'+(data.description||'')+'</textarea></div>'
+    +'</div></form>';
+  var modal = new bootstrap.Modal(document.getElementById('cms-modal'));
+  modal.show();
+  document.getElementById('cms-modal-form').onsubmit = function(e) {
+    e.preventDefault();
+    var fd = new FormData(this);
+    var obj = {};
+    fd.forEach(function(v,k){ obj[k]=v; });
+    if (data.id) { db.updateSubject(data.id, obj); } else { db.createSubject(obj); }
+    modal.hide();
+    loadSubjects();
+    window.showToast('Subject '+(data.id?'updated':'created')+'!','success');
+  };
+}
+function editSubject(id) { var s = db.getSubjects().find(function(x){return x.id===Number(id);}); if(s) openSubjectModal(s); }
+function deleteSubject(id) { if(confirm('Delete this subject? Lessons and books for it will also be removed.')){ db.deleteSubject(id); loadSubjects(); window.showToast('Deleted!','error'); } }
+document.getElementById('filter-subject-level').addEventListener('change', loadSubjects);
+document.getElementById('filter-subject-cat').addEventListener('change', loadSubjects);
+document.getElementById('filter-subject-search').addEventListener('input', loadSubjects);
+// ── Combinations ──
+function loadCombinations() {
+  var items = db.getCombinations();
+  renderTable('combinations-table-body', items, function(c) {
+    var streamClass = c.stream==='science'?'primary':'info';
+    var subjBadges = c.subjects.map(function(s){ return '<span class="badge bg-'+streamClass+' bg-opacity-10 text-'+streamClass+' me-1">'+s+'</span>'; }).join('');
+    return '<tr><td><strong class="text-'+streamClass+'">'+c.name+'</strong></td><td class="small">'+c.fullName+'</td>'
+      +'<td><span class="badge bg-'+streamClass+'">'+c.stream+'</span></td>'
+      +'<td>'+subjBadges+'</td>'
+      +'<td><button class="btn btn-sm btn-outline-primary me-1" onclick="editCombo('+c.id+')"><i class="fa-solid fa-pen"></i></button>'
+      +'<button class="btn btn-sm btn-outline-danger" onclick="deleteCombo('+c.id+')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+  }, 'combinations-empty');
+}
+function openComboModal(data) {
+  data = data || {};
+  document.getElementById('cms-modal-title').textContent = data.id ? 'Edit Combination' : 'Add Combination';
+  document.getElementById('cms-modal-body').innerHTML = '<form id="cms-modal-form"><div class="row g-3">'
+    +'<div class="col-md-4"><label class="form-label font-bold small">Short Name</label><input class="form-control" name="name" value="'+(data.name||'')+'" required placeholder="MPC"></div>'
+    +'<div class="col-md-4"><label class="form-label font-bold small">Full Name</label><input class="form-control" name="fullName" value="'+(data.fullName||'')+'" required placeholder="Mathematics, Physics, Computer Science"></div>'
+    +'<div class="col-md-4"><label class="form-label font-bold small">Stream</label><select class="form-select" name="stream"><option value="science"'+(data.stream==='science'?' selected':'')+'>Science</option><option value="humanities"'+(data.stream==='humanities'?' selected':'')+'>Humanities</option></select></div>'
+    +'<div class="col-12"><label class="form-label font-bold small">Subjects (comma separated)</label><input class="form-control" name="subjects" value="'+(data.subjects?data.subjects.join(', '):'')+'" required placeholder="Mathematics, Physics, Computer Science"></div>'
+    +'<div class="col-12"><label class="form-label font-bold small">Description</label><textarea class="form-control" name="description" rows="2">'+(data.description||'')+'</textarea></div>'
+    +'</div></form>';
+  var modal = new bootstrap.Modal(document.getElementById('cms-modal'));
+  modal.show();
+  document.getElementById('cms-modal-form').onsubmit = function(e) {
+    e.preventDefault();
+    var fd = new FormData(this);
+    var obj = {};
+    fd.forEach(function(v,k){ obj[k]=v; });
+    obj.subjects = obj.subjects.split(',').map(function(s){return s.trim();}).filter(Boolean);
+    if (data.id) { db.updateCombination(data.id, obj); } else { db.createCombination(obj); }
+    modal.hide();
+    loadCombinations();
+    window.showToast('Combination '+(data.id?'updated':'created')+'!','success');
+  };
+}
+function editCombo(id) { var c = db.getCombinations().find(function(x){return x.id===Number(id);}); if(c) openComboModal(c); }
+function deleteCombo(id) { if(confirm('Delete this combination?')){ db.deleteCombination(id); loadCombinations(); window.showToast('Deleted!','error'); } }
+</script>
+</body>
+</html>

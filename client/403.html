@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>403 - Access Denied | HON-ACADEMY</title>
+  <meta name="description" content="You do not have permission to access this page." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Poppins:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; position: relative;
+    }
+
+    /* Animated background particles */
+    .bg-orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: 0.15; animation: floatOrb 8s ease-in-out infinite;
+    }
+    .bg-orb-1 { width: 400px; height: 400px; background: #4f46e5; top: -100px; left: -100px; }
+    .bg-orb-2 { width: 300px; height: 300px; background: #ef4444; bottom: -80px; right: -80px; animation-delay: -4s; }
+    .bg-orb-3 { width: 200px; height: 200px; background: #10b981; top: 50%; left: 50%; animation-delay: -2s; }
+
+    @keyframes floatOrb {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(20px, -30px) scale(1.05); }
+      66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+
+    /* Card */
+    .error-card {
+      position: relative; z-index: 10;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
+      padding: 56px 48px;
+      text-align: center;
+      max-width: 520px;
+      width: 90%;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 32px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255,255,255,0.05);
+      animation: slideUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Shield icon */
+    .shield-wrap {
+      position: relative; width: 100px; height: 100px;
+      margin: 0 auto 28px;
+    }
+    .shield-bg {
+      width: 100px; height: 100px; border-radius: 50%;
+      background: linear-gradient(135deg, rgba(239,68,68,0.2), rgba(239,68,68,0.05));
+      border: 2px solid rgba(239,68,68,0.3);
+      display: flex; align-items: center; justify-content: center;
+      animation: pulseBorder 2s ease-in-out infinite;
+    }
+    @keyframes pulseBorder {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.3); }
+      50% { box-shadow: 0 0 0 12px rgba(239,68,68,0); }
+    }
+    .shield-bg i { font-size: 44px; color: #ef4444; }
+
+    /* Code */
+    .error-code {
+      font-family: 'Poppins', sans-serif;
+      font-size: 80px; font-weight: 900; line-height: 1;
+      background: linear-gradient(135deg, #ef4444, #f97316);
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+      margin-bottom: 8px;
+    }
+    .error-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 22px; font-weight: 700;
+      color: #fff; margin-bottom: 14px;
+    }
+    .error-desc {
+      font-size: 14px; color: rgba(255,255,255,0.55);
+      line-height: 1.7; margin-bottom: 32px;
+    }
+
+    /* Divider */
+    .divider {
+      width: 60px; height: 3px;
+      background: linear-gradient(90deg, #ef4444, #f97316);
+      border-radius: 2px; margin: 0 auto 28px;
+    }
+
+    /* Role info */
+    .role-info {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
+      border-radius: 20px; padding: 6px 16px;
+      color: #fca5a5; font-size: 12px; font-weight: 600;
+      margin-bottom: 28px;
+    }
+
+    /* Buttons */
+    .btn-group-custom { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary-custom {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 12px;
+      background: linear-gradient(135deg, #4f46e5, #6366f1);
+      color: #fff; font-size: 14px; font-weight: 700;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: all 0.2s; box-shadow: 0 4px 20px rgba(79,70,229,0.4);
+    }
+    .btn-primary-custom:hover {
+      transform: translateY(-2px); box-shadow: 0 8px 28px rgba(79,70,229,0.5);
+      color: #fff;
+    }
+    .btn-secondary-custom {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 24px; border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 600;
+      text-decoration: none; cursor: pointer; transition: all 0.2s;
+    }
+    .btn-secondary-custom:hover { background: rgba(255,255,255,0.12); color: #fff; transform: translateY(-2px); }
+
+    /* Portal links */
+    .portal-links {
+      margin-top: 28px; padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+    }
+    .portal-links p { font-size: 12px; color: rgba(255,255,255,0.35); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+    .portal-pills { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .portal-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 600;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .portal-pill:hover { background: rgba(255,255,255,0.08); color: #fff; border-color: rgba(255,255,255,0.2); }
+
+    /* Brand */
+    .brand-footer {
+      margin-top: 28px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .brand-icon {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; color: #fff;
+    }
+    .brand-text { font-size: 12px; color: rgba(255,255,255,0.35); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <!-- Background orbs -->
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+
+  <div class="error-card">
+    <!-- Shield Icon -->
+    <div class="shield-wrap">
+      <div class="shield-bg">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+    </div>
+
+    <!-- Error Code -->
+    <div class="error-code">403</div>
+    <h1 class="error-title">Access Denied</h1>
+    <div class="divider"></div>
+
+    <!-- Role Badge -->
+    <div class="role-info" id="roleInfo">
+      <i class="fa-solid fa-circle-xmark"></i>
+      <span id="roleText">You are not authorized to view this page</span>
+    </div>
+
+    <p class="error-desc">
+      This portal is restricted to authorized users only.<br>
+      Please sign in with the correct account to gain access,<br>
+      or return to a page you are allowed to view.
+    </p>
+
+    <div class="btn-group-custom">
+      <a href="login.html" class="btn-primary-custom">
+        <i class="fa-solid fa-right-to-bracket"></i> Sign In
+      </a>
+      <a href="index.html" class="btn-secondary-custom">
+        <i class="fa-solid fa-house"></i> Go Home
+      </a>
+    </div>
+
+    <!-- Portal quick links -->
+    <div class="portal-links">
+      <p>Authorized Portals</p>
+      <div class="portal-pills">
+        <a href="admin-dashboard.html" class="portal-pill"><i class="fa-solid fa-shield-halved"></i> Admin</a>
+        <a href="teacher-dashboard.html" class="portal-pill"><i class="fa-solid fa-chalkboard-user"></i> Teacher</a>
+        <a href="student-dashboard.html" class="portal-pill"><i class="fa-solid fa-user-graduate"></i> Student</a>
+      </div>
+    </div>
+
+    <!-- Brand -->
+    <div class="brand-footer">
+      <div class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+      <span class="brand-text">HON-ACADEMY</span>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script>
+    // Show current user role if available
+    try {
+      const user = window.db && window.db.getCurrentUser();
+      if (user) {
+        document.getElementById('roleText').textContent = 
+          `Signed in as "${user.name}" (${user.role}) — insufficient permissions`;
+      }
+    } catch(e) {}
+  </script>
+</body>
+</html>
