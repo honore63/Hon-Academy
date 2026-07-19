@@ -15,6 +15,7 @@
     .nav-brand-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, var(--portal-primary), #6366f1); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; margin-bottom: 24px; }
     .nav-main-item { width: 64px; height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: rgba(255,255,255,0.5); text-decoration: none; border-radius: 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; border: none; background: transparent; }
     .nav-main-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .nav-main-item:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
     .nav-main-item.active { background: rgba(59,130,246,0.15); color: #3b82f6; }
     .nav-main-item i { font-size: 18px; margin-bottom: 4px; }
     .nav-main-item span { font-size: 10px; font-weight: 600; line-height: 1.1; text-align: center; }
@@ -25,6 +26,7 @@
     .sub-nav-list { list-style: none; padding: 0; margin: 0; }
     .sub-nav-list li a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: #475569; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.2s; margin-bottom: 4px; border: none; background: transparent; width: 100%; text-align: left; cursor: pointer; }
     .sub-nav-list li a:hover { background: #f8fafc; color: #0f172a; }
+    .sub-nav-list li a:focus-visible { outline: 2px solid #3b82f6; outline-offset: -2px; border-radius: 8px; }
     .sub-nav-list li a.active { background: #eff6ff; color: #2563eb; font-weight: 600; border-left: 3px solid #3b82f6; }
     .portal-main { margin-left: calc(var(--nav-main-w) + var(--nav-sub-w)); min-height: 100vh; }
     .portal-topbar { height: 64px; background: #fff; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 28px; position: sticky; top: 0; z-index: 100; }

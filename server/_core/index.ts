@@ -4,6 +4,10 @@ import { createServer } from "http";
 import net from "net";
 import path from "path";
 import fs from "fs";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -32,7 +36,7 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
   // Statically serve the client folder directly
-  const clientPath = path.resolve(import.meta.dirname, "../..", "client");
+  const clientPath = path.resolve(__dirname, "../../client");
   if (!fs.existsSync(clientPath)) {
     console.error(`Could not find the client directory at: ${clientPath}`);
   }
@@ -40,9 +44,9 @@ async function startServer() {
   app.use(express.static(clientPath));
 
   // Catch-all to support pretty URLs or fallback to index.html
-  app.use("*", (req, res) => {
+  app.get("*", (req, res) => {
     // If request has extension, let it 404
-    if (path.extname(req.baseUrl || req.originalUrl)) {
+    if (path.extname(req.path)) {
       res.status(404).send("Not found");
       return;
     }

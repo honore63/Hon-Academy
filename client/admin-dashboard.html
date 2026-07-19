@@ -46,6 +46,7 @@
       margin-bottom: 8px; cursor: pointer; transition: all 0.2s; border: none; background: transparent;
     }
     .nav-main-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .nav-main-item:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
     .nav-main-item.active { background: rgba(59,130,246,0.15); color: var(--theme-active); }
     .nav-main-item i { font-size: 18px; margin-bottom: 4px; }
     .nav-main-item span { font-size: 10px; font-weight: 600; line-height: 1.1; text-align: center; padding: 0 2px; }
@@ -74,6 +75,7 @@
       text-decoration: none; transition: all 0.2s; margin-bottom: 4px; border: none; background: transparent; width: 100%; text-align: left; cursor: pointer;
     }
     .sub-nav-list li a:hover { background: #f8fafc; color: #0f172a; }
+    .sub-nav-list li a:focus-visible { outline: 2px solid #3b82f6; outline-offset: -2px; border-radius: 8px; }
     .sub-nav-list li a.active { background: #eff6ff; color: #2563eb; font-weight: 600; border-left: 3px solid #3b82f6; }
     .sub-nav-list li a i { font-size: 14px; width: 16px; text-align: center; }
 
@@ -134,6 +136,9 @@
     .stat-label { font-size: 12px; color: #64748b; margin-top: 4px; font-weight: 500; }
     .stat-change { font-size: 11px; margin-top: 6px; font-weight: 600; }
     .stat-change.up { color: #15803d; } .stat-change.down { color: #dc2626; }
+    .portal-stat-card { background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px 20px; text-align:center; min-width:110px; }
+    .portal-stat-card .portal-stat-value { font-family:'Poppins',sans-serif; font-size:22px; font-weight:800; color:#1e3a8a; line-height:1; }
+    .portal-stat-card .portal-stat-label { font-size:11px; color:#64748b; font-weight:500; margin-top:4px; }
 
     /* ─── Section Cards ─── */
     .section-card {
@@ -199,6 +204,8 @@
     }
     .portal-btn-primary { background: #1e3a8a; color: #fff; }
     .portal-btn-primary:hover { background: #1d4ed8; }
+    .portal-btn-secondary { background: #e2e8f0; color: #475569; }
+    .portal-btn-secondary:hover { background: #cbd5e1; }
     .portal-btn-danger { background: #ef4444; color: #fff; }
     .portal-btn-danger:hover { background: #dc2626; }
     .portal-btn-sm { padding: 6px 14px; font-size: 12px; }
@@ -216,6 +223,7 @@
 
     /* ─── Responsive ─── */
     .mobile-toggle { display: none; position: fixed; bottom: 20px; left: 20px; z-index: 1060; width: 48px; height: 48px; border-radius: 50%; background: #1e3a8a; color: #fff; border: none; box-shadow: 0 4px 16px rgba(30,58,138,0.4); cursor: pointer; align-items: center; justify-content: center; font-size: 18px; }
+    .mobile-toggle:focus-visible { outline: 2px solid #60a5fa; outline-offset: 2px; }
     .sidebar-open .portal-sidebar-main { transform: translateX(0) !important; }
     .sidebar-open .portal-sidebar-sub { transform: translateX(0) !important; }
     @media (max-width: 900px) {
@@ -236,7 +244,7 @@
 
 <!-- ═══ MAIN NAVIGATION ═══ -->
 <aside class="portal-sidebar-main">
-  <div class="nav-brand-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+  <div class="nav-brand-icon" style="background:none;padding:0;overflow:hidden;"><img src="IMAGES/WhatsApp Image 2026-07-18 at 9.51.59 AM.jpeg" alt="HON-ACADEMY" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
   <button class="nav-main-item active" id="nav-main-dashboard" onclick="switchNav('dashboard')"><i class="fa-solid fa-gauge-high"></i><span>Dashboard</span></button>
   <button class="nav-main-item" id="nav-main-users" onclick="switchNav('users')"><i class="fa-solid fa-users-gear"></i><span>Users</span></button>
   <button class="nav-main-item" id="nav-main-academics" onclick="switchNav('academics')"><i class="fa-solid fa-book"></i><span>Academics</span></button>
@@ -284,6 +292,7 @@
         <li><a href="#" onclick="window.showToast('Academic years module coming soon','info')"><i class="fa-solid fa-calendar"></i> Academic Years</a></li>
         <li><a href="#" onclick="setActiveSub(event, 'classes')"><i class="fa-solid fa-school"></i> Classes</a></li>
         <li><a href="#" onclick="setActiveSub(event, 'subjects')"><i class="fa-solid fa-book-open"></i> Subjects</a></li>
+        <li><a href="#" onclick="setActiveSub(event, 'course-content')"><i class="fa-solid fa-layer-group"></i> Course Content</a></li>
         <li><a href="#" onclick="window.showToast('Timetable module coming soon','info')"><i class="fa-solid fa-clock"></i> Timetables</a></li>
       </ul>
     </div>
@@ -293,6 +302,7 @@
       <ul class="sub-nav-list">
         <li><a href="#" onclick="setActiveSub(event, 'learning')"><i class="fa-solid fa-book-open"></i> Curriculum Hub</a></li>
         <li><a href="resources-management.html"><i class="fa-solid fa-folder-tree"></i> Digital Library Manager</a></li>
+        <li><a href="digital-library.html"><i class="fa-solid fa-book-open"></i> Browse Digital Library</a></li>
       </ul>
     </div>
 
@@ -301,6 +311,8 @@
       <ul class="sub-nav-list">
         <li><a href="marks.html"><i class="fa-solid fa-check-double"></i> Marks & Grades</a></li>
         <li><a href="#" onclick="setActiveSub(event, 'assignments')"><i class="fa-solid fa-pen-nib"></i> Assignment Manager</a></li>
+        <li><a href="#" onclick="setActiveSub(event, 'assessment-types')"><i class="fa-solid fa-list-check"></i> Assessment Types</a></li>
+        <li><a href="#" onclick="setActiveSub(event, 'assessment-monitor')"><i class="fa-solid fa-chart-simple"></i> Assessment Monitor</a></li>
       </ul>
     </div>
 
@@ -454,8 +466,8 @@
                 <div class="mb-2"><input type="text" class="portal-input" id="ann-title" placeholder="Announcement title" required></div>
                 <div class="mb-2">
                   <select class="portal-input" id="ann-category">
-                    <option>School News</option><option>Timetable</option>
-                    <option>Meetings</option><option>Events</option><option>Exams</option>
+                    <option>Academic Announcement</option><option>Achievement & Recognition</option><option>Digital Learning</option><option>Staff Development</option><option>Parents & Community</option><option>School News</option><option>Timetable</option>
+                    <option>Meetings</option><option>Events</option><option>Exams</option><option>Competitions</option>
                   </select>
                 </div>
                 <div class="mb-2"><textarea class="portal-input" id="ann-content" rows="3" placeholder="Write announcement..." required></textarea></div>
@@ -542,6 +554,26 @@
       </div>
     </div>
 
+    <!-- ── COURSE CONTENT SECTION ── -->
+    <div id="section-course-content" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header">
+          <h5 class="section-card-title"><i class="fa-solid fa-layer-group text-primary me-2"></i>Manage Course Content</h5>
+          <div class="d-flex gap-2">
+            <select id="cc-subject-select" class="portal-input" style="width:auto;min-width:200px;padding:8px 12px;font-size:13px" onchange="renderCourseContent()">
+              <option value="">— Select Subject —</option>
+            </select>
+          </div>
+        </div>
+        <div class="section-card-body" id="cc-body">
+          <div class="text-center py-5 text-muted">
+            <i class="fa-solid fa-hand-pointer" style="font-size:2rem;display:block;margin-bottom:.5rem"></i>
+            <p>Select a subject above to manage its course content.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- ── CLASSES SECTION ── -->
     <div id="section-classes" class="d-none">
       <div class="section-card">
@@ -557,13 +589,70 @@
       <div class="row g-4">
         <div class="col-lg-5">
           <div class="section-card">
-            <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-bullhorn text-danger me-2"></i>Post Announcement</h5></div>
+            <div class="section-card-header">
+              <h5 class="section-card-title"><i class="fa-solid fa-bullhorn text-danger me-2"></i><span id="ann-form-title">Post Announcement</span></h5>
+            </div>
             <div class="section-card-body">
-              <form onsubmit="postAnnouncement(event, true)">
-                <div class="mb-3"><input type="text" class="portal-input" id="ann2-title" placeholder="Title" required></div>
-                <div class="mb-3"><select class="portal-input" id="ann2-category"><option>School News</option><option>Timetable</option><option>Meetings</option><option>Events</option><option>Exams</option></select></div>
-                <div class="mb-3"><textarea class="portal-input" id="ann2-content" rows="4" placeholder="Announcement content..." required></textarea></div>
-                <button type="submit" class="portal-btn portal-btn-primary" style="width:100%"><i class="fa-solid fa-paper-plane me-1"></i>Publish</button>
+              <form onsubmit="postAnnouncement(event, true)" id="ann-form">
+                <input type="hidden" id="ann2-edit-id" value="">
+                <div class="mb-3"><input type="text" class="portal-input" id="ann2-title" placeholder="Announcement title *" required></div>
+                <div class="mb-3"><input type="text" class="portal-input" id="ann2-summary" placeholder="Short summary (optional)"></div>
+                <div class="mb-3">
+                  <div class="row g-2">
+                    <div class="col-6"><select class="portal-input" id="ann2-category"><option>Academic Announcement</option><option>Achievement & Recognition</option><option>Digital Learning</option><option>Staff Development</option><option>Parents & Community</option><option>School News</option><option>Timetable</option><option>Meetings</option><option>Events</option><option>Exams</option><option>Competitions</option></select></div>
+                    <div class="col-6">
+                      <select class="portal-input" id="ann2-visibility">
+                        <option value="public">Public</option>
+                        <option value="school_community" selected>School Community</option>
+                        <option value="teachers_only">Teachers Only</option>
+                        <option value="students_only">Students Only</option>
+                        <option value="parents_only">Parents Only</option>
+                        <option value="admin_only">Admin Only</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class="row g-2">
+                    <div class="col-6">
+                      <select class="portal-input" id="ann2-priority">
+                        <option value="normal">Normal Priority</option>
+                        <option value="important">Important</option>
+                        <option value="urgent">Urgent</option>
+                      </select>
+                    </div>
+                    <div class="col-6">
+                      <label style="font-size:11px;color:#64748b;display:flex;align-items:center;gap:4px;padding:4px 0;"><input type="checkbox" id="ann2-pinned"> Pinned</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3"><textarea class="portal-input" id="ann2-content" rows="4" placeholder="Full announcement content (HTML supported)..." required></textarea></div>
+                <div class="mb-3">
+                  <div class="row g-2">
+                    <div class="col-6">
+                      <label style="font-size:11px;color:#64748b;font-weight:500;">Publish Date</label>
+                      <input type="datetime-local" class="portal-input" id="ann2-publish-date" style="font-size:13px;">
+                    </div>
+                    <div class="col-6">
+                      <label style="font-size:11px;color:#64748b;font-weight:500;">Expiry Date</label>
+                      <input type="datetime-local" class="portal-input" id="ann2-expiry-date" style="font-size:13px;">
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3"><input type="text" class="portal-input" id="ann2-tags" placeholder="Tags (comma separated, e.g. exam,primary,notice)"></div>
+                <div class="mb-3">
+                  <label style="font-size:11px;color:#64748b;font-weight:500;margin-bottom:4px;display:block;">Media URL (optional)</label>
+                  <div class="row g-2">
+                    <div class="col-4"><input type="text" class="portal-input" id="ann2-media-image" placeholder="Image URL" style="font-size:12px;"></div>
+                    <div class="col-4"><input type="text" class="portal-input" id="ann2-media-video" placeholder="Video URL" style="font-size:12px;"></div>
+                    <div class="col-4"><input type="text" class="portal-input" id="ann2-media-audio" placeholder="Audio URL" style="font-size:12px;"></div>
+                  </div>
+                </div>
+                <div class="mb-3"><input type="text" class="portal-input" id="ann2-attachment-url" placeholder="Attachment URL (optional)" style="font-size:12px;"></div>
+                <div style="display:flex;gap:8px;">
+                  <button type="submit" class="portal-btn portal-btn-primary" style="flex:1;" id="ann-submit-btn"><i class="fa-solid fa-paper-plane me-1"></i>Publish</button>
+                  <button type="button" class="portal-btn portal-btn-secondary" id="ann-cancel-edit" style="display:none;" onclick="cancelAnnEdit()"><i class="fa-solid fa-xmark me-1"></i>Cancel</button>
+                </div>
               </form>
             </div>
           </div>
@@ -645,8 +734,58 @@
       </div>
     </div>
 
-  </div><!-- /portal-content -->
-</div><!-- /portal-main -->
+      <!-- Assessment Types -->
+      <div id="section-assessment-types" class="d-none">
+        <div class="section-card">
+          <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-list-check me-2 text-primary"></i>Assessment Types <span class="badge bg-primary rounded-pill ms-2" id="asm-type-count">0</span></h5></div>
+          <div class="section-card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+              <p class="text-muted small mb-0"><i class="fa-regular fa-circle-info me-1"></i>Configure assessment types used by teachers when recording marks and generating reports.</p>
+              <button class="btn btn-primary btn-sm rounded-pill" id="admin-add-asm-type"><i class="fa-solid fa-plus me-1"></i>New Type</button>
+            </div>
+            <div class="table-responsive">
+              <table class="portal-table">
+                <thead><tr><th>Name</th><th>Max Marks</th><th>Weight</th><th>Category</th><th>Ranking</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody id="admin-asm-types-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <!-- Add/Edit Modal -->
+        <div class="modal fade" id="asmTypeModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Assessment Type</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+          <div class="modal-body">
+            <form id="asm-type-form">
+              <div class="mb-2"><label class="form-label small fw-bold">Name</label><input type="text" class="form-control" id="asm-t-name" required></div>
+              <div class="row g-2 mb-2"><div class="col-6"><label class="form-label small fw-bold">Default Max Marks</label><input type="number" class="form-control" id="asm-t-max" value="20" min="1"></div>
+              <div class="col-6"><label class="form-label small fw-bold">Weight (%)</label><input type="number" class="form-control" id="asm-t-weight" value="10" min="0" max="100"></div></div>
+              <div class="row g-2 mb-2"><div class="col-6"><label class="form-label small fw-bold">Category</label><select class="form-select" id="asm-t-cat"><option value="test">Test</option><option value="exam">Exam</option><option value="ca">Continuous Assessment</option><option value="project">Project</option><option value="practical">Practical</option><option value="assignment">Assignment</option><option value="oral">Oral</option></select></div>
+              <div class="col-6"><label class="form-label small fw-bold">Layout Template</label><select class="form-select" id="asm-t-layout"><option value="standard">Standard</option><option value="simple">Simple</option><option value="full">Full</option><option value="project">Project</option><option value="cumulative">Cumulative</option></select></div></div>
+              <div class="form-check mb-2"><input type="checkbox" class="form-check-input" id="asm-t-rank"><label class="form-check-label small">Enable ranking for this type</label></div>
+              <div class="form-check mb-2"><input type="checkbox" class="form-check-input" id="asm-t-att"><label class="form-check-label small">Include attendance on reports</label></div>
+            </form>
+          </div>
+          <div class="modal-footer"><button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button><button class="btn btn-primary" id="asm-type-save-btn">Save</button></div>
+        </div></div></div>
+      </div>
+
+      <!-- Assessment Monitor -->
+      <div id="section-assessment-monitor" class="d-none">
+        <div class="section-card">
+          <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-chart-simple me-2 text-primary"></i>Assessment Monitor</h5></div>
+          <div class="section-card-body">
+            <div class="row g-3 mb-4" id="asm-monitor-stats"></div>
+            <div class="table-responsive">
+              <table class="portal-table">
+                <thead><tr><th>Assessment</th><th>Type</th><th>Class</th><th>Subject</th><th>Teacher</th><th>Status</th><th>Results</th><th>Actions</th></tr></thead>
+                <tbody id="asm-monitor-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </div><!-- /portal-content -->
+    </div><!-- /portal-main -->
 
 <!-- User Management Modal -->
 <div class="modal-overlay" id="user-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;align-items:center;justify-content:center;padding:20px;">
@@ -686,6 +825,37 @@
         <div style="margin-bottom:16px;">
           <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:6px;">Bio</label>
           <textarea id="user-modal-bio" class="portal-input" rows="2" placeholder="Brief description" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;"></textarea>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:6px;">Qualification</label>
+            <input type="text" id="user-modal-qualification" class="portal-input" placeholder="e.g. MA in Education" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;">
+          </div>
+          <div class="col-md-6">
+            <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:6px;">Years of Experience</label>
+            <input type="number" id="user-modal-experience" class="portal-input" placeholder="0" min="0" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;">
+          </div>
+          <div class="col-md-6">
+            <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:6px;">Phone Number</label>
+            <input type="text" id="user-modal-staff-phone" class="portal-input" placeholder="+250 7XX XXX XXX" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;">
+          </div>
+          <div class="col-md-6">
+            <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:6px;">Teaching Level</label>
+            <select id="user-modal-teaching-level" class="portal-input" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;">
+              <option value="">Select Level</option>
+              <option value="Nursery">Nursery</option>
+              <option value="Primary">Primary</option>
+              <option value="Secondary">Secondary</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:6px;">Subjects (comma-separated)</label>
+            <input type="text" id="user-modal-subjects" class="portal-input" placeholder="e.g. Mathematics, Physics" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;">
+          </div>
+          <div class="col-md-6">
+            <label style="font-size:12px;font-weight:600;color:#64748b;display:block;margin-bottom:6px;">Office / Department</label>
+            <input type="text" id="user-modal-office" class="portal-input" placeholder="e.g. Science Block" style="width:100%;padding:10px 14px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:13px;">
+          </div>
         </div>
       </div>
       <div id="user-modal-student-fields" style="display:none;">
@@ -728,50 +898,49 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/data.js"></script>
-<script src="js/db-extension.js"></script>
+<script src="js/rbac.js"></script>
+    <script src="js/assessments.js"></script>
+    <script src="js/db-extension.js"></script>
 <script src="js/components.js"></script>
 <script>
+  (function() {
   // ── RBAC Guard ──
-  const adminUser = window.db.getCurrentUser();
-  if (!adminUser || adminUser.role !== 'admin') {
-    window.location.href = '403.html';
-  }
+  if (!window.rbac.guard(['admin'])) return;
+  var adminUser = window.rbac.getCurrentUser();
 
   // ── Populate user info ──
   if (adminUser) {
-    const topbarName = document.getElementById('topbarName');
+    var topbarName = document.getElementById('topbarName');
     if (topbarName) topbarName.textContent = adminUser.name;
     if (adminUser.avatarUrl) {
-      const topbarAvatar = document.getElementById('topbarAvatar');
+      var topbarAvatar = document.getElementById('topbarAvatar');
       if (topbarAvatar) topbarAvatar.src = adminUser.avatarUrl;
     }
   }
 
   // ── Section navigation ──
-  const sections = ['home','analytics','students','teachers','subjects','classes','announcements','users','learning','assignments','academic-reports','audit-log'];
+  var sections = ['home','analytics','students','teachers','subjects','course-content','classes','announcements','users','learning','assignments','assessment-types','assessment-monitor','academic-reports','audit-log'];
   function showSection(id) {
     sections.forEach(s => {
       const el = document.getElementById('section-' + s);
       if (el) el.classList.toggle('d-none', s !== id);
     });
-    const titles = { home:'Dashboard', analytics:'System Analytics', students:'Students Base', teachers:'Teachers Roster', subjects:'Subjects Master', classes:'Classes Grid', announcements:'Notices Hub', users:'User Administration', learning:'Curriculum Hub', assignments:'Assignments Manager', 'academic-reports':'Terminal Reports', 'audit-log':'Audit Log' };
+    const titles = { home:'Dashboard', analytics:'System Analytics', students:'Students Base', teachers:'Teachers Roster', subjects:'Subjects Master', 'course-content':'Course Content Manager', classes:'Classes Grid', announcements:'Notices Hub', users:'User Administration', learning:'Curriculum Hub', assignments:'Assignments Manager', 'assessment-types':'Assessment Types', 'assessment-monitor':'Assessment Monitor', 'academic-reports':'Terminal Reports', 'audit-log':'Audit Log' };
     document.getElementById('topbarTitle').textContent = titles[id] || 'Admin Portal';
     if (id === 'students') renderStudents();
     if (id === 'teachers') renderTeachers();
     if (id === 'subjects') renderSubjectsFull();
+    if (id === 'course-content') renderCourseContent();
     if (id === 'classes') renderClasses();
     if (id === 'announcements') renderAllAnnouncements();
     if (id === 'analytics') renderAnalytics();
     if (id === 'learning') renderLearningOverview();
     if (id === 'assignments') renderAssignments();
+    if (id === 'assessment-types') renderAssessmentTypes();
+    if (id === 'assessment-monitor') renderAssessmentMonitor();
     if (id === 'academic-reports') renderAcademicReports();
     if (id === 'audit-log') renderAuditLog();
-  }
     if (id === 'users') renderUsersManagement();
-    if (id === 'analytics') renderAnalytics();
-    if (id === 'learning') renderLearningOverview();
-    if (id === 'assignments') renderAssignments();
-    if (id === 'academic-reports') renderAcademicReports();
   }
 
   // ── Load Home Data ──
@@ -895,16 +1064,46 @@
 
   function renderAllAnnouncements() {
     const anns = window.db.getAnnouncements();
-    document.getElementById('all-announcements').innerHTML = anns.length ? anns.map(a => `
-      <div style="padding:12px;margin-bottom:10px;background:#f8fafc;border-radius:10px;border-left:4px solid #ef4444;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-          <strong style="font-size:14px;">${a.title}</strong>
-          <span class="role-pill" style="background:#fee2e2;color:#dc2626;">${a.category}</span>
-        </div>
-        <p style="font-size:13px;color:#64748b;margin:0;">${a.content}</p>
-        <p style="font-size:11px;color:#94a3b8;margin:6px 0 0;">By ${a.authorName} · ${new Date(a.createdAt).toLocaleDateString()}</p>
-      </div>`).join('')
-      : '<p style="color:#94a3b8;text-align:center;padding:30px;">No announcements yet.</p>';
+    const visLabels = window.db.VISIBILITY_LABELS || {};
+    document.getElementById('all-announcements').innerHTML = anns.length ? anns.map(a => {
+      const visLabel = visLabels[a.visibility] || a.visibility || 'Unknown';
+      const priorityColor = a.priority === 'urgent' ? '#ef4444' : a.priority === 'important' ? '#f59e0b' : '#4f46e5';
+      const hasMedia = a.media && a.media.length > 0;
+      const mediaIndicators = [];
+      if (hasMedia) {
+        if (a.media.some(m => m.type === 'image')) mediaIndicators.push('fa-image');
+        if (a.media.some(m => m.type === 'video')) mediaIndicators.push('fa-video');
+        if (a.media.some(m => m.type === 'audio')) mediaIndicators.push('fa-music');
+      }
+      return `
+        <div style="padding:14px;margin-bottom:12px;background:#fff;border-radius:10px;border-left:4px solid ${priorityColor};box-shadow:0 1px 3px rgba(0,0,0,0.04);border:1px solid #f1f5f9;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+            <div style="flex:1;">
+              <strong style="font-size:14px;color:#1e293b;">${a.title}</strong>
+              ${a.pinned ? '<span style="font-size:9px;background:#4f46e5;color:#fff;padding:1px 8px;border-radius:10px;margin-left:6px;font-weight:600;">PINNED</span>' : ''}
+            </div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;">
+              <span class="role-pill" style="background:#e0e7ff;color:#4f46e5;">${a.category}</span>
+              <span class="role-pill" style="background:#f1f5f9;color:#64748b;">${visLabel}</span>
+              ${mediaIndicators.map(m => '<span class="role-pill" style="background:#fef3c7;color:#92400e;padding:2px 6px;"><i class="fa-solid ' + m + '" style="font-size:10px;"></i></span>').join('')}
+            </div>
+          </div>
+          <p style="font-size:12px;color:#64748b;margin:6px 0;">${(a.summary || a.content || '').replace(/<[^>]*>/g,'').substring(0,150)}${(a.summary||a.content||'').replace(/<[^>]*>/g,'').length > 150 ? '...' : ''}</p>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+            <div style="font-size:11px;color:#94a3b8;">
+              <span><i class="fa-regular fa-clock me-1"></i>${new Date(a.createdAt||a.publishDate||a.date).toLocaleDateString()}</span>
+              <span style="margin-left:12px;"><i class="fa-solid fa-user me-1"></i>${a.authorName || 'Admin'}</span>
+              <span style="margin-left:12px;"><i class="fa-regular fa-eye me-1"></i>${a.views||0}</span>
+              ${a.status && a.status !== 'published' ? '<span class="role-pill" style="background:#fef3c7;color:#92400e;margin-left:8px;">' + a.status.toUpperCase() + '</span>' : ''}
+            </div>
+            <div style="display:flex;gap:4px;">
+              <button class="portal-btn portal-btn-sm portal-btn-secondary" onclick="editAnnouncement(${a.id})" title="Edit"><i class="fa-solid fa-pen" style="font-size:11px;"></i></button>
+              <button class="portal-btn portal-btn-sm portal-btn-danger" onclick="deleteAnnouncement(${a.id})" title="Delete"><i class="fa-solid fa-trash-can" style="font-size:11px;"></i></button>
+              <a href="announcements.html" target="_blank" class="portal-btn portal-btn-sm portal-btn-primary" title="View on site"><i class="fa-solid fa-external-link" style="font-size:11px;"></i></a>
+            </div>
+          </div>
+        </div>`;
+    }).join('') : '<p style="color:#94a3b8;text-align:center;padding:30px;">No announcements yet.</p>';
   }
 
   function renderAnalytics() {
@@ -1072,7 +1271,7 @@ tr:nth-child(even){background:#f8fafc}
 </style></head><body>
 <div class="report">
   <div class="header">
-    <div class="logo"><i class="fa-solid fa-graduation-cap"></i></div>
+    <div class="logo"><img src="IMAGES/WhatsApp Image 2026-07-18 at 9.51.59 AM.jpeg" alt="HON-ACADEMY Logo" style="width:100%;height:100%;object-fit:contain;border-radius:4px;"></div>
     <h1 class="school-name">${school.name || 'HON-ACADEMY'}</h1>
     <p class="school-motto">${school.motto || 'Excellence in Education'}</p>
     <div class="report-title">Terminal Academic Report</div>
@@ -1108,11 +1307,19 @@ tr:nth-child(even){background:#f8fafc}
 </div>
 </body></html>`;
     
-    // Open in new window for printing/saving as PDF
-    const win = window.open('', '_blank');
-    win.document.write(html);
-    win.document.close();
+    // Use blob URL to avoid popup blockers
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const win = window.open(url, '_blank');
+    if (!win) {
+      window.showToast('Popup blocked! Allow popups for this site to generate reports.', 'error');
+      URL.revokeObjectURL(url);
+      return;
+    }
     win.focus();
+    
+    // Clean up blob URL after a delay
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
     
     window.showToast('Report generated - Print/Save as PDF from browser', 'success');
   }
@@ -1122,13 +1329,16 @@ tr:nth-child(even){background:#f8fafc}
     const users = window.db.getUsers();
     document.getElementById('audit-log-tbody').innerHTML = log.length ? log.map(l => {
       const user = users.find(u => u.id === l.uploadedBy || u.id === l.userId);
+      // Get target info from various possible fields
+      const target = l.targetType || l.target || l.details?.split(' ')[0] || '-';
       return `<tr>
         <td style="font-size:12px;color:#94a3b8;">${new Date(l.timestamp).toLocaleString()}</td>
-        <td><span class="role-pill" style="background:${l.action==='delete'?'#fee2e2;color:#991b1b':l.action==='upload'?'#dcfce7;color:#166534':l.action==='download'?'#dbeafe;color:#1e40af':'#fef3c7;color:#92400e'};">${l.action}</span></td>
+        <td><span class="role-pill" style="background:${l.action==='delete'?'#fee2e2;color:#991b1b':l.action==='upload'?'#dcfce7;color:#166534':l.action==='download'?'#dbeafe;color:#1e40af':l.action==='create'?'#fef3c7;color:#92400e':l.action==='update'?'#e0e7ff;color:#4f46e5':'#fef3c7;color:#92400e'};">${l.action}</span></td>
         <td>${l.details||''}</td>
-        <td>${user?user.name:l.uploadedBy||l.targetType||'-'}</td>
+        <td>${target}</td>
+        <td>${user?user.name:l.uploadedBy||l.userId||'-'}</td>
       </tr>`;
-    }).join('') : '<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:20px;">No audit log entries.</td></tr>';
+    }).join('') : '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:20px;">No audit log entries.</td></tr>';
   }
 
   function toggleAddSubjectForm() {
@@ -1163,17 +1373,106 @@ tr:nth-child(even){background:#f8fafc}
   function postAnnouncement(e, isSecondary = false) {
     e.preventDefault();
     const pfx = isSecondary ? 'ann2' : 'ann';
+    const editId = document.getElementById('ann2-edit-id').value;
     const title = document.getElementById(`${pfx}-title`).value.trim();
+    const summary = document.getElementById(`${pfx}-summary`).value.trim();
     const category = document.getElementById(`${pfx}-category`).value;
     const content = document.getElementById(`${pfx}-content`).value.trim();
+    const visibility = document.getElementById('ann2-visibility').value;
+    const priority = document.getElementById('ann2-priority').value;
+    const pinned = document.getElementById('ann2-pinned').checked;
+    const tags = document.getElementById('ann2-tags').value.trim();
+    const publishDate = document.getElementById('ann2-publish-date').value;
+    const expiryDate = document.getElementById('ann2-expiry-date').value;
+    const imgUrl = document.getElementById('ann2-media-image').value.trim();
+    const vidUrl = document.getElementById('ann2-media-video').value.trim();
+    const audUrl = document.getElementById('ann2-media-audio').value.trim();
+    const attUrl = document.getElementById('ann2-attachment-url').value.trim();
+
     if (!title) { window.showToast('Announcement title is required', 'error'); return; }
     if (!content) { window.showToast('Announcement content is required', 'error'); return; }
     if (title.length < 3) { window.showToast('Title must be at least 3 characters', 'error'); return; }
-    window.db.addAnnouncement({ title, category, content, authorName: adminUser.name });
-    window.showToast('Announcement published!', 'success');
-    e.target.reset();
+
+    const media = [];
+    if (imgUrl) media.push({ id: Date.now(), type: 'image', url: imgUrl, title: title + ' Image' });
+    if (vidUrl) media.push({ id: Date.now() + 1, type: 'video', url: vidUrl, title: title + ' Video' });
+    if (audUrl) media.push({ id: Date.now() + 2, type: 'audio', url: audUrl, title: title + ' Audio' });
+
+    const attachments = [];
+    if (attUrl) attachments.push({ id: Date.now() + 3, name: 'Attachment', type: 'document', url: attUrl, size: '—', downloadCount: 0 });
+
+    const data = {
+      title, summary, category, content, visibility, priority, pinned,
+      tags, authorName: adminUser.name, authors: [adminUser.name],
+      media: media.length > 0 ? media : undefined,
+      attachments: attachments.length > 0 ? attachments : undefined,
+      publishDate: publishDate ? new Date(publishDate).toISOString() : new Date().toISOString(),
+      expiryDate: expiryDate ? new Date(expiryDate).toISOString() : undefined,
+      status: 'published'
+    };
+
+    if (editId) {
+      window.db.updateAnnouncement(editId, data);
+      window.showToast('Announcement updated!', 'success');
+      cancelAnnEdit();
+    } else {
+      const newAnn = window.db.createAnnouncement(data);
+      if (newAnn) {
+        window.showToast('Announcement published!', 'success');
+      } else {
+        window.showToast('Failed to create announcement', 'error');
+      }
+    }
     loadAdminData();
     if (isSecondary) renderAllAnnouncements();
+  }
+
+  function editAnnouncement(id) {
+    const a = window.db.getAnnouncement(id);
+    if (!a) return;
+    document.getElementById('ann2-edit-id').value = a.id;
+    document.getElementById('ann2-title').value = a.title || '';
+    document.getElementById('ann2-summary').value = a.summary || '';
+    document.getElementById('ann2-category').value = a.category || 'School News';
+    document.getElementById('ann2-visibility').value = a.visibility || 'school_community';
+    document.getElementById('ann2-priority').value = a.priority || 'normal';
+    document.getElementById('ann2-pinned').checked = a.pinned || false;
+    document.getElementById('ann2-content').value = (a.content || '').replace(/<[^>]*>/g, '');
+    document.getElementById('ann2-tags').value = a.tags || '';
+    document.getElementById('ann2-publish-date').value = a.publishDate ? a.publishDate.substring(0, 16) : '';
+    document.getElementById('ann2-expiry-date').value = a.expiryDate ? a.expiryDate.substring(0, 16) : '';
+    if (a.media) {
+      const img = a.media.find(m => m.type === 'image');
+      const vid = a.media.find(m => m.type === 'video');
+      const aud = a.media.find(m => m.type === 'audio');
+      document.getElementById('ann2-media-image').value = img ? img.url : '';
+      document.getElementById('ann2-media-video').value = vid ? vid.url : '';
+      document.getElementById('ann2-media-audio').value = aud ? aud.url : '';
+    } else {
+      document.getElementById('ann2-media-image').value = '';
+      document.getElementById('ann2-media-video').value = '';
+      document.getElementById('ann2-media-audio').value = '';
+    }
+    document.getElementById('ann2-attachment-url').value = (a.attachments && a.attachments[0]) ? a.attachments[0].url : '';
+    document.getElementById('ann-form-title').textContent = 'Edit Announcement';
+    document.getElementById('ann-submit-btn').innerHTML = '<i class="fa-solid fa-pen me-1"></i>Update';
+    document.getElementById('ann-cancel-edit').style.display = '';
+    document.getElementById('ann-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function deleteAnnouncement(id) {
+    if (!confirm('Delete this announcement permanently?')) return;
+    window.db.deleteAnnouncement(id);
+    window.showToast('Announcement deleted', 'success');
+    renderAllAnnouncements();
+  }
+
+  function cancelAnnEdit() {
+    document.getElementById('ann2-edit-id').value = '';
+    document.getElementById('ann-form').reset();
+    document.getElementById('ann-form-title').textContent = 'Post Announcement';
+    document.getElementById('ann-submit-btn').innerHTML = '<i class="fa-solid fa-paper-plane me-1"></i>Publish';
+    document.getElementById('ann-cancel-edit').style.display = 'none';
   }
 
   function doLogout() {
@@ -1250,6 +1549,28 @@ tr:nth-child(even){background:#f8fafc}
         document.getElementById('user-modal-specialty').value = user.subjectSpecialty || '';
         document.getElementById('user-modal-bio').value = user.bio || '';
       }
+      if (user.role === 'admin') {
+        document.getElementById('user-modal-specialty').value = user.subjectSpecialty || '';
+        document.getElementById('user-modal-bio').value = user.bio || '';
+      }
+      if (user.role === 'teacher' || user.role === 'admin') {
+        const sp = window.db.getStaffProfile(user.id);
+        if (sp) {
+          document.getElementById('user-modal-qualification').value = sp.qualification || '';
+          document.getElementById('user-modal-experience').value = sp.experience || 0;
+          document.getElementById('user-modal-staff-phone').value = sp.phone || '';
+          document.getElementById('user-modal-teaching-level').value = sp.teachingLevel || '';
+          document.getElementById('user-modal-subjects').value = (sp.subjects||[]).join(', ');
+          document.getElementById('user-modal-office').value = sp.office || '';
+        } else {
+          document.getElementById('user-modal-qualification').value = '';
+          document.getElementById('user-modal-experience').value = 0;
+          document.getElementById('user-modal-staff-phone').value = '';
+          document.getElementById('user-modal-teaching-level').value = '';
+          document.getElementById('user-modal-subjects').value = '';
+          document.getElementById('user-modal-office').value = '';
+        }
+      }
       if (user.role === 'student') {
         document.getElementById('user-modal-admission').value = user.admissionNumber || '';
         document.getElementById('user-modal-class').value = user.class || '';
@@ -1259,6 +1580,11 @@ tr:nth-child(even){background:#f8fafc}
       }
     } else {
       title.innerHTML = '<i class="fa-solid fa-user-plus text-primary me-2"></i>Add User';
+      // clear staff fields
+      ['user-modal-qualification','user-modal-experience','user-modal-staff-phone','user-modal-teaching-level','user-modal-subjects','user-modal-office'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.value = id==='user-modal-experience'?'0':''; }
+      });
     }
     modal.style.display = 'flex';
     setTimeout(() => document.getElementById('user-modal-name').focus(), 100);
@@ -1269,7 +1595,7 @@ tr:nth-child(even){background:#f8fafc}
   }
 
   function toggleUserRoleFields(role) {
-    document.getElementById('user-modal-teacher-fields').style.display = role === 'teacher' ? 'block' : 'none';
+    document.getElementById('user-modal-teacher-fields').style.display = (role === 'teacher' || role === 'admin') ? 'block' : 'none';
     document.getElementById('user-modal-student-fields').style.display = role === 'student' ? 'block' : 'none';
   }
 
@@ -1305,6 +1631,24 @@ tr:nth-child(even){background:#f8fafc}
       userData.subjectSpecialty = document.getElementById('user-modal-specialty').value.trim();
       userData.bio = document.getElementById('user-modal-bio').value.trim();
     }
+    if (role === 'admin') {
+      userData.bio = document.getElementById('user-modal-bio').value.trim();
+    }
+    if (role === 'teacher' || role === 'admin') {
+      const staffProfile = {
+        userId: id ? parseInt(id) : 0,
+        phone: document.getElementById('user-modal-staff-phone').value.trim(),
+        qualification: document.getElementById('user-modal-qualification').value.trim(),
+        experience: parseInt(document.getElementById('user-modal-experience').value) || 0,
+        specialization: document.getElementById('user-modal-specialty').value.trim(),
+        office: document.getElementById('user-modal-office').value.trim(),
+        teachingLevel: document.getElementById('user-modal-teaching-level').value,
+        subjects: document.getElementById('user-modal-subjects').value.split(',').map(s=>s.trim()).filter(Boolean),
+        isActive: true
+      };
+      if (id) staffProfile.userId = parseInt(id);
+      window.db.saveStaffProfile(staffProfile);
+    }
     if (role === 'student') {
       const adm = document.getElementById('user-modal-admission').value.trim();
       userData.admissionNumber = adm || `HON-${new Date().getFullYear()}-${String(users.filter(u=>u.role==='student').length+1).padStart(3,'0')}`;
@@ -1335,6 +1679,7 @@ tr:nth-child(even){background:#f8fafc}
     const user = users.find(u => u.id === id);
     if (user) {
       window.db.deleteUser(id);
+      window.db.deleteStaffProfile(id);
       window.db.addAuditLog({ action: 'delete', targetType: 'user', details: `Deleted ${user.role}: ${user.name}`, uploadedBy: adminUser.name });
       window.showToast('User deleted', 'warning');
       renderUsersManagement();
@@ -1368,20 +1713,481 @@ tr:nth-child(even){background:#f8fafc}
   function switchNav(module) {
     document.querySelectorAll('.nav-main-item').forEach(btn => btn.classList.remove('active'));
     document.getElementById('nav-main-' + module).classList.add('active');
-
     document.querySelectorAll('.sub-nav-group').forEach(grp => grp.classList.remove('active'));
     const subGrp = document.getElementById('sub-group-' + module);
     if (subGrp) {
       subGrp.classList.add('active');
       const firstLink = subGrp.querySelector('.sub-nav-list li a');
-      if (firstLink) firstLink.click();
+      if (firstLink) {
+        // Don't auto-click; just set active visually and call showSection if needed
+        var sid = firstLink.getAttribute('onclick');
+        if (sid && sid.includes("setActiveSub")) {
+          firstLink.classList.add('active');
+          var m = sid.match(/setActiveSub\([^,]+,\s*'([^']+)'/);
+          if (m) showSection(m[1]);
+        } else {
+          firstLink.click();
+        }
+      }
     }
+    // Close sidebar on mobile
+    if (window.innerWidth <= 900) document.body.classList.remove('sidebar-open');
   }
+  // Keyboard arrow navigation for main nav items
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      var items = document.querySelectorAll('.nav-main-item:not([style*="flex"])');
+      var focused = document.activeElement;
+      if (focused && focused.classList.contains('nav-main-item')) {
+        e.preventDefault();
+        var idx = Array.prototype.indexOf.call(items, focused);
+        if (e.key === 'ArrowDown') idx = (idx + 1) % items.length;
+        else idx = (idx - 1 + items.length) % items.length;
+        items[idx].focus();
+      }
+    }
+  });
   function setActiveSub(event, sectionId) {
+    if (event) { event.preventDefault(); }
     document.querySelectorAll('.sub-nav-list li a').forEach(a => a.classList.remove('active'));
     if(event && event.currentTarget) event.currentTarget.classList.add('active');
     if (sectionId) showSection(sectionId);
   }
+
+  /* ===================== ASSESSMENT TYPES ADMIN ===================== */
+  function renderAssessmentTypes() {
+    var types = [];
+    try { types = window.db.AssessmentType.getAll(); } catch(e) {}
+    document.getElementById('asm-type-count').textContent = types.filter(function(t){ return t.isActive !== false; }).length;
+    var tbody = document.getElementById('admin-asm-types-tbody');
+    tbody.innerHTML = types.length === 0 ?
+      '<tr><td colspan="7" class="text-center text-muted py-3">No assessment types defined.</td></tr>' :
+      types.map(function(t){
+        var catIcons = { test:'fa-file-pen', exam:'fa-file-lines', ca:'fa-chart-simple', project:'fa-diagram-project', practical:'fa-flask', assignment:'fa-pen-ruler', oral:'fa-microphone', custom:'fa-clipboard' };
+        var ico = catIcons[t.category] || 'fa-clipboard';
+        var st = t.isActive !== false ? '<span class="m-status submitted"><i class="fa-solid fa-circle-check"></i> Active</span>' : '<span class="m-status remaining"><i class="fa-solid fa-circle-xmark"></i> Archived</span>';
+        return '<tr><td class="font-bold"><i class="fa-solid ' + ico + ' text-primary me-1"></i>' + t.name + '</td><td>' + (t.defaultMaxMarks || "-") + '</td><td>' + (t.weight != null ? t.weight + '%' : "-") + '</td><td>' + (t.category || "general") + '</td><td>' + (t.hasRanking ? '<i class="fa-solid fa-check text-success"></i>' : '<i class="fa-solid fa-x text-danger"></i>') + '</td><td>' + st + '</td><td>' +
+          '<button class="btn btn-sm btn-outline-primary rounded-pill me-1 edit-asm-type" data-id="' + t.id + '"><i class="fa-solid fa-pen"></i></button>' +
+          '<button class="btn btn-sm btn-outline-danger rounded-pill archive-asm-type" data-id="' + t.id + '"><i class="fa-solid fa-archive"></i></button></td></tr>';
+      }).join('');
+
+    document.querySelectorAll('.edit-asm-type').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var t = window.db.AssessmentType.getById(parseInt(this.dataset.id));
+        if (!t) return;
+        document.getElementById('asm-t-name').value = t.name;
+        document.getElementById('asm-t-max').value = t.defaultMaxMarks || 20;
+        document.getElementById('asm-t-weight').value = t.weight || 10;
+        document.getElementById('asm-t-cat').value = t.category || 'test';
+        document.getElementById('asm-t-layout').value = t.layoutTemplate || 'standard';
+        document.getElementById('asm-t-rank').checked = t.hasRanking === true;
+        document.getElementById('asm-t-att').checked = t.hasAttendance === true;
+        document.getElementById('asm-type-save-btn').dataset.editId = t.id;
+        var modal = new bootstrap.Modal(document.getElementById('asmTypeModal'));
+        modal.show();
+      });
+    });
+    document.querySelectorAll('.archive-asm-type').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (!confirm('Archive this assessment type? It will be hidden from teachers.')) return;
+        window.db.AssessmentType.remove(parseInt(this.dataset.id));
+        renderAssessmentTypes();
+        window.showToast && window.showToast('Assessment type archived.', 'success');
+      });
+    });
+  }
+  document.getElementById('admin-add-asm-type').addEventListener('click', function(){
+    document.getElementById('asm-t-name').value = '';
+    document.getElementById('asm-t-max').value = 20;
+    document.getElementById('asm-t-weight').value = 10;
+    document.getElementById('asm-t-cat').value = 'test';
+    document.getElementById('asm-t-layout').value = 'standard';
+    document.getElementById('asm-t-rank').checked = false;
+    document.getElementById('asm-t-att').checked = false;
+    delete document.getElementById('asm-type-save-btn').dataset.editId;
+    new bootstrap.Modal(document.getElementById('asmTypeModal')).show();
+  });
+  document.getElementById('asm-type-save-btn').addEventListener('click', function(){
+    var data = {
+      name: document.getElementById('asm-t-name').value,
+      defaultMaxMarks: parseInt(document.getElementById('asm-t-max').value) || 20,
+      weight: parseInt(document.getElementById('asm-t-weight').value) || null,
+      category: document.getElementById('asm-t-cat').value,
+      layoutTemplate: document.getElementById('asm-t-layout').value,
+      hasRanking: document.getElementById('asm-t-rank').checked,
+      hasAttendance: document.getElementById('asm-t-att').checked,
+      hasComments: true
+    };
+    var editId = this.dataset.editId;
+    if (editId) {
+      window.db.AssessmentType.update(parseInt(editId), data);
+      window.showToast && window.showToast('Assessment type updated.', 'success');
+    } else {
+      window.db.AssessmentType.create(data);
+      window.showToast && window.showToast('New assessment type created.', 'success');
+    }
+    bootstrap.Modal.getInstance(document.getElementById('asmTypeModal')).hide();
+    renderAssessmentTypes();
+  });
+
+  /* ===================== ASSESSMENT MONITOR ===================== */
+  function renderAssessmentMonitor() {
+    var assessments = []; try { assessments = window.db.Assessment.getList(); } catch(e) {}
+    var stats = assessments.length > 0 ? window.db.Assessment.getStats() : { total: 0, byStatus: {}, byType: {}, bySubject: {} };
+    var users = []; try { users = window.db.getUsers(); } catch(e) {}
+    var subjects = []; try { subjects = window.db.getSubjects(); } catch(e) {}
+    var classes = []; try { classes = window.db.getClasses(); } catch(e) {}
+
+    document.getElementById('asm-monitor-stats').innerHTML =
+      '<div class="col-md-3 col-6"><div class="portal-stat"><i class="fa-solid fa-clipboard-list text-primary"></i><h3>' + stats.total + '</h3><p>Total Assessments</p></div></div>' +
+      '<div class="col-md-3 col-6"><div class="portal-stat"><i class="fa-solid fa-check-circle text-success"></i><h3>' + ((stats.byStatus && stats.byStatus.published) || 0) + '</h3><p>Published</p></div></div>' +
+      '<div class="col-md-3 col-6"><div class="portal-stat"><i class="fa-solid fa-file-pen text-warning"></i><h3>' + ((stats.byStatus && stats.byStatus.draft) || 0) + '</h3><p>Drafts</p></div></div>' +
+      '<div class="col-md-3 col-6"><div class="portal-stat"><i class="fa-solid fa-award text-info"></i><h3>' + Object.keys(stats.byType || {}).length + '</h3><p>Types Used</p></div></div>';
+
+    var tbody = document.getElementById('asm-monitor-tbody');
+    tbody.innerHTML = assessments.length === 0 ?
+      '<tr><td colspan="8" class="text-center text-muted py-3">No assessments created yet.</td></tr>' :
+      assessments.map(function(a){
+        var typeName = "";
+        try { var t = window.db.AssessmentType.getById(a.assessmentTypeId); if (t) typeName = t.name; } catch(e){}
+        var subjName = ""; var c = subjects.find(function(s){ return s.id === a.subjectId; }); if (c) subjName = c.title;
+        var clsName = ""; var cl = classes.find(function(c){ return c.id === a.classId; }); if (cl) clsName = cl.name;
+        var teacherName = ""; var tu = users.find(function(u){ return u.id === a.teacherId; }); if (tu) teacherName = tu.name;
+        var resultsCount = 0; try { resultsCount = window.db.AssessmentResult.getByAssessment(a.id).length; } catch(e){}
+        var st = a.status || "draft";
+        var badgeColor = st === "published" ? "success" : st === "archived" ? "secondary" : "warning";
+        return '<tr><td class="font-bold">' + (a.name || "Untitled") + '</td><td>' + typeName + '</td><td>' + clsName + '</td><td>' + subjName + '</td><td>' + teacherName + '</td><td><span class="badge bg-' + badgeColor + ' rounded-pill">' + st + '</span></td><td><span class="badge bg-primary rounded-pill">' + resultsCount + '</span></td><td>' +
+          '<button class="btn btn-sm btn-outline-danger rounded-pill archive-assessment" data-id="' + a.id + '" title="Archive"><i class="fa-solid fa-archive"></i></button></td></tr>';
+      }).join('');
+
+    document.querySelectorAll('.archive-assessment').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        if (!confirm('Archive this assessment?')) return;
+        window.db.Assessment.update(parseInt(this.dataset.id), { status: 'archived' });
+        renderAssessmentMonitor();
+      });
+    });
+  }
+
+  // Expose globally for onclick handlers in HTML
+  window.switchNav = switchNav;
+  // ── Course Content Manager ──
+  function renderCourseContent() {
+    var select = document.getElementById('cc-subject-select');
+    var subjects = window.db.getSubjects();
+    var currentVal = select.value;
+    select.innerHTML = '<option value="">— Select Subject —</option>' + subjects.map(function(s) { return '<option value="' + s.id + '">' + escHtml(s.title) + ' (' + escHtml(s.code||'') + ')</option>'; }).join('');
+    if (currentVal) select.value = currentVal;
+    var subjectId = select.value;
+    if (!subjectId) {
+      document.getElementById('cc-body').innerHTML = '<div class="text-center py-5 text-muted"><i class="fa-solid fa-hand-pointer" style="font-size:2rem;display:block;margin-bottom:.5rem"></i><p>Select a subject above to manage its course content.</p></div>';
+      return;
+    }
+    var content = window.db.getSubjectContent(subjectId);
+    if (!content || !content.subject) {
+      document.getElementById('cc-body').innerHTML = '<div class="text-center py-5 text-muted"><p>Subject not found.</p></div>';
+      return;
+    }
+    var s = content.subject, units = content.units || [], lessons = content.lessons || [], resources = content.resources || [], assignments = content.assignments || [], quizzes = content.quizzes || [], pastPapers = content.pastPapers || [], teachers = content.teachers || [];
+
+    var html = '<div class="row g-3">';
+
+    // ── Overview Stats ──
+    html += '<div class="col-12"><div class="d-flex flex-wrap gap-3 mb-3">' +
+      '<div class="portal-stat-card"><div class="portal-stat-value">' + units.length + '</div><div class="portal-stat-label">Units</div></div>' +
+      '<div class="portal-stat-card"><div class="portal-stat-value">' + lessons.length + '</div><div class="portal-stat-label">Lessons</div></div>' +
+      '<div class="portal-stat-card"><div class="portal-stat-value">' + resources.length + '</div><div class="portal-stat-label">Resources</div></div>' +
+      '<div class="portal-stat-card"><div class="portal-stat-value">' + assignments.length + '</div><div class="portal-stat-label">Assignments</div></div>' +
+      '<div class="portal-stat-card"><div class="portal-stat-value">' + quizzes.length + '</div><div class="portal-stat-label">Quizzes</div></div>' +
+      '<div class="portal-stat-card"><div class="portal-stat-value">' + pastPapers.length + '</div><div class="portal-stat-label">Past Papers</div></div>' +
+      '<div class="portal-stat-card"><div class="portal-stat-value">' + teachers.length + '</div><div class="portal-stat-label">Teachers</div></div>' +
+    '</div></div>';
+
+    // ── Units Management ──
+    html += '<div class="col-12"><div class="section-card"><div class="section-card-header"><h6 class="section-card-title mb-0"><i class="fa-solid fa-layer-group me-2"></i>Units (' + units.length + ')</h6><button class="portal-btn portal-btn-primary portal-btn-sm" onclick="showAddUnit(' + subjectId + ')"><i class="fa-solid fa-plus me-1"></i>Add Unit</button></div><div class="section-card-body p-0"><div style="overflow-x:auto"><table class="portal-table mb-0"><thead><tr><th>#</th><th>Title</th><th>Description</th><th>Topics</th><th style="text-align:center">Actions</th></tr></thead><tbody>';
+    if (units.length) {
+      units.forEach(function(u, ui) {
+        var topics = (window.db.getUnitTopics ? window.db.getUnitTopics(u.id) : []) || [];
+        html += '<tr><td>' + (ui+1) + '</td><td class="fw-semibold">' + escHtml(u.title) + '</td><td style="font-size:.8rem;color:#6b7280">' + escHtml((u.description||'').substring(0,80)) + '</td><td><span class="badge bg-info">' + topics.length + ' topics</span></td><td style="text-align:center"><button class="portal-btn portal-btn-sm portal-btn-outline me-1" onclick="showEditUnit(' + u.id + ')"><i class="fa-solid fa-pen"></i></button><button class="portal-btn portal-btn-sm portal-btn-danger" onclick="deleteUnit(' + u.id + ')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+      });
+    } else {
+      html += '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:20px;">No units yet. Click "Add Unit" to create one.</td></tr>';
+    }
+    html += '</tbody></table></div></div></div></div>';
+
+    // ── Lessons Management ──
+    html += '<div class="col-12"><div class="section-card"><div class="section-card-header"><h6 class="section-card-title mb-0"><i class="fa-solid fa-photo-film me-2"></i>Lessons (' + lessons.length + ')</h6><button class="portal-btn portal-btn-primary portal-btn-sm" onclick="showAddLesson(' + subjectId + ')"><i class="fa-solid fa-plus me-1"></i>Add Lesson</button></div><div class="section-card-body p-0"><div style="overflow-x:auto"><table class="portal-table mb-0"><thead><tr><th>Title</th><th>Date</th><th>Grade/Class</th><th>Has Video</th><th>Has PDF</th><th style="text-align:center">Actions</th></tr></thead><tbody>';
+    if (lessons.length) {
+      lessons.forEach(function(l) {
+        html += '<tr><td class="fw-semibold">' + escHtml(l.title) + '</td><td style="font-size:.82rem">' + (l.date||'-') + '</td><td>' + (l.gradeClass||'-') + '</td><td>' + (l.videoUrl ? '<i class="fa-solid fa-check text-success"></i>' : '<i class="fa-solid fa-times text-muted"></i>') + '</td><td>' + (l.pdfNotes ? '<i class="fa-solid fa-check text-success"></i>' : '<i class="fa-solid fa-times text-muted"></i>') + '</td><td style="text-align:center"><button class="portal-btn portal-btn-sm portal-btn-outline me-1" onclick="showEditLesson(' + l.id + ')"><i class="fa-solid fa-pen"></i></button><button class="portal-btn portal-btn-sm portal-btn-danger" onclick="deleteLesson(' + l.id + ')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+      });
+    } else {
+      html += '<tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:20px;">No lessons yet. Click "Add Lesson" to create one.</td></tr>';
+    }
+    html += '</tbody></table></div></div></div></div>';
+
+    // ── Resources ──
+    html += '<div class="col-12"><div class="section-card"><div class="section-card-header"><h6 class="section-card-title mb-0"><i class="fa-solid fa-folder-open me-2"></i>Resources (' + resources.length + ')</h6><button class="portal-btn portal-btn-primary portal-btn-sm" onclick="showAddResource(' + subjectId + ')"><i class="fa-solid fa-plus me-1"></i>Add Resource</button></div><div class="section-card-body p-0"><div style="overflow-x:auto"><table class="portal-table mb-0"><thead><tr><th>Title</th><th>File</th><th>Type</th><th style="text-align:center">Actions</th></tr></thead><tbody>';
+    if (resources.length) {
+      resources.forEach(function(r) {
+        html += '<tr><td class="fw-semibold">' + escHtml(r.title) + '</td><td style="font-size:.82rem">' + escHtml(r.fileName||'') + '</td><td>' + (r.fileType||'-') + '</td><td style="text-align:center"><button class="portal-btn portal-btn-sm portal-btn-outline me-1" onclick="showEditResource(' + r.id + ')"><i class="fa-solid fa-pen"></i></button><button class="portal-btn portal-btn-sm portal-btn-danger" onclick="deleteResource(' + r.id + ')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+      });
+    } else {
+      html += '<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:20px;">No resources uploaded yet.</td></tr>';
+    }
+    html += '</tbody></table></div></div></div></div>';
+
+    // ── Assignments ──
+    html += '<div class="col-md-6"><div class="section-card"><div class="section-card-header"><h6 class="section-card-title mb-0"><i class="fa-solid fa-pen-to-square me-2"></i>Assignments (' + assignments.length + ')</h6><button class="portal-btn portal-btn-primary portal-btn-sm" onclick="showAddAssignment(' + subjectId + ')"><i class="fa-solid fa-plus me-1"></i>Add</button></div><div class="section-card-body p-0"><div style="overflow-x:auto"><table class="portal-table mb-0"><thead><tr><th>Title</th><th>Due</th><th>Max</th><th style="text-align:center">Actions</th></tr></thead><tbody>';
+    if (assignments.length) {
+      assignments.forEach(function(a) {
+        html += '<tr><td class="fw-semibold" style="font-size:.85rem">' + escHtml(a.title) + '</td><td style="font-size:.8rem">' + (a.dueDate||'-') + '</td><td>' + (a.maxScore||'-') + '</td><td style="text-align:center"><button class="portal-btn portal-btn-sm portal-btn-outline me-1" onclick="showEditAssignment(' + a.id + ')"><i class="fa-solid fa-pen"></i></button><button class="portal-btn portal-btn-sm portal-btn-danger" onclick="deleteAssignment(' + a.id + ')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+      });
+    } else {
+      html += '<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:20px;">No assignments.</td></tr>';
+    }
+    html += '</tbody></table></div></div></div></div>';
+
+    // ── Quizzes ──
+    html += '<div class="col-md-6"><div class="section-card"><div class="section-card-header"><h6 class="section-card-title mb-0"><i class="fa-solid fa-question-circle me-2"></i>Quizzes (' + quizzes.length + ')</h6><button class="portal-btn portal-btn-primary portal-btn-sm" onclick="showAddQuiz(' + subjectId + ')"><i class="fa-solid fa-plus me-1"></i>Add</button></div><div class="section-card-body p-0"><div style="overflow-x:auto"><table class="portal-table mb-0"><thead><tr><th>Title</th><th>Questions</th><th>Time</th><th style="text-align:center">Actions</th></tr></thead><tbody>';
+    if (quizzes.length) {
+      quizzes.forEach(function(q) {
+        html += '<tr><td class="fw-semibold" style="font-size:.85rem">' + escHtml(q.title) + '</td><td>' + ((q.questions&&q.questions.length)||0) + '</td><td>' + (q.timeLimit||'-') + 'm</td><td style="text-align:center"><button class="portal-btn portal-btn-sm portal-btn-outline me-1" onclick="showEditQuiz(' + q.id + ')"><i class="fa-solid fa-pen"></i></button><button class="portal-btn portal-btn-sm portal-btn-danger" onclick="deleteQuiz(' + q.id + ')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+      });
+    } else {
+      html += '<tr><td colspan="4" style="text-align:center;color:#94a3b8;padding:20px;">No quizzes.</td></tr>';
+    }
+    html += '</tbody></table></div></div></div></div>';
+
+    // ── Past Papers ──
+    html += '<div class="col-12"><div class="section-card"><div class="section-card-header"><h6 class="section-card-title mb-0"><i class="fa-solid fa-file-archive me-2"></i>Past Papers (' + pastPapers.length + ')</h6><button class="portal-btn portal-btn-primary portal-btn-sm" onclick="showAddPastPaper(' + subjectId + ')"><i class="fa-solid fa-plus me-1"></i>Add Past Paper</button></div><div class="section-card-body p-0"><div style="overflow-x:auto"><table class="portal-table mb-0"><thead><tr><th>Title</th><th>Year</th><th>Term</th><th>Type</th><th style="text-align:center">Actions</th></tr></thead><tbody>';
+    if (pastPapers.length) {
+      pastPapers.forEach(function(p) {
+        html += '<tr><td class="fw-semibold" style="font-size:.85rem">' + escHtml(p.title) + '</td><td>' + p.year + '</td><td>Term ' + (p.term||1) + '</td><td><span class="badge bg-' + (p.type==='national'?'danger':p.type==='mock'?'warning':'primary') + ' bg-opacity-10 text-' + (p.type==='national'?'danger':p.type==='mock'?'warning':'primary') + '">' + (p.type||'exam') + '</span></td><td style="text-align:center"><button class="portal-btn portal-btn-sm portal-btn-outline me-1" onclick="showEditPastPaper(' + p.id + ')"><i class="fa-solid fa-pen"></i></button><button class="portal-btn portal-btn-sm portal-btn-danger" onclick="deletePastPaper(' + p.id + ')"><i class="fa-solid fa-trash"></i></button></td></tr>';
+      });
+    } else {
+      html += '<tr><td colspan="5" style="text-align:center;color:#94a3b8;padding:20px;">No past papers.</td></tr>';
+    }
+    html += '</tbody></table></div></div></div></div>';
+
+    html += '</div>';
+    document.getElementById('cc-body').innerHTML = html;
+  }
+
+  // ── CRUD action modals (simple prompt-based for speed) ──
+  function showAddUnit(subjectId) {
+    var title = prompt('Unit title:');
+    if (!title) return;
+    var desc = prompt('Description (optional):');
+    var obj = prompt('Objectives (optional):');
+    window.db.saveUnit({ subjectId: Number(subjectId), title: title, description: desc||'', objectives: obj||'', order: 999 });
+    window.showToast('Unit "' + title + '" added!', 'success');
+    renderCourseContent();
+  }
+  function showEditUnit(unitId) {
+    var units = JSON.parse(localStorage.getItem('db_subject_units')) || [];
+    var u = units.find(function(x) { return x.id === unitId; });
+    if (!u) return;
+    var title = prompt('Unit title:', u.title);
+    if (!title) return;
+    var desc = prompt('Description:', u.description||'');
+    var obj = prompt('Objectives:', u.objectives||'');
+    window.db.saveUnit({ id: unitId, title: title, description: desc||'', objectives: obj||'' });
+    window.showToast('Unit updated!', 'success');
+    renderCourseContent();
+  }
+  window.deleteUnit = function(unitId) {
+    if (!confirm('Delete this unit and its topics?')) return;
+    window.db.deleteUnit(unitId);
+    window.showToast('Unit deleted.', 'warning');
+    renderCourseContent();
+  };
+
+  function showAddLesson(subjectId) {
+    var title = prompt('Lesson title:');
+    if (!title) return;
+    var videoUrl = prompt('Video URL (optional):');
+    var pdfNotes = prompt('PDF filename (optional):');
+    window.db.saveLesson({ subjectId: Number(subjectId), title: title, videoUrl: videoUrl||'', pdfNotes: pdfNotes||'', date: new Date().toISOString().slice(0,10) });
+    window.showToast('Lesson added!', 'success');
+    renderCourseContent();
+  }
+  function showEditLesson(lessonId) {
+    var lessons = JSON.parse(localStorage.getItem('db_lessons')) || [];
+    var l = lessons.find(function(x) { return x.id === lessonId; });
+    if (!l) return;
+    var title = prompt('Lesson title:', l.title);
+    if (!title) return;
+    var videoUrl = prompt('Video URL:', l.videoUrl||'');
+    var pdfNotes = prompt('PDF filename:', l.pdfNotes||'');
+    window.db.saveLesson({ id: lessonId, title: title, videoUrl: videoUrl||'', pdfNotes: pdfNotes||'' });
+    window.showToast('Lesson updated!', 'success');
+    renderCourseContent();
+  }
+  window.deleteLesson = function(lessonId) {
+    if (!confirm('Delete this lesson?')) return;
+    window.db.deleteLesson(lessonId);
+    window.showToast('Lesson deleted.', 'warning');
+    renderCourseContent();
+  };
+
+  function showAddResource(subjectId) {
+    var title = prompt('Resource title:');
+    if (!title) return;
+    var fileName = prompt('File name (e.g. chapter5.pdf):');
+    if (!fileName) return;
+    var fileType = prompt('File type (PDF, PPT, Word):') || 'PDF';
+    window.db.saveResource({ subjectId: Number(subjectId), title: title, fileName: fileName, fileType: fileType, uploadedBy: currentUser.id, uploadedAt: new Date().toISOString() });
+    window.showToast('Resource added!', 'success');
+    renderCourseContent();
+  }
+  function showEditResource(resourceId) {
+    var resources = JSON.parse(localStorage.getItem('db_books')) || [];
+    var r = resources.find(function(x) { return x.id === resourceId; });
+    if (!r) return;
+    var title = prompt('Resource title:', r.title);
+    if (!title) return;
+    var fileName = prompt('File name:', r.fileName);
+    if (!fileName) return;
+    window.db.saveResource({ id: resourceId, title: title, fileName: fileName });
+    window.showToast('Resource updated!', 'success');
+    renderCourseContent();
+  }
+  window.deleteResource = function(resourceId) {
+    if (!confirm('Delete this resource?')) return;
+    window.db.deleteResource(resourceId);
+    window.showToast('Resource deleted.', 'warning');
+    renderCourseContent();
+  };
+
+  function showAddAssignment(subjectId) {
+    var title = prompt('Assignment title:');
+    if (!title) return;
+    var desc = prompt('Description:');
+    var dueDate = prompt('Due date (YYYY-MM-DD):') || '';
+    var maxScore = prompt('Max score:') || '100';
+    window.db.saveAssignment({ subjectId: Number(subjectId), title: title, description: desc||'', dueDate: dueDate, maxScore: Number(maxScore), type: 'homework' });
+    window.showToast('Assignment added!', 'success');
+    renderCourseContent();
+  }
+  function showEditAssignment(assignmentId) {
+    var assignments = JSON.parse(localStorage.getItem('db_subject_assignments')) || [];
+    var a = assignments.find(function(x) { return x.id === assignmentId; });
+    if (!a) return;
+    var title = prompt('Assignment title:', a.title);
+    if (!title) return;
+    var desc = prompt('Description:', a.description||'');
+    var dueDate = prompt('Due date:', a.dueDate||'');
+    window.db.saveAssignment({ id: assignmentId, title: title, description: desc||'', dueDate: dueDate });
+    window.showToast('Assignment updated!', 'success');
+    renderCourseContent();
+  }
+  window.deleteAssignment = function(assignmentId) {
+    if (!confirm('Delete this assignment?')) return;
+    window.db.deleteAssignment(assignmentId);
+    window.showToast('Assignment deleted.', 'warning');
+    renderCourseContent();
+  };
+
+  function showAddQuiz(subjectId) {
+    var title = prompt('Quiz title:');
+    if (!title) return;
+    var timeLimit = prompt('Time limit in minutes:') || '10';
+    var passScore = prompt('Pass score %:') || '60';
+    window.db.saveQuiz({ subjectId: Number(subjectId), title: title, questions: [], timeLimit: Number(timeLimit), passScore: Number(passScore) });
+    window.showToast('Quiz added! Edit to add questions.', 'success');
+    renderCourseContent();
+  }
+  function showEditQuiz(quizId) {
+    var quizzes = JSON.parse(localStorage.getItem('db_subject_quizzes')) || [];
+    var q = quizzes.find(function(x) { return x.id === quizId; });
+    if (!q) return;
+    var title = prompt('Quiz title:', q.title);
+    if (!title) return;
+    var timeLimit = prompt('Time limit (min):', String(q.timeLimit||'10'));
+    var passScore = prompt('Pass score %:', String(q.passScore||'60'));
+    window.db.saveQuiz({ id: quizId, title: title, timeLimit: Number(timeLimit), passScore: Number(passScore) });
+    window.showToast('Quiz updated!', 'success');
+    renderCourseContent();
+  }
+  window.deleteQuiz = function(quizId) {
+    if (!confirm('Delete this quiz?')) return;
+    window.db.deleteQuiz(quizId);
+    window.showToast('Quiz deleted.', 'warning');
+    renderCourseContent();
+  };
+
+  function showAddPastPaper(subjectId) {
+    var title = prompt('Past paper title:');
+    if (!title) return;
+    var year = prompt('Year:') || String(new Date().getFullYear());
+    var term = prompt('Term (1,2,3):') || '1';
+    var type = prompt('Type (end_of_term, end_of_year, national, mock):') || 'end_of_term';
+    window.db.savePastPaper({ subjectId: Number(subjectId), title: title, year: Number(year), term: Number(term), type: type, fileUrl: 'past_papers/' + title.replace(/\s+/g,'_') + '.pdf' });
+    window.showToast('Past paper added!', 'success');
+    renderCourseContent();
+  }
+  function showEditPastPaper(paperId) {
+    var papers = JSON.parse(localStorage.getItem('db_subject_past_papers')) || [];
+    var p = papers.find(function(x) { return x.id === paperId; });
+    if (!p) return;
+    var title = prompt('Past paper title:', p.title);
+    if (!title) return;
+    var year = prompt('Year:', String(p.year));
+    var term = prompt('Term:', String(p.term||'1'));
+    window.db.savePastPaper({ id: paperId, title: title, year: Number(year), term: Number(term) });
+    window.showToast('Past paper updated!', 'success');
+    renderCourseContent();
+  }
+  window.deletePastPaper = function(paperId) {
+    if (!confirm('Delete this past paper?')) return;
+    window.db.deletePastPaper(paperId);
+    window.showToast('Past paper deleted.', 'warning');
+    renderCourseContent();
+  };
+
+  function escHtml(str) {
+    return String(str||'').replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+  }
+
+  window.setActiveSub = setActiveSub;
+  window.showSection = showSection;
+  window.doLogout = doLogout;
+  window.showProfileSection = showProfileSection;
+  window.toggleAddSubjectForm = toggleAddSubjectForm;
+  window.addNewSubject = addNewSubject;
+  window.postAnnouncement = postAnnouncement;
+  window.editAnnouncement = editAnnouncement;
+  window.deleteAnnouncement = deleteAnnouncement;
+  window.cancelAnnEdit = cancelAnnEdit;
+  window.openUserModal = openUserModal;
+  window.closeUserModal = closeUserModal;
+  window.saveUser = saveUser;
+  window.deleteSubject = deleteSubject;
+  window.editUser = editUser;
+  window.deleteUser = deleteUser;
+  window.generateStudentReport = generateStudentReport;
+  window.saveProfile = saveProfile;
+  window.loadAdminData = loadAdminData;
+  window.toggleUserRoleFields = toggleUserRoleFields;
+  window.renderAssessmentTypes = renderAssessmentTypes;
+  window.renderAssessmentMonitor = renderAssessmentMonitor;
+  window.renderCourseContent = renderCourseContent;
+  window.showAddUnit = showAddUnit;
+  window.showEditUnit = showEditUnit;
+  window.showAddLesson = showAddLesson;
+  window.showEditLesson = showEditLesson;
+  window.showAddResource = showAddResource;
+  window.showEditResource = showEditResource;
+  window.showAddAssignment = showAddAssignment;
+  window.showEditAssignment = showEditAssignment;
+  window.showAddQuiz = showAddQuiz;
+  window.showEditQuiz = showEditQuiz;
+  window.showAddPastPaper = showAddPastPaper;
+  window.showEditPastPaper = showEditPastPaper;
+  })();
 </script>
+<div class="sidebar-overlay" onclick="toggleSidebar()" role="presentation" tabindex="-1"></div>
+<button class="mobile-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation menu"><i class="fa-solid fa-bars"></i></button>
 </body>
 </html>

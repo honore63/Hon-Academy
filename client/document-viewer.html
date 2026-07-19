@@ -38,7 +38,11 @@ body{font-family:'Inter',sans-serif;background:#f8fafc;margin:0;padding:0;overfl
 <body>
 <header class="viewer-header">
 <div style="display:flex;align-items:center;gap:12px;">
-<a href="documents-management.html" style="color:#64748b;text-decoration:none;font-size:13px;"><i class="fa-solid fa-arrow-left me-1"></i>Documents</a>
+<a href="javascript:history.back()" style="color:#64748b;text-decoration:none;font-size:13px;"><i class="fa-solid fa-arrow-left me-1"></i>Back</a>
+<span style="color:#e2e8f0;">|</span>
+<button class="toolbar-btn" id="prev-btn" title="Previous Resource (Left Arrow)"><i class="fa-solid fa-chevron-left"></i></button>
+<span id="res-counter" style="font-size:12px;font-weight:600;color:#64748b;min-width:80px;text-align:center">-</span>
+<button class="toolbar-btn" id="next-btn" title="Next Resource (Right Arrow)"><i class="fa-solid fa-chevron-right"></i></button>
 <span style="color:#e2e8f0;">|</span>
 <h6 id="doc-title">Loading...</h6>
 </div>
@@ -46,6 +50,7 @@ body{font-family:'Inter',sans-serif;background:#f8fafc;margin:0;padding:0;overfl
 <button class="toolbar-btn" onclick="zoomOut()" id="zoom-out-btn" title="Zoom Out"><i class="fa-solid fa-minus"></i></button>
 <span id="zoom-level">100%</span>
 <button class="toolbar-btn" onclick="zoomIn()" id="zoom-in-btn" title="Zoom In"><i class="fa-solid fa-plus"></i></button>
+<button class="toolbar-btn" onclick="toggleFullscreen()" id="fullscreen-btn" title="Full Screen (F)"><i class="fa-solid fa-expand"></i></button>
 <button class="toolbar-btn" onclick="downloadDoc()" title="Download"><i class="fa-solid fa-download"></i></button>
 </div>
 </header>
@@ -62,8 +67,10 @@ body{font-family:'Inter',sans-serif;background:#f8fafc;margin:0;padding:0;overfl
 </div>
 </div>
 <aside class="side-panel" id="side-panel">
-<h6><i class="fa-solid fa-circle-info me-2 text-primary"></i>Document Info</h6>
+<h6><i class="fa-solid fa-circle-info me-2 text-primary"></i>Resource Details</h6>
 <div id="doc-meta"></div>
+<h6 class="mt-4"><i class="fa-solid fa-list me-2 text-primary"></i>Navigation</h6>
+<div id="nav-info" style="font-size:13px;color:#64748b;"></div>
 <h6 class="mt-4"><i class="fa-solid fa-share-nodes me-2 text-primary"></i>Sharing</h6>
 <div id="doc-sharing"></div>
 <h6 class="mt-4"><i class="fa-solid fa-clock-rotate-left me-2 text-primary"></i>Version History</h6>
@@ -81,8 +88,139 @@ body{font-family:'Inter',sans-serif;background:#f8fafc;margin:0;padding:0;overfl
 
   const params = new URLSearchParams(window.location.search);
   const docId = parseInt(params.get('id'));
+  const resId = parseInt(params.get('resId'));
+  const resType = params.get('type');
+  const subId = params.get('subId');
+  const fromSource = params.get('from') || '';
+  const urlIdx = parseInt(params.get('idx')) || -1;
+
   let zoom = 100;
-  const doc = window.db.getDocument(docId);
+  var doc = null;
+  var previewList = [];
+  var currentIdx = -1;
+
+  // Load preview navigation list from sessionStorage (set by digital-library.html)
+  try {
+    var stored = sessionStorage.getItem('dl_preview_list');
+    if (stored) previewList = JSON.parse(stored);
+    if (urlIdx >= 0 && urlIdx < previewList.length) currentIdx = urlIdx;
+  } catch(e) { previewList = []; }
+
+  function navigateToResource(idx) {
+    if (idx < 0 || idx >= previewList.length) return;
+    currentIdx = idx;
+    var r = previewList[idx];
+    if (!r) return;
+    sessionStorage.setItem('dl_preview_list', JSON.stringify(previewList));
+    var resTypeNav = r.source || 'library';
+    var subjIdNav = r.subjectId || '';
+    window.location.href = 'document-viewer.html?resId=' + r.id + '&type=' + encodeURIComponent(resTypeNav) + '&subId=' + subjIdNav + '&from=' + fromSource + '&idx=' + idx;
+  }
+
+  function buildResourceDoc(id, type) {
+    var subjects = window.db.getSubjects();
+    var subject = subjects.find(function(s) { return s.id === Number(subId); });
+    var subjectTitle = subject ? subject.title : 'Subject';
+    var ft = 'PDF', fsize = '~1 MB', fname = 'resource.pdf', fUrl = '', category = 'Document';
+    var title = 'Resource', desc = 'Preview from ' + subjectTitle;
+    var extraMeta = {};
+
+    if (type === 'lesson_video' || type === 'lesson_notes') {
+      var lessons = window.db.getSubjectLessons(subId);
+      var lesson = lessons.find(function(l) { return l.id === Number(id); });
+      category = type === 'lesson_video' ? 'Video Lesson' : 'Lesson Notes';
+      ft = type === 'lesson_video' ? 'MP4' : 'PDF';
+      fsize = type === 'lesson_video' ? '~45 MB' : '~2.4 MB';
+      if (lesson) {
+        title = lesson.title + (type === 'lesson_video' ? ' (Video)' : ' (Notes)');
+        desc = lesson.description || 'Lesson resource';
+        fname = type === 'lesson_video' ? (lesson.title||'lesson') + '.mp4' : ((lesson.pdfNotes||lesson.title||'notes') + '.pdf');
+        fUrl = type === 'lesson_video' ? (lesson.videoUrl || '') : '';
+        extraMeta = { lessonId: lesson.id, unit: lesson.unit || '', topic: lesson.topic || '' };
+      } else {
+        title = (type === 'lesson_video' ? 'Video' : 'Notes') + ' #' + id;
+        fname = (type === 'lesson_video' ? 'lesson_' : 'notes_') + id + '.' + ft.toLowerCase();
+      }
+    } else if (type === 'book') {
+      var books = window.db.getSubjectResources(subId);
+      var book = books.find(function(b) { return b.id === Number(id); });
+      category = 'Learning Resource';
+      if (book) {
+        var ext = (book.fileName||'').split('.').pop().toLowerCase();
+        ft = (ext||'pdf').toUpperCase();
+        fsize = {pdf:'~3.2 MB',ppt:'~1.8 MB',pptx:'~2.1 MB',doc:'~450 KB',docx:'~520 KB'}[ext]||'~1 MB';
+        fname = book.fileName||'resource.'+ext;
+        title = book.title;
+        desc = 'Learning resource for ' + subjectTitle;
+      } else {
+        title = 'Resource #' + id;
+        fname = 'resource_' + id + '.pdf';
+      }
+    } else if (type === 'past_paper') {
+      var papers = window.db.getSubjectPastPapers(subId);
+      var paper = papers.find(function(p) { return p.id === Number(id); });
+      category = 'Past Paper';
+      ft = 'PDF'; fsize = '~1.5 MB'; fname = 'past_paper_' + id + '.pdf';
+      if (paper) {
+        title = paper.title;
+        desc = 'Past exam paper - Term ' + (paper.term||1) + ' ' + paper.year;
+        fname = (paper.title||'past_paper').replace(/\s+/g,'_') + '.pdf';
+        extraMeta = { academicYear: paper.year, term: paper.term };
+      } else {
+        title = 'Past Paper #' + id;
+      }
+    } else if (type === 'topic_resource') {
+      var allTopics = [];
+      var allUnits = window.db.getSubjectUnits ? window.db.getSubjectUnits(subId) : [];
+      allUnits.forEach(function(u) {
+        var tops = window.db.getUnitTopics ? (window.db.getUnitTopics(u.id) || []) : [];
+        allTopics = allTopics.concat(tops);
+      });
+      var topic = allTopics.find(function(t) { return t.id === Number(id); });
+      if (topic) {
+        title = topic.title + ' (Topic Resource)';
+        desc = topic.content || '';
+        fname = (topic.title||'topic') + '.pdf';
+        extraMeta = { topic: topic.title };
+      }
+    } else if (type === 'library' || type === 'subject_resource') {
+      var libRes = window.db.getResource ? window.db.getResource(id) : null;
+      if (libRes) {
+        title = libRes.title || 'Resource';
+        desc = libRes.description || '';
+        ft = (libRes.fileType||'PDF').toLowerCase();
+        fsize = libRes.fileSize || '~1 MB';
+        fname = libRes.fileName || 'resource.'+ft;
+        fUrl = libRes.fileUrl || '';
+        category = libRes.category || 'Document';
+        subjectTitle = libRes.subject || subjectTitle;
+        extraMeta = { level: libRes.level, className: libRes.className, unit: libRes.unit, topic: libRes.topic, academicYear: libRes.academicYear, term: libRes.term };
+      } else {
+        title = 'Resource #' + id;
+        fname = 'resource_' + id + '.' + ft.toLowerCase();
+      }
+    } else {
+      title = 'Resource #' + id;
+      fname = 'resource_' + id + '.' + ft.toLowerCase();
+    }
+    var now = new Date().toISOString();
+    var obj = { title: title, description: desc, category: category, subject: subjectTitle, class: '', fileType: ft.toUpperCase(), fileSize: fsize, fileName: fname, fileUrl: fUrl, uploadedBy: 'HON-ACADEMY', createdAt: now, updatedAt: now, downloads: 0, version: 1, visibility: 'shared', status: 'active' };
+    // Merge extra metadata for rich display
+    if (extraMeta.level) obj.level = extraMeta.level;
+    if (extraMeta.className) obj.class = extraMeta.className;
+    if (extraMeta.unit) obj.unit = extraMeta.unit;
+    if (extraMeta.topic) obj.topic = extraMeta.topic;
+    if (extraMeta.academicYear) obj.academicYear = extraMeta.academicYear;
+    if (extraMeta.term) obj.term = extraMeta.term;
+    return obj;
+  }
+
+  // If called from course resources, build a resource object dynamically
+  if (resId && resType) {
+    doc = buildResourceDoc(Number(resId), resType);
+  } else {
+    doc = window.db.getDocument(docId);
+  }
 
   if (!doc) {
     document.getElementById('doc-title').textContent = 'Document not found';
@@ -93,8 +231,30 @@ body{font-family:'Inter',sans-serif;background:#f8fafc;margin:0;padding:0;overfl
 
   document.getElementById('doc-title').textContent = doc.title;
 
+  // Navigation UI
+  var hasNav = previewList.length > 1 && currentIdx >= 0;
+  var prevBtn = document.getElementById('prev-btn');
+  var nextBtn = document.getElementById('next-btn');
+  var counterEl = document.getElementById('res-counter');
+
+  if (hasNav) {
+    counterEl.textContent = 'Resource ' + (currentIdx + 1) + ' of ' + previewList.length;
+    prevBtn.disabled = currentIdx <= 0;
+    nextBtn.disabled = currentIdx >= previewList.length - 1;
+    prevBtn.onclick = function() { if (currentIdx > 0) navigateToResource(currentIdx - 1); };
+    nextBtn.onclick = function() { if (currentIdx < previewList.length - 1) navigateToResource(currentIdx + 1); };
+    document.getElementById('nav-info').innerHTML =
+      '<div class="meta-row"><span class="label">Position</span><span class="value">' + (currentIdx+1) + ' of ' + previewList.length + '</span></div>' +
+      '<div style="margin-top:8px;font-size:11px;color:#94a3b8;">Use <kbd style="background:#f1f5f9;padding:1px 6px;border-radius:3px;font-size:11px;">←</kbd> <kbd style="background:#f1f5f9;padding:1px 6px;border-radius:3px;font-size:11px;">→</kbd> to navigate</div>';
+  } else {
+    prevBtn.style.display = 'none';
+    nextBtn.style.display = 'none';
+    counterEl.style.display = 'none';
+    document.getElementById('nav-info').innerHTML = '<p style="font-size:13px;color:#94a3b8;">Open from Digital Library to browse resources sequentially.</p>';
+  }
+
   function renderMeta() {
-    const meta = [
+    var metaRows = [
       ['Title', doc.title],
       ['Description', doc.description || '-'],
       ['Category', doc.category || '-'],
@@ -102,142 +262,179 @@ body{font-family:'Inter',sans-serif;background:#f8fafc;margin:0;padding:0;overfl
       ['Class', doc.class || '-'],
       ['Academic Year', doc.academicYear || '-'],
       ['Term', doc.term || '-'],
+      ['Level', doc.level || '-'],
+      ['Unit', doc.unit || '-'],
+      ['Topic', doc.topic || '-'],
       ['Uploaded By', doc.uploadedBy || '-'],
       ['Upload Date', new Date(doc.createdAt).toLocaleDateString()],
       ['Last Updated', new Date(doc.updatedAt || doc.createdAt).toLocaleDateString()],
       ['File Type', (doc.fileType||'').toUpperCase()],
       ['File Size', doc.fileSize || '-'],
-      ['Version', `v${doc.version || 1}`],
+      ['Version', 'v' + (doc.version || 1)],
       ['Downloads', doc.downloads || 0]
     ];
-    document.getElementById('doc-meta').innerHTML = meta.map(([l,v]) => `<div class="meta-row"><span class="label">${l}</span><span class="value">${v}</span></div>`).join('');
+    document.getElementById('doc-meta').innerHTML = metaRows.map(function(item) {
+      return '<div class="meta-row"><span class="label">' + item[0] + '</span><span class="value">' + item[1] + '</span></div>';
+    }).join('');
 
-    const vis = doc.visibility || 'private';
-    const visColors = {private:'#fee2e2;color:#991b1b',shared:'#dbeafe;color:#1e40af',public:'#dcfce7;color:#166534'};
-    document.getElementById('doc-sharing').innerHTML = `
-      <div class="meta-row"><span class="label">Visibility</span><span class="share-badge" style="background:${visColors[vis]||visColors.private}">${vis}</span></div>
-      <div class="meta-row"><span class="label">Status</span><span class="share-badge" style="background:${doc.status==='archived'?'#fef3c7;color:#92400e':'#dcfce7;color:#166534'}">${doc.status||'active'}</span></div>`;
+    var vis = doc.visibility || 'private';
+    var visColors = {private:'#fee2e2;color:#991b1b',shared:'#dbeafe;color:#1e40af',public:'#dcfce7;color:#166534'};
+    document.getElementById('doc-sharing').innerHTML =
+      '<div class="meta-row"><span class="label">Visibility</span><span class="share-badge" style="background:' + (visColors[vis]||visColors.private) + '">' + vis + '</span></div>' +
+      '<div class="meta-row"><span class="label">Status</span><span class="share-badge" style="background:' + (doc.status==='archived'?'#fef3c7;color:#92400e':'#dcfce7;color:#166534') + '">' + (doc.status||'active') + '</span></div>';
   }
 
   function renderVersions() {
-    const versions = window.db.getVersionsForDocument(doc.id);
-    const container = document.getElementById('doc-versions');
-    if (!versions.length) { container.innerHTML = '<p style="font-size:13px;color:#94a3b8;">No previous versions.</p>'; return; }
-    container.innerHTML = versions.map(v => `<div class="meta-row"><span class="label">v${v.version||'?'}</span><span class="value" style="font-size:11px;">${new Date(v.archivedAt).toLocaleDateString()}</span></div>`).join('');
+    var container = document.getElementById('doc-versions');
+    container.innerHTML = '<p style="font-size:13px;color:#94a3b8;">Version history available for full documents.</p>';
   }
 
-  const PLACEHOLDER_IMAGES = {
-    'school':'https://images.unsplash.com/photo-1586339949916-3e5487e5e09f?w=800&h=600&fit=crop',
-    'notes':'https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&h=600&fit=crop',
-    'exam':'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&h=600&fit=crop',
-    'report':'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&h=600&fit=crop',
-    'default':'https://images.unsplash.com/photo-1586339949916-3e5487e5e09f?w=800&h=600&fit=crop'
-  };
-  function getPlaceholder(key) { return PLACEHOLDER_IMAGES[key] || PLACEHOLDER_IMAGES.default; }
-
   function generateDocContent(ft, isDownload) {
-    const title = doc.title || 'Untitled';
-    const desc = doc.description || 'No description provided.';
-    const category = doc.category || 'General';
-    const subject = doc.subject || 'General';
-    const uploader = doc.uploadedBy || 'Unknown';
-    const date = new Date(doc.createdAt).toLocaleDateString();
-    const fileName = doc.fileName || 'document.' + ft;
-    const newline = isDownload ? '\r\n' : '<br>';
-    const bold = isDownload ? '' : '<strong>';
-    const boldEnd = isDownload ? '' : '</strong>';
+    var title = doc.title || 'Untitled';
+    var desc = doc.description || 'No description provided.';
+    var category = doc.category || 'General';
+    var subject = doc.subject || 'General';
+    var uploader = doc.uploadedBy || 'Unknown';
+    var date = new Date(doc.createdAt).toLocaleDateString();
+    var fileName = doc.fileName || 'document.' + ft;
 
     if (isDownload) {
-      let content = `=== HonE-Learning Platform - Document Download ===\r\n\r\n`;
-      content += `Title: ${title}\r\n`;
-      content += `Description: ${desc}\r\n`;
-      content += `Category: ${category}\r\n`;
-      content += `Subject: ${subject}\r\n`;
-      content += `Class: ${doc.class || 'N/A'}\r\n`;
-      content += `Academic Year: ${doc.academicYear || 'N/A'}\r\n`;
-      content += `Term: ${doc.term || 'N/A'}\r\n`;
-      content += `Uploaded By: ${uploader}\r\n`;
-      content += `Upload Date: ${date}\r\n`;
-      content += `File: ${fileName}\r\n`;
-      content += `File Type: ${ft.toUpperCase()}\r\n`;
-      content += `File Size: ${doc.fileSize || '~125 KB'}\r\n`;
-      content += `Version: v${doc.version || 1}\r\n`;
-      content += `\r\n--- Content Preview ---\r\n\r\n`;
-      content += `This is a simulated download of "${title}".\r\n`;
-      content += `In the production environment, the actual file "${fileName}" would be served here.\r\n`;
+      var content = '=== HonE-Learning Platform - Document Download ===\r\n\r\n';
+      content += 'Title: ' + title + '\r\n';
+      content += 'Description: ' + desc + '\r\n';
+      content += 'Category: ' + category + '\r\n';
+      content += 'Subject: ' + subject + '\r\n';
+      content += 'Class: ' + (doc.class || 'N/A') + '\r\n';
+      content += 'Level: ' + (doc.level || 'N/A') + '\r\n';
+      content += 'Unit: ' + (doc.unit || 'N/A') + '\r\n';
+      content += 'Topic: ' + (doc.topic || 'N/A') + '\r\n';
+      content += 'Academic Year: ' + (doc.academicYear || 'N/A') + '\r\n';
+      content += 'Term: ' + (doc.term || 'N/A') + '\r\n';
+      content += 'Uploaded By: ' + uploader + '\r\n';
+      content += 'Upload Date: ' + date + '\r\n';
+      content += 'File: ' + fileName + '\r\n';
+      content += 'File Type: ' + ft.toUpperCase() + '\r\n';
+      content += 'File Size: ' + (doc.fileSize || '~125 KB') + '\r\n';
+      content += 'Version: v' + (doc.version || 1) + '\r\n';
+      content += '\r\n--- Content Preview ---\r\n\r\n';
+      content += 'This is a simulated download of "' + title + '".\r\n';
+      content += 'In the production environment, the actual file "' + fileName + '" would be served here.\r\n';
       return content;
     }
 
-    // HTML preview
-    const borderColors = {pdf:'#ef4444',doc:'#2563eb',docx:'#2563eb',xls:'#16a34a',xlsx:'#16a34a',ppt:'#f97316',pptx:'#f97316',jpg:'#8b5cf6',jpeg:'#8b5cf6',png:'#8b5cf6',zip:'#64748b',txt:'#94a3b8'};
-    const color = borderColors[ft] || '#94a3b8';
+    var borderColors = {pdf:'#ef4444',doc:'#2563eb',docx:'#2563eb',xls:'#16a34a',xlsx:'#16a34a',ppt:'#f97316',pptx:'#f97316',jpg:'#8b5cf6',jpeg:'#8b5cf6',png:'#8b5cf6',zip:'#64748b',txt:'#94a3b8'};
+    var color = borderColors[ft] || '#94a3b8';
 
-    if (['jpg','jpeg','png'].includes(ft)) {
-      return `<img src="${getPlaceholder(category.toLowerCase().includes('report')?'report':category.toLowerCase().includes('exam')?'exam':'notes')}" alt="${title}" style="transform:scale(${zoom/100});border-radius:8px;max-width:100%;">`;
+    if (['jpg','jpeg','png','gif','webp'].indexOf(ft) !== -1) {
+      return '<img src="' + (doc.fileUrl || '') + '" alt="' + title + '" style="transform:scale(' + (zoom/100) + ');border-radius:8px;max-width:100%;">';
     }
 
-    return `<div class="simulated-doc" style="transform:scale(${zoom/100});transform-origin:top center;"><h2>${title}</h2>
-      <div style="background:#f8fafc;border-radius:8px;padding:16px;margin-bottom:16px;border-left:4px solid ${color};">
-        <strong>${ft.toUpperCase()} Document</strong><br><small style="color:#64748b;">${fileName}</small></div>
-      <p>${desc}</p>
-      <hr style="border-color:#f1f5f9;margin:16px 0;">
-      <table style="width:100%;font-size:13px;color:#64748b;"><tr>
-        <td style="padding:4px 0;"><strong>Category:</strong> ${category}</td>
-        <td style="padding:4px 0;"><strong>Subject:</strong> ${subject}</td>
-      </tr><tr>
-        <td style="padding:4px 0;"><strong>Uploaded:</strong> ${uploader}</td>
-        <td style="padding:4px 0;"><strong>Date:</strong> ${date}</td>
-      </tr><tr>
-        <td style="padding:4px 0;"><strong>Size:</strong> ${doc.fileSize || '~125 KB'}</td>
-        <td style="padding:4px 0;"><strong>Version:</strong> v${doc.version || 1}</td>
-      </tr></table>
-      ${ft === 'zip' ? `<div style="text-align:center;padding:20px;color:#94a3b8;"><i class="fa-solid fa-file-zipper" style="font-size:36px;display:block;margin-bottom:8px;"></i>ZIP Archive — download to extract contents.</div>` : ''}
-      <p style="color:#94a3b8;font-style:italic;font-size:12px;margin-top:16px;">This is a browser-based preview. Click Download to get the actual file.</p>
-    </div>`;
+    if (['mp4','webm','ogg'].indexOf(ft) !== -1) {
+      return '<div style="width:100%;max-width:800px;text-align:center"><video controls style="width:100%;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.1);transform:scale(' + (zoom/100) + ')" src="' + (doc.fileUrl || '') + '"><source src="' + (doc.fileUrl || '') + '" type="video/' + ft + '">Your browser does not support video playback.</video><p style="color:#64748b;font-size:13px;margin-top:8px;">' + title + '</p></div>';
+    }
+
+    if (['mp3','wav','aac','ogg','flac'].indexOf(ft) !== -1) {
+      return '<div style="width:100%;max-width:600px;text-align:center;padding:40px 20px"><div style="background:#fff;border-radius:16px;padding:40px 32px;box-shadow:0 4px 24px rgba(0,0,0,.1);transform:scale(' + (zoom/100) + ')"><i class="fa-solid fa-headphones" style="font-size:48px;color:#1a3c7b;display:block;margin-bottom:16px"></i><h5 style="margin-bottom:16px">' + title + '</h5><audio controls style="width:100%" src="' + (doc.fileUrl || '') + '">Your browser does not support audio playback.</audio><p style="color:#64748b;font-size:13px;margin-top:12px">Audio Lesson &mdash; ' + fileName + '</p></div></div>';
+    }
+
+    if (doc.fileUrl && doc.fileUrl.indexOf('youtube.com/embed') !== -1) {
+      return '<div style="width:100%;max-width:800px;transform:scale(' + (zoom/100) + ');transform-origin:top center;"><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.1);"><iframe src="' + doc.fileUrl + '" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;" allowfullscreen></iframe></div><p style="color:#64748b;font-size:13px;text-align:center;margin-top:8px;">' + title + '</p></div>';
+    }
+
+    return '<div class="simulated-doc" style="transform:scale(' + (zoom/100) + ');transform-origin:top center;"><h2>' + title + '</h2>' +
+      '<div style="background:#f8fafc;border-radius:8px;padding:16px;margin-bottom:16px;border-left:4px solid ' + color + ';">' +
+        '<strong>' + ft.toUpperCase() + ' Document</strong><br><small style="color:#64748b;">' + fileName + '</small></div>' +
+      '<p>' + desc + '</p>' +
+      '<hr style="border-color:#f1f5f9;margin:16px 0;">' +
+      '<table style="width:100%;font-size:13px;color:#64748b;"><tr>' +
+        '<td style="padding:4px 0;"><strong>Category:</strong> ' + category + '</td>' +
+        '<td style="padding:4px 0;"><strong>Subject:</strong> ' + subject + '</td>' +
+      '</tr><tr>' +
+        '<td style="padding:4px 0;"><strong>Level:</strong> ' + (doc.level || '-') + '</td>' +
+        '<td style="padding:4px 0;"><strong>Class:</strong> ' + (doc.class || '-') + '</td>' +
+      '</tr><tr>' +
+        '<td style="padding:4px 0;"><strong>Unit:</strong> ' + (doc.unit || '-') + '</td>' +
+        '<td style="padding:4px 0;"><strong>Topic:</strong> ' + (doc.topic || '-') + '</td>' +
+      '</tr><tr>' +
+        '<td style="padding:4px 0;"><strong>Uploaded:</strong> ' + uploader + '</td>' +
+        '<td style="padding:4px 0;"><strong>Date:</strong> ' + date + '</td>' +
+      '</tr><tr>' +
+        '<td style="padding:4px 0;"><strong>Size:</strong> ' + (doc.fileSize || '~125 KB') + '</td>' +
+        '<td style="padding:4px 0;"><strong>Version:</strong> v' + (doc.version || 1) + '</td>' +
+      '</tr></table>' +
+      (ft === 'zip' ? '<div style="text-align:center;padding:20px;color:#94a3b8;"><i class="fa-solid fa-file-zipper" style="font-size:36px;display:block;margin-bottom:8px;"></i>ZIP Archive &mdash; download to extract contents.</div>' : '') +
+      '<p style="color:#94a3b8;font-style:italic;font-size:12px;margin-top:16px;">This is a browser-based preview. Click Download to get the actual file.</p></div>';
   }
 
   function renderPreview() {
-    const ft = (doc.fileType || '').toLowerCase();
-    const container = document.getElementById('preview-content');
-    container.innerHTML = generateDocContent(ft, false);
+    var ft = (doc.fileType || '').toLowerCase();
+    document.getElementById('preview-content').innerHTML = generateDocContent(ft, false);
   }
 
-  function zoomIn() {
-    if (zoom >= 200) return;
-    zoom += 10;
-    updateZoom();
-  }
-
-  function zoomOut() {
-    if (zoom <= 30) return;
-    zoom -= 10;
-    updateZoom();
-  }
+  function zoomIn() { if (zoom < 200) { zoom += 10; updateZoom(); } }
+  function zoomOut() { if (zoom > 30) { zoom -= 10; updateZoom(); } }
 
   function updateZoom() {
     document.getElementById('zoom-level').textContent = zoom + '%';
     document.getElementById('zoom-level-bottom').textContent = zoom + '%';
     document.getElementById('zoom-in-btn').disabled = zoom >= 200;
     document.getElementById('zoom-out-btn').disabled = zoom <= 30;
-    const zoomEls = document.querySelectorAll('#preview-content img, #preview-content .simulated-doc');
-    zoomEls.forEach(el => el.style.transform = `scale(${zoom/100})`);
+  }
+
+  function mimeForExt(ext) {
+    var map = {pdf:'application/pdf',mp4:'video/mp4',webm:'video/webm',ogg:'video/ogg',mp3:'audio/mpeg',wav:'audio/wav',aac:'audio/aac',jpg:'image/jpeg',jpeg:'image/jpeg',png:'image/png',gif:'image/gif',webp:'image/webp',ppt:'application/vnd.ms-powerpoint',pptx:'application/vnd.openxmlformats-officedocument.presentationml.presentation',doc:'application/msword',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',xls:'application/vnd.ms-excel',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',zip:'application/zip',txt:'text/plain'};
+    return map[ext] || 'application/octet-stream';
   }
 
   function downloadDoc() {
-    window.db.logDocumentDownload(docId, currentUser.id);
-    const ft = (doc.fileType || 'txt').toLowerCase();
-    const content = generateDocContent(ft, true);
-    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    var actualId = resId || docId;
+    var actualType = resType || 'document';
+    if (actualId && actualId > 0) {
+      window.db.logResourceDownload(actualId, actualType, Number(subId||0), currentUser.id);
+    } else if (docId && docId > 0) {
+      window.db.logDocumentDownload(docId, currentUser.id);
+    }
+    if (doc.fileUrl && doc.fileUrl.indexOf('youtube.com') === -1) {
+      window.open(doc.fileUrl, '_blank');
+      if (window.showToast) window.showToast('Opening ' + doc.fileName + ' for download', 'success');
+      return;
+    }
+    var ft = (doc.fileType || 'txt').toLowerCase();
+    var fileName = doc.fileName || (doc.title||'document').replace(/[^a-z0-9]/gi,'_').toLowerCase() + '.' + ft;
+    var ext = fileName.split('.').pop().toLowerCase();
+    var mimeType = mimeForExt(ext);
+    var content = generateDocContent(ft, true);
+    var blob = new Blob([content], { type: mimeType+';charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
     a.href = url;
-    a.download = doc.fileName || `${doc.title.replace(/[^a-z0-9]/gi,'_').toLowerCase()}.txt`;
+    a.download = fileName;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    window.showToast(`"${doc.title}" downloaded`, 'success');
+    if (window.showToast) window.showToast('"' + doc.title + '" downloaded', 'success');
     renderMeta();
+  }
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(function(){});
+    } else {
+      document.exitFullscreen().catch(function(){});
+    }
+  }
+
+  function updateFullscreenIcon() {
+    var btn = document.getElementById('fullscreen-btn');
+    if (!btn) return;
+    if (document.fullscreenElement) {
+      btn.innerHTML = '<i class="fa-solid fa-compress"></i>';
+      btn.title = 'Exit Full Screen (F)';
+    } else {
+      btn.innerHTML = '<i class="fa-solid fa-expand"></i>';
+      btn.title = 'Full Screen (F)';
+    }
   }
 
   renderMeta();
@@ -248,6 +445,41 @@ body{font-family:'Inter',sans-serif;background:#f8fafc;margin:0;padding:0;overfl
   window.zoomIn = zoomIn;
   window.zoomOut = zoomOut;
   window.downloadDoc = downloadDoc;
+  window.toggleFullscreen = toggleFullscreen;
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    // Don't intercept if user is typing in an input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
+
+    switch (e.key) {
+      case 'ArrowRight':
+        if (hasNav && currentIdx < previewList.length - 1) {
+          e.preventDefault();
+          navigateToResource(currentIdx + 1);
+        }
+        break;
+      case 'ArrowLeft':
+        if (hasNav && currentIdx > 0) {
+          e.preventDefault();
+          navigateToResource(currentIdx - 1);
+        }
+        break;
+      case 'Escape':
+        window.history.back();
+        break;
+      case 'f':
+      case 'F':
+        if (!e.ctrlKey && !e.metaKey) {
+          e.preventDefault();
+          toggleFullscreen();
+        }
+        break;
+    }
+  });
+
+  document.addEventListener('fullscreenchange', updateFullscreenIcon);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
 })();
 </script>
 </body>

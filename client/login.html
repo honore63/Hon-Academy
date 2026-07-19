@@ -301,7 +301,7 @@
     <div class="login-left">
 
       <div class="school-badge">
-        <div class="school-badge-icon"><i class="fa-solid fa-graduation-cap text-white"></i></div>
+        <div class="school-badge-icon" style="overflow:hidden;padding:0;"><img src="IMAGES/WhatsApp Image 2026-07-18 at 9.51.59 AM.jpeg" alt="HON-ACADEMY" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
         <div>
           <span class="school-badge-text" id="login-school-name">School Platform</span>
           <span class="school-badge-sub" id="login-school-badge">Learning Portal</span>
@@ -373,7 +373,7 @@
 
       <!-- Logo -->
       <div class="form-logo">
-        <div class="form-logo-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div class="form-logo-icon" style="overflow:hidden;padding:0;"><img src="IMAGES/WhatsApp Image 2026-07-18 at 9.51.59 AM.jpeg" alt="HON-ACADEMY" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"></div>
         <div>
           <div class="form-logo-name" id="form-logo-name">School</div>
           <div class="form-logo-sub">Learning Portal</div>
@@ -508,6 +508,20 @@
         document.getElementById('login-desc').textContent = school.loginDescription || school.aboutIntro || 'A modern Learning Management System designed to empower schools, teachers, and students through secure, accessible, and engaging digital learning experiences.';
         document.getElementById('form-logo-name').textContent = short;
         document.getElementById('form-subtitle').textContent = 'Sign in to your ' + short + ' account';
+        
+        if (school && school.logoUrl) {
+          const badgeIcon = document.querySelector('.school-badge-icon');
+          if (badgeIcon) {
+            badgeIcon.innerHTML = '<img src="' + school.logoUrl + '" alt="' + school.name + '" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;">';
+            badgeIcon.style.background = 'none';
+          }
+          const logoIcon = document.querySelector('.form-logo-icon');
+          if (logoIcon) {
+            logoIcon.innerHTML = '<img src="' + school.logoUrl + '" alt="' + school.name + '" style="width:100%; height:100%; object-fit:cover; border-radius:inherit;">';
+            logoIcon.style.background = 'none';
+            logoIcon.style.boxShadow = 'none';
+          }
+        }
       } catch(e) {}
       // Check for role URL parameter
       var params = new URLSearchParams(window.location.search);

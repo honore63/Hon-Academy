@@ -8,110 +8,478 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="css/style.css" />
+    <style>
+      :root { --ann-primary: #4f46e5; --ann-secondary: #7c3aed; --ann-accent: #f59e0b; --ann-bg: #f8fafc; --ann-card-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04); --ann-card-hover-shadow: 0 10px 25px rgba(0,0,0,0.08); }
+      .ann-hero { background: linear-gradient(135deg, var(--ann-primary) 0%, var(--ann-secondary) 100%); padding: 40px 0 50px; margin-top: -1px; position: relative; overflow: hidden; }
+      .ann-hero::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.05) 0%, transparent 50%); }
+      .ann-hero h1 { color: #fff; font-weight: 700; font-size: 2.2rem; margin-bottom: 8px; position: relative; }
+      .ann-hero p { color: rgba(255,255,255,0.85); font-size: 1rem; margin-bottom: 0; position: relative; }
+      .ann-stats-bar { display: flex; gap: 24px; margin-top: 24px; flex-wrap: wrap; position: relative; }
+      .ann-stat-item { display: flex; align-items: center; gap: 10px; color: #fff; }
+      .ann-stat-item i { font-size: 1.3rem; opacity: 0.8; }
+      .ann-stat-item span { font-size: 0.85rem; opacity: 0.9; }
+      .ann-stat-item strong { font-size: 1.1rem; }
+      .ann-search-section { background: #fff; border-radius: 12px; padding: 20px; margin-top: -25px; position: relative; z-index: 10; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+      .ann-search-input { border: 2px solid #e2e8f0; border-radius: 8px; padding: 10px 16px; font-size: 0.95rem; width: 100%; transition: border-color 0.2s; }
+      .ann-search-input:focus { outline: none; border-color: var(--ann-primary); }
+      .ann-filter-select { border: 2px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; font-size: 0.85rem; background: #fff; min-width: 140px; }
+      .ann-filter-select:focus { outline: none; border-color: var(--ann-primary); }
+      .ann-featured-section { margin-bottom: 28px; }
+      .ann-featured-section h3 { font-size: 1rem; font-weight: 600; color: #1e293b; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+      .ann-featured-section h3 i { color: var(--ann-accent); }
+      .ann-featured-card { background: linear-gradient(135deg, #fefce8 0%, #fef3c7 100%); border: 2px solid #fde68a; border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.25s; height: 100%; }
+      .ann-featured-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(245,158,11,0.15); }
+      .ann-featured-badge { background: var(--ann-accent); color: #fff; font-size: 9px; padding: 3px 10px; border-radius: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+      .ann-card { background: #fff; border-radius: 12px; box-shadow: var(--ann-card-shadow); transition: all 0.3s; cursor: pointer; height: 100%; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #f1f5f9; }
+      .ann-card:hover { transform: translateY(-4px); box-shadow: var(--ann-card-hover-shadow); border-color: #e2e8f0; }
+      .ann-card-media { width: 100%; height: 160px; object-fit: cover; border-radius: 12px 12px 0 0; }
+      .ann-card-media-placeholder { width: 100%; height: 160px; background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color: var(--ann-primary); border-radius: 12px 12px 0 0; }
+      .ann-card-body { padding: 16px 18px 18px; flex: 1; display: flex; flex-direction: column; }
+      .ann-card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+      .ann-card-tag { font-size: 9px; padding: 3px 10px; border-radius: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; }
+      .ann-card-title { font-size: 1rem; font-weight: 600; color: #1e293b; margin-bottom: 6px; line-height: 1.35; }
+      .ann-card-summary { font-size: 0.82rem; color: #64748b; margin-bottom: 12px; flex: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+      .ann-card-meta { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid #f1f5f9; font-size: 0.75rem; color: #94a3b8; }
+      .ann-card-actions { display: flex; gap: 6px; margin-top: 10px; }
+      .ann-card-actions .btn-sm { font-size: 0.72rem; padding: 4px 12px; border-radius: 6px; }
+      .ann-priority-urgent { border-left: 4px solid #ef4444; }
+      .ann-priority-important { border-left: 4px solid var(--ann-accent); }
+      .ann-priority-pinned { border-left: 4px solid var(--ann-primary); }
+      .ann-empty-state { text-align: center; padding: 60px 20px; color: #94a3b8; }
+      .ann-empty-state i { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+      .ann-results-count { font-size: 0.82rem; color: #64748b; margin-bottom: 16px; }
+      /* Preview Modal */
+      .ann-preview-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+      .ann-preview-overlay.show { display: flex; }
+      .ann-preview-modal { background: #fff; border-radius: 16px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; animation: modalIn 0.25s ease-out; }
+      @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+      .ann-preview-close { position: absolute; top: 12px; right: 14px; width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(0,0,0,0.1); color: #475569; font-size: 1rem; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; transition: background 0.2s; }
+      .ann-preview-close:hover { background: rgba(0,0,0,0.2); }
+      .ann-preview-header { padding: 28px 28px 16px; }
+      .ann-preview-header h2 { font-size: 1.4rem; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
+      .ann-preview-meta { display: flex; flex-wrap: wrap; gap: 12px; font-size: 0.8rem; color: #64748b; margin-bottom: 4px; }
+      .ann-preview-media { width: 100%; max-height: 400px; object-fit: contain; background: #f1f5f9; border-radius: 8px; margin: 0 28px 16px; width: calc(100% - 56px); }
+      .ann-preview-content { padding: 0 28px 20px; font-size: 0.92rem; line-height: 1.7; color: #334155; }
+      .ann-preview-content p { margin-bottom: 12px; }
+      .ann-preview-attachments { padding: 0 28px 20px; }
+      .ann-preview-attachments h6 { font-size: 0.85rem; font-weight: 600; color: #1e293b; margin-bottom: 10px; }
+      .ann-attachment-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: #f8fafc; border-radius: 8px; margin-bottom: 6px; font-size: 0.82rem; }
+      .ann-attachment-item i { font-size: 1.1rem; color: var(--ann-primary); }
+      .ann-attachment-item .att-name { flex: 1; color: #1e293b; font-weight: 500; }
+      .ann-attachment-item .att-size { color: #94a3b8; font-size: 0.75rem; }
+      .ann-attachment-item .att-dl { color: var(--ann-primary); cursor: pointer; }
+      .ann-preview-nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 28px; border-top: 1px solid #f1f5f9; }
+      .ann-preview-nav-btn { font-size: 0.82rem; color: var(--ann-primary); cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 6px; transition: background 0.2s; border: none; background: none; }
+      .ann-preview-nav-btn:hover { background: #f1f5f9; }
+      .ann-preview-nav-btn:disabled { opacity: 0.3; cursor: default; }
+      .ann-preview-nav-btn:disabled:hover { background: none; }
+      .ann-preview-nav-indicator { font-size: 0.78rem; color: #94a3b8; }
+      /* Media lightbox */
+      .ann-lightbox { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); z-index: 99999; display: none; align-items: center; justify-content: center; padding: 40px; backdrop-filter: blur(8px); }
+      .ann-lightbox.show { display: flex; }
+      .ann-lightbox-content { max-width: 90vw; max-height: 85vh; position: relative; }
+      .ann-lightbox-content img, .ann-lightbox-content video { max-width: 100%; max-height: 85vh; border-radius: 8px; }
+      .ann-lightbox-close { position: absolute; top: -40px; right: 0; color: #fff; font-size: 1.5rem; cursor: pointer; background: none; border: none; }
+      .results-highlight { background: #fef9c3; padding: 0 2px; border-radius: 2px; }
+      @media (max-width: 768px) {
+        .ann-hero h1 { font-size: 1.6rem; }
+        .ann-search-section { padding: 14px; }
+        .ann-stats-bar { gap: 12px; }
+        .ann-preview-modal { max-height: 95vh; border-radius: 12px; }
+        .ann-preview-header { padding: 20px 18px 12px; }
+        .ann-preview-header h2 { font-size: 1.1rem; }
+        .ann-preview-content { padding: 0 18px 16px; }
+        .ann-preview-attachments { padding: 0 18px 16px; }
+        .ann-preview-nav { padding: 12px 18px; flex-wrap: wrap; gap: 8px; }
+        .ann-preview-media { margin: 0 18px 12px; width: calc(100% - 36px); }
+      }
+    </style>
   </head>
   <body class="animate-fade-in">
     <header class="site-header"></header>
 
-    <section class="page-banner">
-        <div class="container">
-          <div class="breadcrumb-custom"><a href="index.html">Home</a><span>/</span><span class="current">Announcements</span></div>
-          <h1>Announcements</h1>
-          <p id="page-intro">Stay updated with the latest news, timetable changes, meeting notices, and events.</p>
-        </div>
+    <section class="ann-hero">
+      <div class="container">
+        <div class="breadcrumb-custom" style="margin-bottom:12px;"><a href="index.html" style="color:rgba(255,255,255,0.7);">Home</a><span style="color:rgba(255,255,255,0.4);">/</span><span class="current" style="color:#fff;">Announcements</span></div>
+        <h1 id="ann-page-title">Announcements & News</h1>
+        <p id="page-intro">Stay updated with the latest news, timetable changes, meeting notices, and events.</p>
+        <div class="ann-stats-bar" id="ann-stats-bar"></div>
+      </div>
     </section>
 
-    <main class="container my-5">
-
-      <!-- Category Filter -->
-      <div class="d-flex flex-wrap gap-2 justify-content-center mb-5" id="category-filters">
-        <button class="btn btn-primary rounded-pill px-4 active" data-cat="all">All</button>
-        <button class="btn btn-outline-primary rounded-pill px-4" data-cat="School News">School News</button>
-        <button class="btn btn-outline-primary rounded-pill px-4" data-cat="Academic">Academic</button>
-        <button class="btn btn-outline-primary rounded-pill px-4" data-cat="Timetable">Timetable</button>
-        <button class="btn btn-outline-primary rounded-pill px-4" data-cat="Meetings">Meetings</button>
-        <button class="btn btn-outline-primary rounded-pill px-4" data-cat="Competitions">Competitions</button>
-        <button class="btn btn-outline-primary rounded-pill px-4" data-cat="Events">Events</button>
+    <main class="container" style="padding-bottom:60px;">
+      <!-- Search & Filters -->
+      <div class="ann-search-section">
+        <div class="row g-3">
+          <div class="col-12">
+            <div class="position-relative">
+              <i class="fa-solid fa-search position-absolute" style="left:14px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:0.9rem;"></i>
+              <input type="text" class="ann-search-input" id="ann-search" placeholder="Search announcements by title, keyword, or tag..." style="padding-left:38px;">
+            </div>
+          </div>
+          <div class="col-md-3 col-6"><select class="ann-filter-select w-100" id="ann-filter-category"><option value="all">All Categories</option></select></div>
+          <div class="col-md-3 col-6"><select class="ann-filter-select w-100" id="ann-filter-priority"><option value="all">All Priorities</option><option value="urgent">Urgent</option><option value="important">Important</option><option value="normal">Normal</option></select></div>
+          <div class="col-md-3 col-6"><select class="ann-filter-select w-100" id="ann-filter-audience"><option value="all">All Audiences</option></select></div>
+          <div class="col-md-3 col-6">
+            <select class="ann-filter-select w-100" id="ann-filter-date">
+              <option value="all">Any Time</option><option value="today">Today</option><option value="week">This Week</option><option value="month">This Month</option><option value="older">Older</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      <!-- Announcements Feed -->
-      <div class="row g-4" id="announcements-grid"></div>
+      <!-- Results count -->
+      <div class="ann-results-count mt-3" id="ann-results-count">Loading announcements...</div>
+
+      <!-- Featured/Important announcements -->
+      <div class="ann-featured-section d-none" id="ann-featured-section">
+        <h3><i class="fa-solid fa-star"></i> Featured & Important</h3>
+        <div class="row g-3" id="ann-featured-grid"></div>
+      </div>
+
+      <!-- Regular announcements grid -->
+      <div class="row g-3" id="announcements-grid"></div>
     </main>
+
+    <!-- Preview Modal -->
+    <div class="ann-preview-overlay" id="ann-preview-overlay">
+      <div class="ann-preview-modal">
+        <button class="ann-preview-close" id="ann-preview-close"><i class="fa-solid fa-xmark"></i></button>
+        <div class="ann-preview-header">
+          <div class="ann-preview-meta" id="ann-preview-meta"></div>
+          <h2 id="ann-preview-title"></h2>
+        </div>
+        <div id="ann-preview-media-container"></div>
+        <div class="ann-preview-content" id="ann-preview-content"></div>
+        <div class="ann-preview-attachments" id="ann-preview-attachments" style="display:none;"></div>
+        <div class="ann-preview-nav">
+          <button class="ann-preview-nav-btn" id="ann-prev-btn"><i class="fa-solid fa-chevron-left"></i> Previous</button>
+          <span class="ann-preview-nav-indicator" id="ann-preview-counter"></span>
+          <button class="ann-preview-nav-btn" id="ann-next-btn">Next <i class="fa-solid fa-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="ann-lightbox" id="ann-lightbox">
+      <div class="ann-lightbox-content">
+        <button class="ann-lightbox-close" id="ann-lightbox-close"><i class="fa-solid fa-xmark"></i></button>
+        <div id="ann-lightbox-inner"></div>
+      </div>
+    </div>
 
     <footer class="site-footer"></footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/data.js"></script>
+    <script src="js/rbac.js"></script>
+    <script src="js/assessments.js"></script>
+    <script src="js/db-extension.js"></script>
     <script src="js/components.js"></script>
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const school = window.db.getSchoolInfo();
+        const currentUser = window.db.getCurrentUser();
+        const db = window.db;
+
         document.getElementById('page-intro').textContent = school.announcementsIntro || 'Stay updated with the latest news, timetable changes, meeting notices, and events from ' + school.name + '.';
-        const announcements = window.db.getAnnouncements();
-        let activeCategory = "all";
 
-        const catIcons = {
-          "School News": "fa-newspaper text-primary",
-          "Timetable": "fa-calendar-days text-warning",
-          "Meetings": "fa-users text-info",
-          "Events": "fa-calendar-check text-success"
-        };
+        let allAnnouncements = [];
+        let filteredResults = [];
+        let previewIndex = -1;
 
-        const catBadgeColors = {
-          "School News": "bg-primary",
-          "Timetable": "bg-warning text-dark",
-          "Meetings": "bg-info text-dark",
-          "Events": "bg-success"
-        };
+        const catIcons = { "Academic Announcement":"fa-graduation-cap","Achievement & Recognition":"fa-trophy","Digital Learning":"fa-laptop","Staff Development":"fa-chalkboard-user","Parents & Community":"fa-people-arrows","News":"fa-newspaper","Timetable":"fa-calendar-days","Meetings":"fa-users","Events":"fa-calendar-check","Academic":"fa-graduation-cap","Competitions":"fa-trophy","Exams":"fa-file-pen" };
+        const catColors = { "Academic Announcement":"bg-primary","Achievement & Recognition":"bg-warning text-dark","Digital Learning":"bg-info text-dark","Staff Development":"bg-success","Parents & Community":"bg-secondary","News":"bg-primary","Timetable":"bg-warning text-dark","Meetings":"bg-info text-dark","Events":"bg-success","Academic":"bg-success","Competitions":"bg-warning text-dark","Exams":"bg-danger" };
+
+        function getCatIcon(c) { return catIcons[c] || "fa-bullhorn"; }
+        function getCatColor(c) { return catColors[c] || "bg-secondary"; }
+        function getVisLabel(v) { return (db.VISIBILITY_LABELS && db.VISIBILITY_LABELS[v]) || v || 'Unknown'; }
+        function getVisColor(v) { return (db.VISIBILITY_COLORS && db.VISIBILITY_COLORS[v]) || 'bg-secondary'; }
+
+        function formatDate(d) {
+          if (!d) return '';
+          return new Date(d).toLocaleDateString("en-US", { month:"short", day:"numeric", year:"numeric" });
+        }
+
+        function formatDateFull(d) {
+          if (!d) return '';
+          return new Date(d).toLocaleDateString("en-US", { weekday:"long", month:"long", day:"numeric", year:"numeric" });
+        }
+
+        function loadAnnouncements() {
+          allAnnouncements = db.getVisibleAnnouncements ? db.getVisibleAnnouncements(currentUser) : (db.getAnnouncements ? db.getAnnouncements() : []);
+          populateFilters();
+          applyFilters();
+          renderStats();
+        }
+
+        function populateFilters() {
+          const catSet = new Set();
+          const visSet = new Set();
+          allAnnouncements.forEach(a => {
+            if (a.category) catSet.add(a.category);
+            if (a.visibility) visSet.add(a.visibility);
+          });
+          const catSel = document.getElementById('ann-filter-category');
+          catSet.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; catSel.appendChild(o); });
+          const audSel = document.getElementById('ann-filter-audience');
+          visSet.forEach(v => {
+            if (db.VISIBILITY_LABELS && db.VISIBILITY_LABELS[v]) {
+              const o = document.createElement('option'); o.value = v; o.textContent = db.VISIBILITY_LABELS[v]; audSel.appendChild(o);
+            }
+          });
+        }
+
+        function applyFilters() {
+          const search = document.getElementById('ann-search').value.toLowerCase().trim();
+          const category = document.getElementById('ann-filter-category').value;
+          const priority = document.getElementById('ann-filter-priority').value;
+          const audience = document.getElementById('ann-filter-audience').value;
+          const dateRange = document.getElementById('ann-filter-date').value;
+          const now = new Date();
+
+          filteredResults = allAnnouncements.filter(a => {
+            if (category !== 'all' && a.category !== category) return false;
+            if (priority !== 'all' && a.priority !== priority) return false;
+            if (audience !== 'all' && a.visibility !== audience) return false;
+            if (search) {
+              const haystack = ((a.title||'') + ' ' + (a.summary||'') + ' ' + (a.content||'') + ' ' + (a.tags||'') + ' ' + (a.authorName||'') + ' ' + ((a.authors||[]).join(' '))).toLowerCase();
+              if (!haystack.includes(search)) return false;
+            }
+            if (dateRange !== 'all') {
+              const d = new Date(a.createdAt || a.publishDate || a.date);
+              if (dateRange === 'today' && d.toDateString() !== now.toDateString()) return false;
+              if (dateRange === 'week') { const weekAgo = new Date(now); weekAgo.setDate(weekAgo.getDate() - 7); if (d < weekAgo) return false; }
+              if (dateRange === 'month') { const monthAgo = new Date(now); monthAgo.setMonth(monthAgo.getMonth() - 1); if (d < monthAgo) return false; }
+              if (dateRange === 'older') { const monthAgo = new Date(now); monthAgo.setMonth(monthAgo.getMonth() - 1); if (d >= monthAgo) return false; }
+            }
+            return true;
+          });
+          renderAnnouncements();
+        }
+
+        function renderStats() {
+          const stats = db.getAnnouncementStats ? db.getAnnouncementStats() : { total: allAnnouncements.length, published: allAnnouncements.length, urgent: 0, pinned: 0, totalViews: 0 };
+          const bar = document.getElementById('ann-stats-bar');
+          bar.innerHTML = `
+            <div class="ann-stat-item"><i class="fa-solid fa-bullhorn"></i><strong>${allAnnouncements.length}</strong><span>Total</span></div>
+            <div class="ann-stat-item"><i class="fa-solid fa-check-circle"></i><strong>${stats.published || allAnnouncements.length}</strong><span>Published</span></div>
+            <div class="ann-stat-item"><i class="fa-solid fa-circle-exclamation"></i><strong>${stats.urgent || 0}</strong><span>Urgent</span></div>
+            <div class="ann-stat-item"><i class="fa-solid fa-thumbtack"></i><strong>${stats.pinned || 0}</strong><span>Pinned</span></div>
+            <div class="ann-stat-item"><i class="fa-solid fa-eye"></i><strong>${stats.totalViews || 0}</strong><span>Views</span></div>
+          `;
+        }
+
+        function highlightText(text, query) {
+          if (!query || !text) return text || '';
+          const q = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          const parts = text.split(new RegExp('(' + q + ')', 'gi'));
+          return parts.map(p => p.toLowerCase() === query.toLowerCase() ? '<span class="results-highlight">' + p + '</span>' : p).join('');
+        }
 
         function renderAnnouncements() {
-          const filtered = activeCategory === "all" ? announcements : announcements.filter(a => a.category === activeCategory);
-          const grid = document.getElementById("announcements-grid");
+          const grid = document.getElementById('announcements-grid');
+          const countEl = document.getElementById('ann-results-count');
+          const search = document.getElementById('ann-search').value.trim();
+          const featuredSec = document.getElementById('ann-featured-section');
+          const featuredGrid = document.getElementById('ann-featured-grid');
 
-          grid.innerHTML = filtered.map(a => {
-            const date = new Date(a.createdAt).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" });
-            const icon = catIcons[a.category] || "fa-bell text-secondary";
-            const badge = catBadgeColors[a.category] || "bg-secondary";
+          const featured = filteredResults.filter(a => a.priority === 'urgent' || a.priority === 'important' || a.pinned);
+          const regular = filteredResults.filter(a => !(a.priority === 'urgent' || a.priority === 'important' || a.pinned));
+
+          if (featured.length > 0) {
+            featuredSec.classList.remove('d-none');
+            featuredGrid.innerHTML = featured.map(a => {
+              const date = formatDate(a.createdAt || a.publishDate || a.date);
+              const catIcon = getCatIcon(a.category);
+              const catColor = getCatColor(a.category);
+              const visLabel = getVisLabel(a.visibility);
+              const visColor = getVisColor(a.visibility);
+              const hasMedia = a.media && a.media.length > 0;
+              const firstMedia = hasMedia ? a.media[0] : null;
+              const priorityLabel = a.priority === 'urgent' ? '<span class="ann-featured-badge" style="background:#ef4444;">Urgent</span>' : a.priority === 'important' ? '<span class="ann-featured-badge" style="background:#f59e0b;">Important</span>' : a.pinned ? '<span class="ann-featured-badge" style="background:#4f46e5;">Featured</span>' : '';
+              return `
+                <div class="col-md-4">
+                  <div class="ann-featured-card" onclick="window.openPreview(${a.id})">
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;">${priorityLabel}<span class="ann-card-tag ${catColor}">${a.category}</span><span class="ann-card-tag ${visColor}">${visLabel}</span></div>
+                    <h6 style="font-weight:600;color:#1e293b;margin-bottom:4px;">${a.title}</h6>
+                    <p style="font-size:0.82rem;color:#64748b;margin-bottom:6px;">${a.summary || (a.content ? a.content.replace(/<[^>]*>/g,'').substring(0,120) : '')}</p>
+                    <div style="font-size:0.75rem;color:#94a3b8;"><i class="fa-regular fa-clock me-1"></i>${date} ${a.authorName ? '· ' + a.authorName : ''}</div>
+                  </div>
+                </div>`;
+            }).join('');
+          } else {
+            featuredSec.classList.add('d-none');
+          }
+
+          if (countEl) countEl.textContent = filteredResults.length + ' announcement' + (filteredResults.length !== 1 ? 's' : '') + ' found';
+
+          grid.innerHTML = regular.length > 0 || featured.length === 0 ? (regular.length > 0 ? regular.map(a => {
+            const date = formatDate(a.createdAt || a.publishDate || a.date);
+            const catIcon = getCatIcon(a.category);
+            const catColor = getCatColor(a.category);
+            const visLabel = getVisLabel(a.visibility);
+            const visColor = getVisColor(a.visibility);
+            const hasMedia = a.media && a.media.length > 0;
+            const firstImage = hasMedia ? a.media.find(m => m.type === 'image') : null;
+            const showTitle = highlightText(a.title, search);
+            const showSummary = highlightText((a.summary || (a.content ? a.content.replace(/<[^>]*>/g,'').substring(0,150) : '')), search);
+            const priorityClass = a.priority === 'urgent' ? 'ann-priority-urgent' : a.priority === 'important' ? 'ann-priority-important' : a.pinned ? 'ann-priority-pinned' : '';
+            const priorityIcon = a.priority === 'urgent' ? '<i class="fa-solid fa-circle-exclamation text-danger" title="Urgent" style="font-size:0.7rem;"></i>' : a.priority === 'important' ? '<i class="fa-solid fa-triangle-exclamation text-warning" title="Important" style="font-size:0.7rem;"></i>' : '';
 
             return `
               <div class="col-md-6 col-lg-4">
-                <div class="card border-0 bg-white h-100">
-                  <div class="card-body p-4 d-flex flex-column">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                      <div class="bg-light rounded-3 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
-                        <i class="fa-solid ${icon} fs-5"></i>
-                      </div>
-                      <span class="badge ${badge} text-uppercase" style="font-size: 9px;">${a.category}</span>
+                <div class="ann-card ${priorityClass}" onclick="window.openPreview(${a.id})">
+                  ${firstImage ? '<img src="' + firstImage.url + '" alt="' + (firstImage.alt||a.title) + '" class="ann-card-media" loading="lazy">' : '<div class="ann-card-media-placeholder"><i class="fa-solid ' + catIcon + '"></i></div>'}
+                  <div class="ann-card-body">
+                    <div class="ann-card-tags">
+                      <span class="ann-card-tag ${catColor}">${a.category}</span>
+                      <span class="ann-card-tag ${visColor}">${visLabel}</span>
+                      ${a.priority === 'urgent' ? '<span class="ann-card-tag" style="background:#ef4444;color:#fff;">URGENT</span>' : ''}
                     </div>
-                    <h5 class="font-bold text-dark mb-2">${a.title}</h5>
-                    <p class="small text-muted mb-3 flex-grow-1 leading-relaxed">${a.content}</p>
-                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
-                      <span class="small text-muted"><i class="fa-regular fa-clock me-1"></i> ${date}</span>
-                      <span class="small text-muted"><i class="fa-solid fa-user me-1"></i> ${a.authorName || 'Admin'}</span>
+                    <div class="ann-card-title">${showTitle} ${priorityIcon}</div>
+                    <div class="ann-card-summary">${showSummary}</div>
+                    <div class="ann-card-meta">
+                      <span><i class="fa-regular fa-clock me-1"></i>${date}</span>
+                      <span><i class="fa-solid fa-user me-1"></i>${a.authorName || (a.authors && a.authors[0]) || 'Admin'}</span>
+                    </div>
+                    <div class="ann-card-actions">
+                      <button class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation();window.openPreview(${a.id})"><i class="fa-regular fa-eye me-1"></i>Preview</button>
+                      ${a.attachments && a.attachments.length > 0 ? '<button class="btn btn-outline-secondary btn-sm" onclick="event.stopPropagation();window.downloadAttachment(${a.id})"><i class="fa-solid fa-download me-1"></i>Download</button>' : ''}
                     </div>
                   </div>
                 </div>
-              </div>
-            `;
-          }).join("");
+              </div>`;
+          }).join('') : (filteredResults.length === 0 ? '<div class="col-12"><div class="ann-empty-state"><i class="fa-regular fa-bell-slash"></i><h6 style="color:#64748b;">No announcements found</h6><p style="font-size:0.85rem;">Try adjusting your search or filter criteria.</p></div></div>' : '')) : '';
         }
 
-        // Category filter buttons
-        document.querySelectorAll("#category-filters button").forEach(btn => {
-          btn.addEventListener("click", () => {
-            document.querySelectorAll("#category-filters button").forEach(b => {
-              b.classList.remove("btn-primary", "active");
-              b.classList.add("btn-outline-primary");
-            });
-            btn.classList.remove("btn-outline-primary");
-            btn.classList.add("btn-primary", "active");
-            activeCategory = btn.dataset.cat;
-            renderAnnouncements();
-          });
+        // Search with debounce
+        let searchTimeout;
+        document.getElementById('ann-search').addEventListener('input', () => {
+          clearTimeout(searchTimeout);
+          searchTimeout = setTimeout(applyFilters, 250);
+        });
+        document.getElementById('ann-filter-category').addEventListener('change', applyFilters);
+        document.getElementById('ann-filter-priority').addEventListener('change', applyFilters);
+        document.getElementById('ann-filter-audience').addEventListener('change', applyFilters);
+        document.getElementById('ann-filter-date').addEventListener('change', applyFilters);
+
+        // Preview modal functions
+        window.openPreview = function(id) {
+          const idx = filteredResults.findIndex(a => a.id === Number(id));
+          if (idx === -1) return;
+          previewIndex = idx;
+          showPreview(idx);
+        };
+
+        function showPreview(idx) {
+          const a = filteredResults[idx];
+          if (!a) return;
+          const overlay = document.getElementById('ann-preview-overlay');
+          document.getElementById('ann-preview-title').textContent = a.title;
+          document.getElementById('ann-preview-meta').innerHTML = `
+            <span class="ann-card-tag ${getCatColor(a.category)}">${a.category}</span>
+            <span class="ann-card-tag ${getVisColor(a.visibility)}">${getVisLabel(a.visibility)}</span>
+            ${a.priority === 'urgent' ? '<span class="ann-card-tag" style="background:#ef4444;color:#fff;">URGENT</span>' : ''}
+            ${a.priority === 'important' ? '<span class="ann-card-tag" style="background:#f59e0b;color:#fff;">IMPORTANT</span>' : ''}
+            <span><i class="fa-regular fa-calendar me-1"></i>${formatDateFull(a.createdAt || a.publishDate || a.date)}</span>
+            <span><i class="fa-solid fa-user me-1"></i>${a.authorName || (a.authors && a.authors[0]) || 'Admin'}</span>
+            ${a.tags ? '<span><i class="fa-solid fa-tags me-1"></i>' + a.tags.split(',').map(t => '<span class="badge bg-light text-dark me-1" style="font-weight:400;">' + t.trim() + '</span>').join('') + '</span>' : ''}
+          `;
+
+          // Media
+          const mc = document.getElementById('ann-preview-media-container');
+          if (a.media && a.media.length > 0) {
+            mc.innerHTML = a.media.map(m => {
+              if (m.type === 'image') return '<img src="' + m.url + '" alt="' + (m.alt||m.title||'') + '" class="ann-preview-media" style="cursor:pointer;" onclick="window.openLightbox(\'' + m.url + '\',\'image\')">';
+              if (m.type === 'video') return '<video class="ann-preview-media" controls poster="' + (m.poster||'') + '"><source src="' + m.url + '" type="video/mp4">Your browser does not support video.</video>';
+              if (m.type === 'audio') return '<div class="p-3 bg-light rounded mx-3 mb-3"><div class="mb-2 fw-medium small">' + (m.title||'Audio') + '</div><audio controls style="width:100%;"><source src="' + m.url + '">Your browser does not support audio.</audio></div>';
+              return '';
+            }).join('');
+          } else {
+            mc.innerHTML = '<div class="ann-preview-media-placeholder" style="height:120px;margin:0 28px 16px;width:calc(100% - 56px);border-radius:8px;font-size:2rem;"><i class="fa-regular fa-file-lines"></i></div>';
+          }
+
+          // Content
+          document.getElementById('ann-preview-content').innerHTML = a.content || a.summary || 'No content available.';
+
+          // Attachments
+          const attDiv = document.getElementById('ann-preview-attachments');
+          if (a.attachments && a.attachments.length > 0) {
+            attDiv.style.display = 'block';
+            attDiv.innerHTML = '<h6><i class="fa-solid fa-paperclip me-2"></i>Attachments (' + a.attachments.length + ')</h6>' +
+              a.attachments.map(at => {
+                const icon = at.type === 'image' ? 'fa-file-image' : at.type === 'video' ? 'fa-file-video' : at.type === 'audio' ? 'fa-file-audio' : 'fa-file-pdf';
+                return '<div class="ann-attachment-item"><i class="fa-solid ' + icon + '"></i><span class="att-name">' + (at.name||'file') + '</span><span class="att-size">' + (at.size||'') + '</span><a href="' + (at.url||'#') + '" target="_blank" class="att-dl" onclick="event.stopPropagation();window.trackDownload(' + a.id + ')"><i class="fa-solid fa-download"></i></a></div>';
+              }).join('');
+          } else {
+            attDiv.style.display = 'none';
+          }
+
+          // Navigation
+          document.getElementById('ann-prev-btn').disabled = idx <= 0;
+          document.getElementById('ann-next-btn').disabled = idx >= filteredResults.length - 1;
+          document.getElementById('ann-preview-counter').textContent = (idx + 1) + ' of ' + filteredResults.length;
+
+          overlay.classList.add('show');
+          document.body.style.overflow = 'hidden';
+        }
+
+        window.closePreview = function() {
+          document.getElementById('ann-preview-overlay').classList.remove('show');
+          document.body.style.overflow = '';
+        };
+
+        document.getElementById('ann-preview-close').addEventListener('click', window.closePreview);
+        document.getElementById('ann-preview-overlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) window.closePreview(); });
+        document.addEventListener('keydown', (e) => {
+          const overlay = document.getElementById('ann-preview-overlay');
+          if (!overlay.classList.contains('show')) return;
+          if (e.key === 'Escape') window.closePreview();
+          if (e.key === 'ArrowLeft') { e.preventDefault(); document.getElementById('ann-prev-btn').click(); }
+          if (e.key === 'ArrowRight') { e.preventDefault(); document.getElementById('ann-next-btn').click(); }
         });
 
-        renderAnnouncements();
+        document.getElementById('ann-prev-btn').addEventListener('click', () => {
+          if (previewIndex > 0) { previewIndex--; showPreview(previewIndex); }
+        });
+        document.getElementById('ann-next-btn').addEventListener('click', () => {
+          if (previewIndex < filteredResults.length - 1) { previewIndex++; showPreview(previewIndex); }
+        });
+
+        // Lightbox
+        window.openLightbox = function(url, type) {
+          const lb = document.getElementById('ann-lightbox');
+          const inner = document.getElementById('ann-lightbox-inner');
+          if (type === 'image') inner.innerHTML = '<img src="' + url + '" alt="">';
+          else if (type === 'video') inner.innerHTML = '<video controls autoplay style="max-width:100%;max-height:85vh;"><source src="' + url + '"></video>';
+          lb.classList.add('show');
+          document.body.style.overflow = 'hidden';
+        };
+        document.getElementById('ann-lightbox-close').addEventListener('click', () => {
+          document.getElementById('ann-lightbox').classList.remove('show');
+          document.body.style.overflow = '';
+        });
+        document.getElementById('ann-lightbox').addEventListener('click', (e) => {
+          if (e.target === e.currentTarget) { document.getElementById('ann-lightbox').classList.remove('show'); document.body.style.overflow = ''; }
+        });
+
+        // Download tracking
+        window.trackDownload = function(id) {
+          if (db.trackAnnouncementDownload && currentUser) db.trackAnnouncementDownload(id, currentUser.id);
+        };
+
+        window.downloadAttachment = function(id) {
+          const a = allAnnouncements.find(x => x.id === Number(id));
+          if (a && a.attachments && a.attachments.length > 0) {
+            window.trackDownload(id);
+            a.attachments.forEach(at => { if (at.url && at.url !== '#') window.open(at.url, '_blank'); });
+          }
+        };
+
+        // Init
+        loadAnnouncements();
       });
     </script>
   </body>
 </html>
-

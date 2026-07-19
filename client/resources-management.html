@@ -294,21 +294,42 @@
                 </div>
               </div>
 
-              <!-- Security, File permissions and Visibility options -->
+              <!-- Education Level & Scheduling -->
               <div class="col-12 mt-3 pt-3 border-top">
-                <h6 class="font-bold text-primary mb-3"><i class="fa-solid fa-lock me-2"></i>Visibility &amp; Security Permissions</h6>
+                <h6 class="font-bold text-primary mb-3"><i class="fa-solid fa-sliders me-2"></i>Level, Scheduling &amp; Visibility</h6>
               </div>
 
-              <div class="col-md-4">
-                <label class="form-label font-bold text-dark">Visibility Level</label>
-                <select id="res-visibility" class="form-select rounded-pill text-sm">
-                  <option value="Students">Everyone (Students &amp; Teachers)</option>
-                  <option value="Teachers Only">Teachers Only</option>
-                  <option value="Only Me">Private / Only Me</option>
+              <div class="col-md-3">
+                <label class="form-label font-bold text-dark">Education Level</label>
+                <select id="res-level" class="form-select rounded-pill text-sm">
+                  <option value="">Select Level...</option>
+                  <option value="Nursery">Nursery</option>
+                  <option value="Primary">Primary</option>
+                  <option value="Lower Secondary">Lower Secondary</option>
+                  <option value="Upper Secondary">Upper Secondary</option>
+                  <option value="TVET">TVET</option>
                 </select>
               </div>
 
-              <div class="col-md-4">
+              <div class="col-md-3">
+                <label class="form-label font-bold text-dark">Visibility Level</label>
+                <select id="res-visibility" class="form-select rounded-pill text-sm">
+                  <option value="public">Public (Visible to Everyone)</option>
+                  <option value="school_community">School Community</option>
+                  <option value="teachers_only">Teachers Only</option>
+                  <option value="students_only">Students Only</option>
+                  <option value="parents_only">Parents Only</option>
+                  <option value="nursery_only">Nursery Only</option>
+                  <option value="primary_only">Primary Only</option>
+                  <option value="lower_secondary_only">Lower Secondary Only</option>
+                  <option value="upper_secondary_only">Upper Secondary Only</option>
+                  <option value="tvet_only">TVET Only</option>
+                  <option value="specific_class">Specific Class</option>
+                  <option value="specific_subject">Specific Subject</option>
+                </select>
+              </div>
+
+              <div class="col-md-3">
                 <label class="form-label font-bold text-dark">Download Permission</label>
                 <select id="res-download" class="form-select rounded-pill text-sm">
                   <option value="true">Allowed (Can Download File)</option>
@@ -316,12 +337,31 @@
                 </select>
               </div>
 
-              <div class="col-md-4">
+              <div class="col-md-3">
                 <label class="form-label font-bold text-dark">Publication Status</label>
                 <select id="res-status" class="form-select rounded-pill text-sm">
-                  <option value="Published">Published Immediately</option>
-                  <option value="Draft">Draft Mode</option>
-                  <option value="Archived">Archived Roster</option>
+                  <option value="active">Published Immediately</option>
+                  <option value="draft">Draft Mode (Schedule Publish)</option>
+                  <option value="archived">Archived</option>
+                </select>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label font-bold text-dark">Schedule Publish Date</label>
+                <input type="date" id="res-publish-date" class="form-control rounded-pill text-sm">
+                <div class="text-muted" style="font-size:10px;margin-top:2px">Leave empty to publish immediately.</div>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label font-bold text-dark">Expiry Date</label>
+                <input type="date" id="res-expiry-date" class="form-control rounded-pill text-sm">
+                <div class="text-muted" style="font-size:10px;margin-top:2px">Resource will auto-expire on this date.</div>
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label font-bold text-dark">Unit (optional)</label>
+                <select id="res-unit" class="form-select rounded-pill text-sm">
+                  <option value="">No unit assigned</option>
                 </select>
               </div>
 
@@ -437,10 +477,12 @@
       const catSelect = document.getElementById("res-category");
       const catSubFilter = document.getElementById("lib-category");
       const subSelect = document.getElementById("res-subject");
+      const unitSelect = document.getElementById("res-unit");
 
       catSelect.innerHTML = "";
       subSelect.innerHTML = "";
       catSubFilter.innerHTML = '<option value="">All Categories</option>';
+      unitSelect.innerHTML = '<option value="">No unit assigned</option>';
 
       categories.forEach(cat => {
         catSelect.innerHTML += `<option value="${cat.id}">${cat.name}</option>`;
@@ -449,6 +491,18 @@
 
       dbSubjects.forEach(sub => {
         subSelect.innerHTML += `<option value="${sub.id}">${sub.name} (${sub.code})</option>`;
+      });
+
+      // Populate units when subject changes
+      subSelect.addEventListener('change', function() {
+        var subId = this.value;
+        unitSelect.innerHTML = '<option value="">No unit assigned</option>';
+        if (subId && window.db.getSubjectUnits) {
+          var units = window.db.getSubjectUnits(subId);
+          units.forEach(function(u) {
+            unitSelect.innerHTML += '<option value="'+u.id+'">'+u.title+'</option>';
+          });
+        }
       });
 
       // Populate classes target checklist box
@@ -611,7 +665,7 @@
                     </div>
 
                     <div class="d-flex gap-1">
-                      <button class="btn btn-outline-secondary btn-xs py-1 px-2.5 rounded-pill font-bold" onclick="previewResFile(${res.id})"><i class="fa-solid fa-eye me-1"></i>Preview</button>
+                      <a href="document-viewer.html?id=${res.id}&from=resources-management" class="btn btn-outline-secondary btn-xs py-1 px-2.5 rounded-pill font-bold text-decoration-none" target="_blank"><i class="fa-solid fa-eye me-1"></i>Preview</a>
                       ${canManage ? `
                         <div class="dropdown d-inline-block">
                           <button class="btn btn-light btn-xs p-1 text-muted rounded-circle" data-bs-toggle="dropdown"><i class="fa-solid fa-ellipsis-vertical"></i></button>
@@ -773,9 +827,17 @@
       document.getElementById("res-language").value = res.language;
       document.getElementById("res-author").value = res.author || "";
       document.getElementById("res-tags").value = (res.tags || []).join(", ");
-      document.getElementById("res-visibility").value = res.visibility;
+      document.getElementById("res-visibility").value = res.visibility || 'public';
       document.getElementById("res-download").value = String(res.downloadAllowed);
       document.getElementById("res-status").value = res.status;
+      document.getElementById("res-level").value = res.level || '';
+      document.getElementById("res-unit").value = res.unitId || '';
+      if (res.publishDate) {
+        document.getElementById("res-publish-date").value = res.publishDate.slice(0,10);
+      }
+      if (res.expiryDate) {
+        document.getElementById("res-expiry-date").value = res.expiryDate.slice(0,10);
+      }
 
       // Handle checkboxes classes
       document.querySelectorAll(".res-class-check").forEach(chk => {
@@ -813,6 +875,15 @@
       });
 
       const id = document.getElementById("resource-form-id").value;
+      const level = document.getElementById("res-level").value;
+      const publishDate = document.getElementById("res-publish-date").value;
+      const expiryDate = document.getElementById("res-expiry-date").value;
+      const unitId = document.getElementById("res-unit").value;
+      var statusVal = document.getElementById("res-status").value;
+      // If publishDate is set and in the future, auto-set status to draft
+      if (publishDate && new Date(publishDate) > new Date() && statusVal !== 'archived') {
+        statusVal = 'draft';
+      }
       const data = {
         title: document.getElementById("res-title").value,
         version: document.getElementById("res-version").value || "1.0",
@@ -825,10 +896,14 @@
         tags: document.getElementById("res-tags").value.split(",").map(t => t.trim()).filter(t => t !== ""),
         visibility: document.getElementById("res-visibility").value,
         downloadAllowed: document.getElementById("res-download").value === "true",
-        status: document.getElementById("res-status").value,
+        status: statusVal,
         gradeClasses: checkedClasses,
         uploadedBy: currentRoleUser ? currentRoleUser.id : 3,
-        externalUrl: null
+        externalUrl: null,
+        level: level,
+        unitId: unitId ? Number(unitId) : null,
+        publishDate: publishDate ? new Date(publishDate).toISOString() : null,
+        expiryDate: expiryDate ? new Date(expiryDate).toISOString() : null
       };
 
       const upType = document.querySelector('input[name="uploadType"]:checked').value;

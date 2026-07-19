@@ -424,7 +424,7 @@ function openLeaderModal(data) {
   };
 }
 function editLeader(id) { var l = db.getLeadership().find(function(x){return x.id===Number(id);}); if(l) openLeaderModal(l); }
-function deleteLeader(id) { if(confirm('Remove this leader?')){ db.deleteLeadership(id); loadLeadership(); window.showToast('Removed!','error'); } }
+function deleteLeader(id) { if(confirm('Remove this leader?')){ db.deleteLeader(id); loadLeadership(); window.showToast('Removed!','error'); } }
 // Programs
 function loadPrograms() {
   var items = db.getFeaturedPrograms();

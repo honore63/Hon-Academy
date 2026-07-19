@@ -1,0 +1,533 @@
+/* =====================================================================
+   Hon Academy — Accessibility & Inclusivity Layer
+   WCAG 2.2 AA · UDL · Keyboard / Screen-reader / Vision / Hearing / Reading
+   Loaded dynamically by js/accessibility.js (works on every page).
+   ===================================================================== */
+
+/* ──────────────────────────────────────────────────────────
+   1. VISIBLE KEYBOARD FOCUS (global)
+   ────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 3px solid #ffbf00 !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 6px rgba(255, 191, 0, 0.35) !important;
+}
+html[data-a11y-focus="strong"] :focus-visible {
+  outline: 4px solid #ffff00 !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 0 8px rgba(255, 255, 0, 0.4) !important;
+}
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+  outline: 3px solid #ffbf00 !important;
+  outline-offset: 2px !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   2. SKIP LINK
+   ────────────────────────────────────────────────────────── */
+.a11y-skip {
+  position: fixed; top: -200px; left: 12px; z-index: 100000;
+  background: #1e3a8a; color: #fff !important;
+  padding: 14px 24px; border-radius: 0 0 12px 12px;
+  font-weight: 700; font-size: 15px; text-decoration: none;
+  box-shadow: 0 6px 24px rgba(0,0,0,.4); transition: top .18s ease;
+}
+.a11y-skip:focus, .a11y-skip:focus-visible { top: 0; }
+
+/* ──────────────────────────────────────────────────────────
+   3. FONT SCALING (root font-size, max 200%)
+   ────────────────────────────────────────────────────────── */
+html[data-a11y-scale="1.1"]  { font-size: 110% !important; }
+html[data-a11y-scale="1.2"]  { font-size: 120% !important; }
+html[data-a11y-scale="1.3"]  { font-size: 130% !important; }
+html[data-a11y-scale="1.5"]  { font-size: 150% !important; }
+html[data-a11y-scale="1.75"] { font-size: 175% !important; }
+html[data-a11y-scale="2"]    { font-size: 200% !important; }
+/* Zoom-safe: ensure fixed-size containers don't overflow */
+@media (max-width: 768px) {
+  html[data-a11y-scale] .container { max-width: 100% !important; padding-left: 8px !important; padding-right: 8px !important; }
+  html[data-a11y-scale] .portal-main, html[data-a11y-scale] main { overflow-x: hidden !important; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   4. LINE SPACING
+   ────────────────────────────────────────────────────────── */
+html[data-a11y-spacing="wide"] body,
+html[data-a11y-spacing="wide"] body * {
+  line-height: 1.9 !important;
+  word-spacing: .08em !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   5. LETTER SPACING (independent of line spacing)
+   ────────────────────────────────────────────────────────── */
+html[data-a11y-letter="wide"] body,
+html[data-a11y-letter="wide"] body * {
+  letter-spacing: .06em !important;
+}
+html[data-a11y-letter="wider"] body,
+html[data-a11y-letter="wider"] body * {
+  letter-spacing: .12em !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   6. DYSLEXIA-FRIENDLY TYPEFACE
+   ────────────────────────────────────────────────────────── */
+html[data-a11y-dyslexia="true"] body,
+html[data-a11y-dyslexia="true"] body * {
+  font-family: "OpenDyslexic", "Comic Sans MS", "Verdana", "Trebuchet MS", sans-serif !important;
+  letter-spacing: .04em !important;
+  word-spacing: .14em !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   7. HIGH-CONTRAST MODE
+   ────────────────────────────────────────────────────────── */
+html[data-a11y-contrast="high"] body { background: #000 !important; color: #fff !important; }
+html[data-a11y-contrast="high"] a,
+html[data-a11y-contrast="high"] a:visited { color: #ffff00 !important; text-decoration: underline !important; }
+html[data-a11y-contrast="high"] header,
+html[data-a11y-contrast="high"] .site-header,
+html[data-a11y-contrast="high"] .nca-topbar,
+html[data-a11y-contrast="high"] .nca-navbar,
+html[data-a11y-contrast="high"] .portal-sidebar-main,
+html[data-a11y-contrast="high"] .portal-sidebar-sub,
+html[data-a11y-contrast="high"] .portal-topbar,
+html[data-a11y-contrast="high"] footer,
+html[data-a11y-contrast="high"] .site-footer {
+  background: #000 !important; color: #fff !important; border-color: #ffff00 !important;
+}
+html[data-a11y-contrast="high"] .card,
+html[data-a11y-contrast="high"] .panel,
+html[data-a11y-contrast="high"] .modal-content,
+html[data-a11y-contrast="high"] table,
+html[data-a11y-contrast="high"] th,
+html[data-a11y-contrast="high"] td,
+html[data-a11y-contrast="high"] input,
+html[data-a11y-contrast="high"] select,
+html[data-a11y-contrast="high"] textarea,
+html[data-a11y-contrast="high"] .nca-nav-collapse,
+html[data-a11y-contrast="high"] .m-card,
+html[data-a11y-contrast="high"] .section-card {
+  background: #000 !important; color: #fff !important; border: 2px solid #ffff00 !important;
+}
+html[data-a11y-contrast="high"] th { background: #1a1a00 !important; color: #ffff00 !important; }
+html[data-a11y-contrast="high"] button,
+html[data-a11y-contrast="high"] .btn {
+  background: #000 !important; color: #ffff00 !important; border: 2px solid #ffff00 !important;
+}
+html[data-a11y-contrast="high"] button:hover,
+html[data-a11y-contrast="high"] .btn:hover {
+  background: #ffff00 !important; color: #000 !important;
+}
+html[data-a11y-contrast="high"] img,
+html[data-a11y-contrast="high"] .nca-logo { filter: grayscale(1) contrast(1.2); }
+html[data-a11y-contrast="high"] * { text-shadow: none !important; }
+
+/* ──────────────────────────────────────────────────────────
+   8. DARK MODE
+   ────────────────────────────────────────────────────────── */
+html[data-a11y-theme="dark"] body { background: #0f172a !important; color: #e5e7eb !important; }
+html[data-a11y-theme="dark"] .card,
+html[data-a11y-theme="dark"] .panel,
+html[data-a11y-theme="dark"] .modal-content,
+html[data-a11y-theme="dark"] table,
+html[data-a11y-theme="dark"] input,
+html[data-a11y-theme="dark"] select,
+html[data-a11y-theme="dark"] textarea,
+html[data-a11y-theme="dark"] .m-card,
+html[data-a11y-theme="dark"] .section-card {
+  background: #1e293b !important; color: #e5e7eb !important; border-color: #334155 !important;
+}
+html[data-a11y-theme="dark"] th { background: #0b1220 !important; color: #cbd5e1 !important; }
+html[data-a11y-theme="dark"] header,
+html[data-a11y-theme="dark"] .site-header,
+html[data-a11y-theme="dark"] .nca-topbar,
+html[data-a11y-theme="dark"] .nca-navbar,
+html[data-a11y-theme="dark"] footer,
+html[data-a11y-theme="dark"] .site-footer {
+  background: #0b1220 !important; color: #e5e7eb !important;
+}
+html[data-a11y-theme="dark"] .portal-sidebar-main,
+html[data-a11y-theme="dark"] .portal-sidebar-sub,
+html[data-a11y-theme="dark"] .portal-topbar {
+  background: #0b1220 !important; color: #e5e7eb !important;
+}
+html[data-a11y-theme="dark"] a { color: #93c5fd !important; }
+html[data-a11y-theme="dark"] .btn-primary { background: #2563eb !important; color: #fff !important; }
+html[data-a11y-theme="dark"] .badge { filter: brightness(1.2); }
+
+/* ──────────────────────────────────────────────────────────
+   9. COLOR-BLIND FRIENDLY PALETTES
+   All palettes avoid red-green confusion by using
+   blue/orange/purple/yellow for status and emphasis.
+   ────────────────────────────────────────────────────────── */
+html[data-a11y-colorblind="deuteranopia"] .text-success,
+html[data-a11y-colorblind="deuteranopia"] .bg-success { color: #0077bb !important; background-color: #0077bb !important; }
+html[data-a11y-colorblind="deuteranopia"] .text-danger,
+html[data-a11y-colorblind="deuteranopia"] .bg-danger { color: #cc3311 !important; background-color: #cc3311 !important; }
+html[data-a11y-colorblind="deuteranopia"] .text-warning,
+html[data-a11y-colorblind="deuteranopia"] .bg-warning { color: #ee7733 !important; background-color: #ee7733 !important; }
+html[data-a11y-colorblind="deuteranopia"] .text-info,
+html[data-a11y-colorblind="deuteranopia"] .bg-info { color: #009988 !important; background-color: #009988 !important; }
+html[data-a11y-colorblind="deuteranopia"] .text-primary,
+html[data-a11y-colorblind="deuteranopia"] .bg-primary { color: #0077bb !important; background-color: #0077bb !important; }
+html[data-a11y-colorblind="deuteranopia"] .m-status.submitted { background: #dbeafe !important; color: #1e40af !important; }
+html[data-a11y-colorblind="deuteranopia"] .m-status.pending { background: #fef3c7 !important; color: #92400e !important; }
+html[data-a11y-colorblind="deuteranopia"] .m-status.remaining { background: #fee2e2 !important; color: #991b1b !important; }
+
+html[data-a11y-colorblind="protanopia"] .text-success,
+html[data-a11y-colorblind="protanopia"] .bg-success { color: #0077bb !important; background-color: #0077bb !important; }
+html[data-a11y-colorblind="protanopia"] .text-danger,
+html[data-a11y-colorblind="protanopia"] .bg-danger { color: #aa3377 !important; background-color: #aa3377 !important; }
+html[data-a11y-colorblind="protanopia"] .text-warning,
+html[data-a11y-colorblind="protanopia"] .bg-warning { color: #ee7733 !important; background-color: #ee7733 !important; }
+html[data-a11y-colorblind="protanopia"] .text-info,
+html[data-a11y-colorblind="protanopia"] .bg-info { color: #009988 !important; background-color: #009988 !important; }
+html[data-a11y-colorblind="protanopia"] .text-primary,
+html[data-a11y-colorblind="protanopia"] .bg-primary { color: #0077bb !important; background-color: #0077bb !important; }
+
+html[data-a11y-colorblind="tritanopia"] .text-success,
+html[data-a11y-colorblind="tritanopia"] .bg-success { color: #ee7733 !important; background-color: #ee7733 !important; }
+html[data-a11y-colorblind="tritanopia"] .text-danger,
+html[data-a11y-colorblind="tritanopia"] .bg-danger { color: #cc3311 !important; background-color: #cc3311 !important; }
+html[data-a11y-colorblind="tritanopia"] .text-warning,
+html[data-a11y-colorblind="tritanopia"] .bg-warning { color: #009988 !important; background-color: #009988 !important; }
+html[data-a11y-colorblind="tritanopia"] .text-info,
+html[data-a11y-colorblind="tritanopia"] .bg-info { color: #0077bb !important; background-color: #0077bb !important; }
+html[data-a11y-colorblind="tritanopia"] .text-primary,
+html[data-a11y-colorblind="tritanopia"] .bg-primary { color: #0077bb !important; background-color: #0077bb !important; }
+/* Status pills get shape+color in colorblind mode */
+html[data-a11y-colorblind] .m-status.submitted::before { content: "\2713 "; font-weight: 900; }
+html[data-a11y-colorblind] .m-status.pending::before { content: "\25CB "; font-weight: 900; }
+html[data-a11y-colorblind] .m-status.remaining::before { content: "\2717 "; font-weight: 900; }
+html[data-a11y-colorblind] .badge-success::before { content: "\2713 "; }
+html[data-a11y-colorblind] .badge-danger::before  { content: "\2717 "; }
+html[data-a11y-colorblind] .badge-warning::before { content: "\25CB "; }
+
+/* ──────────────────────────────────────────────────────────
+   10. LARGER CLICKABLE BUTTONS
+   ────────────────────────────────────────────────────────── */
+html[data-a11y-large-btn="true"] button,
+html[data-a11y-large-btn="true"] .btn,
+html[data-a11y-large-btn="true"] a.btn,
+html[data-a11y-large-btn="true"] input[type="submit"],
+html[data-a11y-large-btn="true"] .nav-main-item,
+html[data-a11y-large-btn="true"] .sub-nav-list a {
+  min-height: 48px !important;
+  padding: 12px 20px !important;
+  font-size: 15px !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+}
+html[data-a11y-large-btn="true"] .btn-sm,
+html[data-a11y-large-btn="true"] button.btn-sm {
+  min-height: 40px !important;
+  padding: 10px 16px !important;
+  font-size: 14px !important;
+}
+/* Ensure touch targets meet 48x48 WCAG minimum */
+@media (pointer: coarse) {
+  html button, html a.btn, html .btn, html input[type="submit"] {
+    min-height: 44px !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────
+   11. REDUCED ANIMATIONS
+   ────────────────────────────────────────────────────────── */
+html[data-a11y-reduce-motion="true"] *,
+html[data-a11y-reduce-motion="true"] *::before,
+html[data-a11y-reduce-motion="true"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────────────
+   12. LARGE CURSOR
+   ────────────────────────────────────────────────────────── */
+html[data-a11y-cursor="large"] body { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Ccircle cx='8' cy='8' r='6' fill='%23000' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") 8 8, auto !important; }
+html[data-a11y-cursor="large"] a,
+html[data-a11y-cursor="large"] button { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Ccircle cx='8' cy='8' r='6' fill='%231e3a8a' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E") 8 8, pointer !important; }
+
+/* ──────────────────────────────────────────────────────────
+   13. READING MODE
+   ────────────────────────────────────────────────────────── */
+html[data-a11y-reading="true"] .site-header,
+html[data-a11y-reading="true"] .nca-topbar,
+html[data-a11y-reading="true"] .nca-navbar,
+html[data-a11y-reading="true"] .nca-hamburger,
+html[data-a11y-reading="true"] .portal-sidebar-main,
+html[data-a11y-reading="true"] .portal-sidebar-sub,
+html[data-a11y-reading="true"] .portal-topbar,
+html[data-a11y-reading="true"] .site-footer,
+html[data-a11y-reading="true"] footer,
+html[data-a11y-reading="true"] nav,
+html[data-a11y-reading="true"] #ncaMainNav,
+html[data-a11y-reading="true"] .a11y-fab,
+html[data-a11y-reading="true"] .a11y-tts-bar {
+  display: none !important;
+}
+html[data-a11y-reading="true"] .portal-main,
+html[data-a11y-reading="true"] main {
+  margin-left: auto !important; margin-right: auto !important;
+  max-width: 760px !important; float: none !important;
+  width: 100% !important; padding: 32px 24px !important;
+}
+html[data-a11y-reading="true"] body {
+  font-size: 1.2rem !important; line-height: 2 !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   14. SCREEN-READER ONLY UTILITY
+   ────────────────────────────────────────────────────────── */
+.a11y-visually-hidden {
+  position: absolute !important; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ──────────────────────────────────────────────────────────
+   15. FLOATING ACCESSIBILITY BUTTON (FAB)
+   ────────────────────────────────────────────────────────── */
+.a11y-fab {
+  position: fixed; right: 18px; bottom: 18px; z-index: 99990;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 18px; border: none; border-radius: 999px;
+  background: #1e3a8a; color: #fff; font-weight: 700;
+  font-size: 14px; cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  transition: background .2s, transform .2s;
+}
+.a11y-fab:hover { background: #16307a; transform: scale(1.05); }
+.a11y-fab .a11y-fab-ico { font-size: 18px; }
+
+/* ──────────────────────────────────────────────────────────
+   16. SETTINGS DRAWER + OVERLAY
+   ────────────────────────────────────────────────────────── */
+.a11y-overlay {
+  position: fixed; inset: 0; background: rgba(8,12,28,.55);
+  z-index: 99995; display: none;
+}
+.a11y-overlay.open { display: block; }
+.a11y-panel {
+  position: fixed; top: 0; right: 0; height: 100%; width: 400px;
+  max-width: 94vw; background: #fff; color: #111; z-index: 99999;
+  box-shadow: -12px 0 40px rgba(0,0,0,.4);
+  transform: translateX(105%); transition: transform .25s ease;
+  display: flex; flex-direction: column;
+}
+html[data-a11y-theme="dark"] .a11y-panel { background: #111827; color: #e5e7eb; }
+html[data-a11y-contrast="high"] .a11y-panel { background: #000; color: #fff; border-left: 3px solid #ffff00; }
+.a11y-panel.open { transform: translateX(0); }
+.a11y-panel-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 18px; border-bottom: 1px solid #e5e7eb;
+  background: #1e3a8a; color: #fff; flex-shrink: 0;
+}
+html[data-a11y-theme="dark"] .a11y-panel-head { background: #0b1220; }
+.a11y-panel-head h2 { font-size: 17px; margin: 0; display: flex; align-items: center; gap: 8px; }
+.a11y-panel-close {
+  background: transparent; border: none; color: #fff;
+  font-size: 22px; line-height: 1; cursor: pointer;
+  padding: 4px 8px; border-radius: 6px;
+}
+.a11y-panel-close:hover { background: rgba(255,255,255,.18); }
+.a11y-panel-body { padding: 12px 18px 28px; overflow-y: auto; flex: 1; }
+.a11y-group {
+  border: 1px solid #e5e7eb; border-radius: 12px;
+  padding: 14px; margin: 14px 0;
+}
+html[data-a11y-theme="dark"] .a11y-group { border-color: #334155; }
+html[data-a11y-contrast="high"] .a11y-group { border-color: #ffff00; }
+.a11y-group h3 {
+  font-size: 13px; margin: 0 0 10px; text-transform: uppercase;
+  letter-spacing: .05em; color: #475569; font-weight: 700;
+}
+html[data-a11y-theme="dark"] .a11y-group h3 { color: #94a3b8; }
+.a11y-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.a11y-opt {
+  flex: 1 1 auto; min-width: 60px; text-align: center;
+  padding: 9px 10px; border: 1px solid #cbd5e1;
+  border-radius: 9px; background: #f8fafc; color: #0f172a;
+  cursor: pointer; font-size: 13px; font-weight: 600;
+}
+html[data-a11y-theme="dark"] .a11y-opt { background: #1e293b; color: #e5e7eb; border-color: #334155; }
+.a11y-opt:hover { border-color: #1e3a8a; }
+.a11y-opt[aria-pressed="true"] { background: #1e3a8a; color: #fff; border-color: #1e3a8a; }
+html[data-a11y-contrast="high"] .a11y-opt { border-color: #ffff00; background: #000; color: #fff; }
+html[data-a11y-contrast="high"] .a11y-opt[aria-pressed="true"] { background: #ffff00; color: #000; }
+.a11y-opt .a11y-opt-ico { display: block; font-size: 16px; margin-bottom: 3px; }
+.a11y-hint { font-size: 12px; color: #64748b; margin: 6px 0 0; }
+html[data-a11y-theme="dark"] .a11y-hint { color: #94a3b8; }
+.a11y-saved {
+  text-align: center; font-size: 13px; color: #16a34a;
+  min-height: 18px; margin-top: 6px;
+}
+html[data-a11y-contrast="high"] .a11y-saved { color: #00ff00; }
+.a11y-actions { display: flex; gap: 10px; margin-top: 8px; }
+.a11y-btn {
+  flex: 1; padding: 11px; border-radius: 9px;
+  border: none; cursor: pointer; font-weight: 700; font-size: 13px;
+}
+.a11y-btn-primary { background: #1e3a8a; color: #fff; }
+.a11y-btn-ghost { background: #e2e8f0; color: #0f172a; }
+html[data-a11y-theme="dark"] .a11y-btn-ghost { background: #334155; color: #e5e7eb; }
+.a11y-foot {
+  padding: 12px 18px; border-top: 1px solid #e5e7eb;
+  font-size: 11px; color: #94a3b8; flex-shrink: 0;
+}
+/* Range slider styling */
+.a11y-range {
+  width: 100%; height: 6px; appearance: none; background: #e2e8f0;
+  border-radius: 3px; outline: none; margin: 6px 0;
+}
+.a11y-range::-webkit-slider-thumb {
+  appearance: none; width: 18px; height: 18px; background: #1e3a8a;
+  border-radius: 50%; cursor: pointer;
+}
+.a11y-range::-moz-range-thumb {
+  width: 18px; height: 18px; background: #1e3a8a;
+  border-radius: 50%; cursor: pointer; border: none;
+}
+.a11y-select {
+  width: 100%; padding: 8px 10px; border: 1px solid #cbd5e1;
+  border-radius: 8px; font-size: 13px; background: #f8fafc;
+}
+html[data-a11y-theme="dark"] .a11y-select { background: #1e293b; color: #e5e7eb; border-color: #334155; }
+
+/* ──────────────────────────────────────────────────────────
+   17. TTS PLAYER BAR
+   ────────────────────────────────────────────────────────── */
+.a11y-tts-bar {
+  position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+  z-index: 99989; background: #1e3a8a; color: #fff;
+  border-radius: 16px; padding: 10px 20px;
+  display: none; align-items: center; gap: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4);
+  font-size: 13px; font-weight: 600;
+  max-width: 90vw; flex-wrap: wrap; justify-content: center;
+}
+.a11y-tts-bar.open { display: flex; }
+html[data-a11y-theme="dark"] .a11y-tts-bar { background: #0b1220; }
+.a11y-tts-bar button {
+  background: rgba(255,255,255,.15); border: none; color: #fff;
+  width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.a11y-tts-bar button:hover { background: rgba(255,255,255,.3); }
+.a11y-tts-bar button.a11y-tts-active { background: #ffbf00; color: #000; }
+.a11y-tts-bar .a11y-tts-progress {
+  width: 100px; height: 4px; background: rgba(255,255,255,.2);
+  border-radius: 2px; overflow: hidden; flex-shrink: 0;
+}
+.a11y-tts-bar .a11y-tts-progress-fill {
+  height: 100%; background: #ffbf00; border-radius: 2px;
+  transition: width .3s; width: 0%;
+}
+.a11y-tts-bar .a11y-tts-text {
+  max-width: 200px; overflow: hidden; text-overflow: ellipsis;
+  white-space: nowrap; font-size: 12px; opacity: .85;
+}
+
+/* ──────────────────────────────────────────────────────────
+   18. VISUAL NOTIFICATION SYSTEM
+   ────────────────────────────────────────────────────────── */
+#a11y-toast-container {
+  position: fixed; top: 20px; right: 20px; z-index: 99998;
+  display: flex; flex-direction: column; gap: 10px;
+  max-width: 400px; pointer-events: none;
+}
+#a11y-toast-container .a11y-toast {
+  background: #fff; color: #111; border-radius: 12px;
+  padding: 14px 18px; box-shadow: 0 8px 24px rgba(0,0,0,.15);
+  border-left: 4px solid #1e3a8a; display: flex;
+  align-items: flex-start; gap: 10px; pointer-events: auto;
+  animation: a11ySlideIn .3s ease; font-size: 14px;
+  line-height: 1.5;
+}
+.a11y-toast.a11y-toast-success { border-left-color: #16a34a; }
+.a11y-toast.a11y-toast-error { border-left-color: #dc2626; }
+.a11y-toast.a11y-toast-warning { border-left-color: #d97706; }
+.a11y-toast.a11y-toast-info { border-left-color: #2563eb; }
+.a11y-toast .a11y-toast-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.a11y-toast .a11y-toast-msg { flex: 1; }
+.a11y-toast .a11y-toast-close {
+  background: none; border: none; cursor: pointer; font-size: 16px;
+  color: #94a3b8; padding: 0 2px; flex-shrink: 0;
+}
+html[data-a11y-theme="dark"] #a11y-toast-container .a11y-toast { background: #1e293b; color: #e5e7eb; }
+@keyframes a11ySlideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0); opacity: 1; }
+}
+
+/* ──────────────────────────────────────────────────────────
+   19. TTS SPEAKING HIGHLIGHT
+   ────────────────────────────────────────────────────────── */
+html[data-a11y-tts="true"] .a11y-tts-zone { cursor: pointer; }
+.a11y-tts-speaking {
+  background: rgba(255, 191, 0, .28) !important;
+  outline: 3px solid #ffbf00 !important;
+  border-radius: 4px;
+}
+
+/* ──────────────────────────────────────────────────────────
+   20. FORM ACCESSIBILITY ENHANCEMENTS
+   ────────────────────────────────────────────────────────── */
+.a11y-required::after { content: " *"; color: #dc2626; font-weight: 700; }
+.a11y-error-msg {
+  color: #dc2626; font-size: 13px; margin-top: 4px;
+  display: flex; align-items: center; gap: 4px;
+}
+.a11y-error-msg::before { content: "\26A0"; font-size: 14px; }
+.a11y-help-text {
+  color: #64748b; font-size: 12px; margin-top: 3px;
+}
+input[aria-invalid="true"], select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 2px rgba(220,38,38,.2) !important;
+}
+
+/* ──────────────────────────────────────────────────────────
+   21. TABLE ACCESSIBILITY
+   ────────────────────────────────────────────────────────── */
+table[role="grid"] th, table[role="table"] th { cursor: default; }
+.a11y-table-caption {
+  caption-side: top; text-align: left; font-weight: 700;
+  font-size: 14px; padding: 8px 0; color: #1e3a8a;
+}
+
+/* ──────────────────────────────────────────────────────────
+   22. DIALOG / MODAL ACCESSIBILITY
+   ────────────────────────────────────────────────────────── */
+[role="dialog"] { outline: none; }
+[role="dialog"] .modal-header,
+[role="dialog"] .a11y-panel-head { border-bottom: 1px solid #e5e7eb; }
+
+/* ──────────────────────────────────────────────────────────
+   23. RESPONSIVE ACCESSIBILITY
+   ────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .a11y-fab { right: 12px; bottom: 12px; padding: 12px 14px; font-size: 13px; }
+  .a11y-panel { width: 100vw; max-width: 100vw; }
+  .a11y-tts-bar { bottom: 70px; left: 10px; right: 10px; transform: none; max-width: none; }
+  #a11y-toast-container { right: 10px; left: 10px; max-width: none; }
+}
+@media (max-width: 480px) {
+  .a11y-panel-body { padding: 10px 14px 20px; }
+  .a11y-group { padding: 10px; margin: 10px 0; }
+  .a11y-opt { min-width: 50px; padding: 8px 6px; font-size: 12px; }
+}

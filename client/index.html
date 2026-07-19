@@ -45,7 +45,7 @@
         </div>
         <div class="col-md-5 d-none d-md-block text-center">
           <div class="bg-white/10 p-4 rounded-4 border border-white/20 shadow-lg">
-            <i class="fa-solid fa-graduation-cap text-white mb-3" style="font-size:4.5rem;filter:drop-shadow(0 4px 6px rgba(0,0,0,.15))"></i>
+            <img id="hero-logo-img" src="IMAGES/WhatsApp Image 2026-07-18 at 9.51.59 AM.jpeg" alt="HON-ACADEMY Logo" style="width:120px;height:120px;object-fit:contain;border-radius:16px;filter:drop-shadow(0 6px 16px rgba(0,0,0,.3));margin-bottom:1rem;display:block;margin-left:auto;margin-right:auto;">
             <h5 class="text-white font-bold mb-1" id="hero-school-name">HON-ACADEMY</h5>
             <p class="text-white-50 small mb-0" id="hero-subtitle-r">Excellence in Education &bull; Innovation &bull; Leadership</p>
           </div>
@@ -98,6 +98,18 @@
             <div id="announcements-feed"></div>
           </section>
 
+          <!-- ═══════════ COMBINATIONS ═══════════ -->
+          <section class="mb-4">
+            <h3 class="mb-4 font-bold text-dark border-bottom pb-2"><i class="fa-solid fa-layer-group text-info me-2"></i>Upper Secondary Combinations</h3>
+            <div id="home-combos" class="row g-3"></div>
+          </section>
+
+          <!-- ═══════════ FEATURED RESOURCES ═══════════ -->
+          <section class="mb-4">
+            <h3 class="mb-4 font-bold text-dark border-bottom pb-2"><i class="fa-solid fa-book-journal-whills text-warning me-2"></i>Featured Resources</h3>
+            <div id="featured-books-list" class="row g-3"></div>
+          </section>
+
           <!-- ═══════════ EVENTS ═══════════ -->
           <section class="mb-4" id="upcoming-events-section">
             <h3 class="mb-4 font-bold text-dark border-bottom pb-2"><i class="fa-solid fa-calendar-days text-success me-2"></i>Upcoming Events</h3>
@@ -113,7 +125,7 @@
             <div class="card-body text-center">
               <i class="fa-solid fa-shield-halved mb-3" style="font-size:2.8rem"></i>
               <h4 class="font-bold">Our Motto</h4>
-              <p class="lead font-semibold text-warning mb-2" id="motto-text">"Excellence in Education, Success in Life."</p>
+              <p class="lead font-semibold text-warning mb-2" id="motto-text">"Excellence &bull; Innovation &bull; Leadership"</p>
               <p class="small text-light mb-0" id="motto-description"></p>
             </div>
           </div>
@@ -126,21 +138,6 @@
             </div>
           </div>
 
-          <!-- COMBINATIONS -->
-          <div class="card border-0 p-4 shadow-sm mb-4">
-            <div class="card-body">
-              <h4 class="font-bold text-dark border-bottom pb-2 mb-4"><i class="fa-solid fa-layer-group text-info me-2"></i>Upper Secondary Combinations</h4>
-              <div id="home-combos"></div>
-            </div>
-          </div>
-
-          <!-- BOOKS -->
-          <div class="card border-0 p-4 shadow-sm">
-            <div class="card-body">
-              <h4 class="font-bold text-dark border-bottom pb-2 mb-4"><i class="fa-solid fa-book-journal-whills text-warning me-2"></i>Featured Resources</h4>
-              <div id="featured-books-list"></div>
-            </div>
-          </div>
         </div>
       </div>
 
@@ -175,6 +172,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/data.js"></script>
+    <script src="js/rbac.js"></script>
+    <script src="js/assessments.js"></script>
     <script src="js/db-extension.js"></script>
     <script src="js/components.js"></script>
     <script>
@@ -189,7 +188,7 @@
       const school = data.school;
 
       // Title
-      document.getElementById('page-title').textContent = school.name + ' — Excellence in Education, Innovation & Leadership';
+      document.getElementById('page-title').textContent = school.name + ' — ' + (school.motto || 'Excellence • Innovation • Leadership');
 
       // Hero
       document.getElementById('hero-badge-text').textContent = school.badge || 'Rwanda Education Board Compliant';
@@ -197,7 +196,13 @@
       document.getElementById('hero-subtitle').textContent = school.heroSubtitle || 'Excellence in Education • Innovation • Leadership';
       document.getElementById('hero-description').textContent = school.heroDescription || school.aboutIntro || '';
       document.getElementById('hero-school-name').textContent = school.name;
-      document.getElementById('hero-subtitle-r').textContent = school.heroSubtitle || '';
+      document.getElementById('hero-subtitle-r').textContent = school.heroSubtitle || (school.motto || '');
+      // Update hero logo dynamically
+      var heroLogo = document.getElementById('hero-logo-img');
+      if (heroLogo && school.logoUrl) heroLogo.src = school.logoUrl;
+      // Update motto card
+      var mottoEl = document.getElementById('motto-text');
+      if (mottoEl && school.motto) mottoEl.textContent = '"' + school.motto + '"';
 
       // CTAs
       const ctaBox = document.getElementById("hero-ctas");
@@ -276,8 +281,10 @@
         const anns = data.latestAnnouncements;
         annFeed.innerHTML = anns.length ? anns.map(a => {
           const d = new Date(a.createdAt).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
-          const cb = a.category==="Timetable"?"bg-warning text-dark":a.category==="Meetings"?"bg-info text-dark":"bg-danger text-white";
-          return '<a href="announcements.html" class="text-decoration-none"><div class="card border-0 p-4 bg-white mb-3 shadow-sm"><div class="d-flex justify-content-between align-items-start mb-2"><span class="badge '+cb+' text-uppercase font-bold small" style="font-size:9px">'+a.category+'</span><span class="small text-muted">'+d+'</span></div><h6 class="font-bold text-dark mb-1">'+a.title+'</h6><p class="small text-muted mb-0">'+a.content+'</p></div></a>';
+          const catColors = {"Academic Announcement":"bg-primary","Achievement & Recognition":"bg-warning text-dark","Digital Learning":"bg-info text-dark","Staff Development":"bg-success","Parents & Community":"bg-secondary","Timetable":"bg-warning text-dark","Meetings":"bg-info text-dark","Events":"bg-success","Competitions":"bg-warning text-dark"};
+          const cb = catColors[a.category] || "bg-danger text-white";
+          const summary = a.summary || (a.content ? a.content.replace(/<[^>]*>/g,'').substring(0,120) : '');
+          return '<a href="announcements.html" class="text-decoration-none"><div class="card border-0 p-4 bg-white mb-3 shadow-sm"><div class="d-flex justify-content-between align-items-start mb-2"><span class="badge '+cb+' text-uppercase font-bold small" style="font-size:9px">'+a.category+'</span><span class="small text-muted">'+d+'</span></div><h6 class="font-bold text-dark mb-1">'+a.title+'</h6><p class="small text-muted mb-0">'+summary+'</p></div></a>';
         }).join('') : '<p class="text-muted text-center p-4">No announcements published yet.</p>';
       }
 
@@ -309,10 +316,12 @@
         try {
           const combos = window.db.getCombinations();
           if (combos.length) {
-            comboBox.innerHTML = combos.map(c => {
-              const clr = c.stream==='science'?'primary':'info';
-              return '<div class="mb-2"><strong class="text-'+clr+'" style="font-size:.95rem">'+c.name+'</strong> <small class="text-muted">('+c.fullName+')</small><div class="d-flex flex-wrap gap-1 mt-1">'+c.subjects.map(s=>'<span class="combo-badge bg-'+clr+' bg-opacity-10 text-'+clr+'">'+s+'</span>').join('')+'</div></div>';
-            }).join('<hr class="my-2">');
+            comboBox.innerHTML = combos.slice(0,8).map(c => {
+              const clr = c.stream==='science'?'#0d6efd':'#0dcaf0';
+              const bgClr = c.stream==='science'?'#e7f1ff':'#e7fafe';
+              const icon = c.stream==='science'?'fa-flask':'fa-book-open-reader';
+              return '<div class="col-lg-3 col-md-4 col-sm-6"><div class="card combo-card h-100 border-0 p-3" style="border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s;background:#fff"><div class="d-flex align-items-center gap-2 mb-2"><div style="width:36px;height:36px;border-radius:10px;background:'+bgClr+';display:flex;align-items:center;justify-content:center;color:'+clr+'"><i class="fa-solid '+icon+'"></i></div><div><h6 class="mb-0 font-bold" style="font-size:0.95rem;color:#0f172a">'+c.name+'</h6><small class="text-muted" style="font-size:11px">'+c.fullName+'</small></div></div><div class="d-flex flex-wrap gap-1 mt-2">'+c.subjects.map(s=>'<span style="font-size:11px;padding:3px 10px;border-radius:50px;background:'+bgClr+';color:'+clr+';font-weight:600">'+s+'</span>').join('')+'</div></div></div>';
+            }).join('');
           } else {
             comboBox.innerHTML = '<p class="text-muted small">No combinations defined yet.</p>';
           }
@@ -323,9 +332,11 @@
       const bList = document.getElementById("featured-books-list");
       if (bList) {
         const bks = data.featuredBooks;
-        bList.innerHTML = bks.length ? bks.map(b => {
+        bList.innerHTML = bks.length ? bks.slice(0,8).map(b => {
           const fi = b.fileType==='pdf'?'fa-file-pdf text-danger':b.fileType==='video'?'fa-file-video text-primary':'fa-book text-success';
-          return '<div class="d-flex align-items-center gap-3 p-3 bg-light border rounded-3 mb-2"><div class="bg-white p-2 rounded border shadow-sm text-center" style="width:40px;height:40px"><i class="fa-solid '+fi+' fs-5"></i></div><div><h6 class="mb-0 font-bold small">'+b.title+'</h6><p class="text-xs text-muted mb-0">'+(b.fileType||'PDF').toUpperCase()+'</p></div></div>';
+          const colors = {pdf:{bg:'#fee2e2',clr:'#dc2626'},video:{bg:'#dbeafe',clr:'#2563eb'},book:{bg:'#d1fae5',clr:'#059669'}};
+          const c = b.fileType==='pdf'?colors.pdf:b.fileType==='video'?colors.video:colors.book;
+          return '<div class="col-lg-3 col-md-4 col-sm-6"><div class="card border-0 h-100 p-3" style="border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,0.06);background:#fff"><div style="width:48px;height:48px;border-radius:12px;background:'+c.bg+';display:flex;align-items:center;justify-content:center;margin-bottom:10px"><i class="fa-solid '+fi+' fs-5" style="color:'+c.clr+'"></i></div><h6 class="font-bold mb-1" style="font-size:.9rem;color:#0f172a">'+b.title+'</h6><small class="text-muted" style="font-size:11px">'+b.fileType.toUpperCase()+'</small></div></div>';
         }).join('') : '<p class="text-muted text-center small">No resources available yet.</p>';
       }
 

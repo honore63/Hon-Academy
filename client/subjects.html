@@ -71,12 +71,12 @@
       <!-- Level Tabs -->
       <ul class="nav nav-pills justify-content-center gap-2 mb-4 flex-wrap" id="levelTabs" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="nav-link level-tab-btn active" id="primary-tab" data-bs-toggle="pill" data-bs-target="#primary-pane" type="button" role="tab">
+          <button class="nav-link level-tab-btn" id="primary-tab" data-bs-toggle="pill" data-bs-target="#primary-pane" type="button" role="tab">
             <i class="fa-solid fa-school-flag me-2"></i>Primary (P1–P6)
           </button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="nav-link level-tab-btn" id="lowersec-tab" data-bs-toggle="pill" data-bs-target="#lowersec-pane" type="button" role="tab">
+          <button class="nav-link level-tab-btn active" id="lowersec-tab" data-bs-toggle="pill" data-bs-target="#lowersec-pane" type="button" role="tab">
             <i class="fa-solid fa-building me-2"></i>Lower Secondary (S1–S3)
           </button>
         </li>
@@ -95,20 +95,20 @@
       <div class="tab-content" id="levelTabContent">
 
         <!-- ===================== PRIMARY ===================== -->
-        <div class="tab-pane fade show active" id="primary-pane" role="tabpanel">
+        <div class="tab-pane fade" id="primary-pane" role="tabpanel">
           <p class="text-muted mb-4 text-center">Primary education covers Grades P1 through P6. All students follow a core curriculum.</p>
           <div class="row g-3" id="primary-grid"></div>
         </div>
 
-        <!-- ===================== LOWER SECONDARY ===================== -->
-        <div class="tab-pane fade" id="lowersec-pane" role="tabpanel">
-          <p class="text-muted mb-4 text-center">Lower Secondary covers S1–S3. Students study a broad curriculum across languages, sciences, humanities and arts.</p>
+        <!-- ===================== LOWER SECONDARY (S1–S3) ===================== -->
+        <div class="tab-pane fade show active" id="lowersec-pane" role="tabpanel">
+          <p class="text-muted mb-4 text-center">Lower Secondary covers S1–S3. Students study the following 14 subjects across languages, sciences, humanities, arts and sports.</p>
           <div class="row g-3" id="lowersec-grid"></div>
         </div>
 
-        <!-- ===================== UPPER SECONDARY ===================== -->
+        <!-- ===================== UPPER SECONDARY (S4–S6) ===================== -->
         <div class="tab-pane fade" id="uppersec-pane" role="tabpanel">
-          <p class="text-muted mb-3 text-center">Upper Secondary (S4–S6) students choose a specialised stream. Browse subjects by category below.</p>
+          <p class="text-muted mb-3 text-center">Upper Secondary (S4–S6) students choose a specialised stream. Browse subjects by group below.</p>
           <!-- Category sub-pills -->
           <div class="d-flex flex-wrap justify-content-center gap-2 mb-4" id="uppersec-categories"></div>
           <div class="row g-3" id="uppersec-grid"></div>
@@ -181,8 +181,8 @@
       function subjectCard(s){
         const count = lessons.filter(l => l.subjectId===s.id).length;
         return `
-        <div class="col-sm-6 col-lg-4 col-xl-3 subject-item" data-title="${s.title.toLowerCase()}" data-code="${(s.code||'').toLowerCase()}" data-level="${s.level}" data-cat="${s.category||''}">
-          <div class="subject-card card h-100 border-0">
+        <div class="col-sm-6 col-lg-4 col-xl-3 subject-item" data-subject-id="${s.id}" data-title="${s.title.toLowerCase()}" data-code="${(s.code||'').toLowerCase()}" data-level="${s.level}" data-cat="${s.category||''}">
+          <div class="subject-card card h-100 border-0" style="cursor:pointer" onclick="location.href='course.html?id=${s.id}'">
             <div class="card-body p-3 d-flex flex-column">
               <div class="d-flex align-items-start gap-2 mb-2">
                 <div class="card-icon ${s.category||''}"><i class="fa-solid ${catIcon(s.category)}"></i></div>
@@ -194,7 +194,7 @@
               <p class="small text-muted mb-3 flex-grow-1" style="font-size:.8rem;line-height:1.45">${s.description||''}</p>
               <div class="d-flex justify-content-between align-items-center pt-2 border-top">
                 <span class="level-badge bg-${levelColors[s.level]||'secondary'} bg-opacity-10 text-${levelColors[s.level]||'secondary'}">${s.level}</span>
-                <span class="small text-muted"><i class="fa-solid fa-photo-film me-1"></i>${count}</span>
+                <span class="small text-muted"><i class="fa-solid fa-photo-film me-1"></i>${count} lessons</span>
               </div>
             </div>
           </div>
@@ -210,10 +210,10 @@
       renderList("primary-grid", pri);
       renderList("lowersec-grid", lsec);
 
-      // Upper Sec category pills
-      const usCats = [...new Set(usec.map(s=>s.category))].sort();
-      const catLabels = {science:"Science",humanities:"Humanities",languages:"Languages",business:"Business & Economics",arts:"Arts",common:"Common"};
-      document.getElementById("uppersec-categories").innerHTML = `<button class="cat-pill active" data-cat="all">All (${usec.length})</button>` + usCats.map(c=>`<button class="cat-pill" data-cat="${c}">${catLabels[c]||c} (${usec.filter(s=>s.category===c).length})</button>`).join("");
+      // Upper Sec category pills (ordered as specified)
+      const usCatOrder = ['science','languages','humanities','arts','sports'];
+      const catLabels = {science:"Mathematics and Sciences",languages:"Languages",humanities:"Humanities",arts:"Arts",sports:"Physical Education"};
+      document.getElementById("uppersec-categories").innerHTML = `<button class="cat-pill active" data-cat="all">All (${usec.length})</button>` + usCatOrder.filter(c=>usec.some(s=>s.category===c)).map(c=>`<button class="cat-pill" data-cat="${c}">${catLabels[c]||c} (${usec.filter(s=>s.category===c).length})</button>`).join("");
       let activeUsCat = "all";
       function renderUpperSec(){
         const filtered = activeUsCat==="all" ? usec : usec.filter(s=>s.category===activeUsCat);

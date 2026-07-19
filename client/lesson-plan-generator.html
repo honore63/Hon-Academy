@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>21st Century Lesson Plan Generator — HON-ACADEMY</title>
+  <meta name="description" content="Generate modern, competency-based lesson plans with the 21st Century Lesson Plan Generator. Created by Honore Tuyishime and Roger Hodali for educators worldwide.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .lpg-hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 50%,#15803d 100%);color:#fff;padding:5rem 0 4rem;position:relative;overflow:hidden}
+    .lpg-hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");opacity:.4}
+    .lpg-hero .container{position:relative;z-index:1}
+    .lpg-badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(255,255,255,.12);padding:.5rem 1.25rem;border-radius:2rem;font-size:.8rem;font-weight:600;margin-bottom:1.5rem;backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15)}
+    .lpg-badge i{font-size:.9rem}
+    .lpg-hero h1{font-size:clamp(2rem,5vw,3.25rem);font-weight:800;line-height:1.15;margin-bottom:1rem;letter-spacing:-.02em}
+    .lpg-hero p{font-size:clamp(1rem,2.5vw,1.2rem);max-width:680px;margin:0 auto 2rem;opacity:.9;line-height:1.7}
+    .lpg-hero-stats{display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;margin-top:2.5rem}
+    .lpg-hero-stat{text-align:center}
+    .lpg-hero-stat .lpg-stat-num{font-size:1.75rem;font-weight:800;display:block;line-height:1}
+    .lpg-hero-stat .lpg-stat-label{font-size:.8rem;opacity:.7;margin-top:.25rem;display:block}
+    .lpg-cta-group{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center}
+    .lpg-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.875rem 1.75rem;border-radius:.75rem;font-weight:700;font-size:.95rem;text-decoration:none;transition:all .25s;border:none;cursor:pointer}
+    .lpg-btn-primary{background:#fff;color:#1e3a8a;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+    .lpg-btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.2);color:#1e3a8a}
+    .lpg-btn-outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.4)}
+    .lpg-btn-outline:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.7);color:#fff}
+    .lpg-btn-accent{background:#15803d;color:#fff;box-shadow:0 4px 20px rgba(21,128,61,.3)}
+    .lpg-btn-accent:hover{background:#166534;transform:translateY(-2px);box-shadow:0 8px 30px rgba(21,128,61,.4);color:#fff}
+
+    .lpg-section{padding:4.5rem 0}
+    .lpg-section-title{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;color:#0f172a;margin-bottom:.75rem}
+    .lpg-section-sub{color:#64748b;max-width:560px;margin:0 auto 3rem;line-height:1.6}
+
+    .lpg-flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-top:2rem}
+    .lpg-flow-step{text-align:center;padding:1.5rem 1rem;position:relative}
+    .lpg-flow-num{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#1e3a8a,#15803d);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:800;margin:0 auto 1rem;box-shadow:0 4px 16px rgba(30,58,138,.2)}
+    .lpg-flow-step h4{font-weight:700;color:#0f172a;font-size:1rem;margin-bottom:.5rem}
+    .lpg-flow-step p{color:#64748b;font-size:.875rem;margin:0;line-height:1.5}
+
+    .lpg-card{background:#fff;border-radius:1rem;padding:1.75rem;box-shadow:0 2px 12px rgba(0,0,0,.04);border:1px solid #e2e8f0;height:100%;transition:all .3s}
+    .lpg-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.08);border-color:#c7d2fe}
+    .lpg-card-icon{width:56px;height:56px;border-radius:.85rem;display:flex;align-items:center;justify-content:center;font-size:1.35rem;margin-bottom:1.25rem}
+    .lpg-card-icon.blue{background:#dbeafe;color:#1e40af}
+    .lpg-card-icon.green{background:#dcfce7;color:#166534}
+    .lpg-card-icon.amber{background:#fef3c7;color:#b45309}
+    .lpg-card-icon.purple{background:#ede9fe;color:#5b21b6}
+    .lpg-card-icon.rose{background:#ffe4e6;color:#be123c}
+    .lpg-card-icon.teal{background:#ccfbf1;color:#0f766e}
+    .lpg-card-icon.indigo{background:#e0e7ff;color:#3730a3}
+    .lpg-card-icon.orange{background:#ffedd5;color:#c2410c}
+    .lpg-card h3{font-size:1.1rem;font-weight:700;color:#0f172a;margin-bottom:.5rem}
+    .lpg-card p{color:#64748b;line-height:1.6;margin:0;font-size:.9rem}
+    .lpg-features{background:#f8fafc}
+
+    .lpg-how{background:#f8fafc}
+    .lpg-how-item{display:flex;gap:1rem;align-items:flex-start;padding:1.25rem 0;border-bottom:1px solid #e2e8f0}
+    .lpg-how-item:last-child{border-bottom:none}
+    .lpg-how-icon{width:44px;height:44px;border-radius:.75rem;background:linear-gradient(135deg,#1e3a8a,#15803d);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+    .lpg-how-content h4{font-weight:700;color:#0f172a;font-size:.95rem;margin-bottom:.2rem}
+    .lpg-how-content p{color:#64748b;margin:0;font-size:.875rem;line-height:1.5}
+
+    .lpg-creators{background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);color:#fff;position:relative;overflow:hidden}
+    .lpg-creators::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");opacity:.3}
+    .lpg-creators .container{position:relative;z-index:1}
+    .lpg-creator-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:1rem;padding:2rem 1.5rem;text-align:center;backdrop-filter:blur(10px);transition:all .3s}
+    .lpg-creator-card:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);transform:translateY(-4px)}
+    .lpg-creator-avatar{width:90px;height:90px;border-radius:50%;margin:0 auto 1.25rem;background:linear-gradient(135deg,#1e3a8a,#15803d);display:flex;align-items:center;justify-content:center;font-size:2rem;color:#fff;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.2)}
+    .lpg-creator-card h4{font-size:1.25rem;font-weight:700;margin-bottom:.25rem}
+    .lpg-creator-role{color:#94a3b8;font-size:.85rem;margin-bottom:1rem;font-weight:500}
+    .lpg-creator-card p{color:rgba(255,255,255,.7);font-size:.85rem;line-height:1.6;margin:0}
+
+    .lpg-embed{background:#fff}
+    .lpg-embed-wrapper{position:relative;border-radius:1rem;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.08);border:1px solid #e2e8f0}
+    .lpg-embed-frame{width:100%;height:70vh;min-height:500px;border:none;display:block;background:#f1f5f9}
+    .lpg-embed-overlay{position:absolute;inset:0;background:#f8fafc;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1;transition:opacity .3s}
+    .lpg-embed-overlay.hidden{opacity:0;pointer-events:none}
+    .lpg-embed-spinner{width:48px;height:48px;border:4px solid #e2e8f0;border-top-color:#1e3a8a;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:1rem}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    .lpg-cta-banner{background:linear-gradient(135deg,#1e3a8a,#15803d);color:#fff;padding:3rem 0;text-align:center}
+    .lpg-cta-banner h3{font-weight:800;margin-bottom:.75rem}
+    .lpg-cta-banner p{opacity:.9;margin-bottom:1.5rem;max-width:500px;margin-left:auto;margin-right:auto}
+
+    @media(max-width:768px){
+      .lpg-hero{padding:3.5rem 0 2.5rem}
+      .lpg-cta-group{flex-direction:column;align-items:center}
+      .lpg-btn{width:100%;justify-content:center}
+      .lpg-hero-stats{gap:1.5rem}
+      .lpg-embed-frame{height:50vh;min-height:350px}
+      .lpg-flow{grid-template-columns:1fr 1fr}
+      .lpg-creator-card{padding:1.5rem 1rem}
+    }
+    @media(max-width:480px){
+      .lpg-flow{grid-template-columns:1fr}
+      .lpg-hero-stats{gap:1rem}
+      .lpg-hero-stat .lpg-stat-num{font-size:1.5rem}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header"></header>
+
+  <!-- Page Banner -->
+  <section class="page-banner" style="padding:1.5rem 0 .75rem;background:linear-gradient(135deg,#0f172a,#1e3a8a)">
+    <div class="container">
+      <div class="breadcrumb-custom"><a href="index.html">Home</a><span>/</span><a href="subjects.html">Academics</a><span>/</span><span class="current">Lesson Plan Generator</span></div>
+    </div>
+  </section>
+
+  <!-- Hero Section -->
+  <section class="lpg-hero">
+    <div class="container text-center">
+      <div class="lpg-badge mx-auto">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>Competency-Based Pedagogy Tool</span>
+      </div>
+      <h1>21st Century Lesson<br>Plan Generator</h1>
+      <p>Create modern, competency-based lesson plans aligned with the 21st Century Skills Framework. Designed for educators who prepare students for tomorrow's challenges.</p>
+      <div class="lpg-cta-group">
+        <a href="https://digitallessonplan.vercel.app/" target="_blank" rel="noopener" class="lpg-btn lpg-btn-primary">
+          <i class="fa-solid fa-rocket"></i> Launch Full Generator
+        </a>
+        <button class="lpg-btn lpg-btn-outline" onclick="document.getElementById('embed-section').scrollIntoView({behavior:'smooth'})">
+          <i class="fa-solid fa-play"></i> Try It Below
+        </button>
+      </div>
+      <div class="lpg-hero-stats">
+        <div class="lpg-hero-stat">
+          <span class="lpg-stat-num">4</span>
+          <span class="lpg-stat-label">Core Skills</span>
+        </div>
+        <div class="lpg-hero-stat">
+          <span class="lpg-stat-num">3</span>
+          <span class="lpg-stat-label">Languages</span>
+        </div>
+        <div class="lpg-hero-stat">
+          <span class="lpg-stat-num">8+</span>
+          <span class="lpg-stat-label">Export Formats</span>
+        </div>
+        <div class="lpg-hero-stat">
+          <span class="lpg-stat-num">100%</span>
+          <span class="lpg-stat-label">Free to Use</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="lpg-section">
+    <div class="container text-center">
+      <h2 class="lpg-section-title">How It Works</h2>
+      <p class="lpg-section-sub">Four simple steps from subject selection to a complete, print-ready lesson plan</p>
+      <div class="lpg-flow">
+        <div class="lpg-flow-step">
+          <div class="lpg-flow-num">1</div>
+          <h4>Select Subject</h4>
+          <p>Choose your subject, level, topic, and available class time</p>
+        </div>
+        <div class="lpg-flow-step">
+          <div class="lpg-flow-num">2</div>
+          <h4>Customize</h4>
+          <p>Pick target skills, differentiation needs, and available resources</p>
+        </div>
+        <div class="lpg-flow-step">
+          <div class="lpg-flow-num">3</div>
+          <h4>Generate</h4>
+          <p>AI builds a complete lesson plan with activities and assessments</p>
+        </div>
+        <div class="lpg-flow-step">
+          <div class="lpg-flow-num">4</div>
+          <h4>Export</h4>
+          <p>Download as PDF, Word, or share directly with colleagues</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Features -->
+  <section class="lpg-section lpg-features">
+    <div class="container">
+      <div class="text-center">
+        <h2 class="lpg-section-title">Built Around the 4 Cs</h2>
+        <p class="lpg-section-sub">Every lesson plan integrates the four foundational 21st century competencies</p>
+      </div>
+      <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+          <div class="lpg-card">
+            <div class="lpg-card-icon blue"><i class="fa-solid fa-brain"></i></div>
+            <h3>Critical Thinking</h3>
+            <p>Embed higher-order thinking skills — analysis, evaluation, synthesis, and problem-solving — into every lesson structure.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="lpg-card">
+            <div class="lpg-card-icon green"><i class="fa-solid fa-lightbulb"></i></div>
+            <h3>Creativity &amp; Innovation</h3>
+            <p>Design lessons that foster creative thinking, design mindsets, and innovative approaches to real-world challenges.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="lpg-card">
+            <div class="lpg-card-icon amber"><i class="fa-solid fa-handshake"></i></div>
+            <h3>Collaboration</h3>
+            <p>Structure cooperative learning, peer feedback cycles, and team-based projects with clear roles and outcomes.</p>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+          <div class="lpg-card">
+            <div class="lpg-card-icon purple"><i class="fa-solid fa-comments"></i></div>
+            <h3>Communication</h3>
+            <p>Integrate multimodal communication skills: digital literacy, presentation, and effective academic expression.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Additional Capabilities -->
+  <section class="lpg-section">
+    <div class="container">
+      <div class="row align-items-start">
+        <div class="col-lg-5 mb-4 mb-lg-0">
+          <h2 class="lpg-section-title text-start">Additional Capabilities</h2>
+          <p class="text-muted text-start mb-0" style="max-width:420px;">Beyond the 4 Cs, the generator supports a comprehensive range of pedagogical features for modern classrooms.</p>
+        </div>
+        <div class="col-lg-7">
+          <div class="lpg-how-item">
+            <div class="lpg-how-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div class="lpg-how-content">
+              <h4>Competency-Based Framework</h4>
+              <p>Align lessons with national competency standards and 21st century skill benchmarks automatically.</p>
+            </div>
+          </div>
+          <div class="lpg-how-item">
+            <div class="lpg-how-icon"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="lpg-how-content">
+              <h4>Assessment Integration</h4>
+              <p>Built-in formative and summative assessment strategies with rubrics, success criteria, and exit tickets.</p>
+            </div>
+          </div>
+          <div class="lpg-how-item">
+            <div class="lpg-how-icon"><i class="fa-solid fa-laptop-code"></i></div>
+            <div class="lpg-how-content">
+              <h4>Digital Tools Integration</h4>
+              <p>Suggests appropriate EdTech tools matched to each activity type and learning objective.</p>
+            </div>
+          </div>
+          <div class="lpg-how-item">
+            <div class="lpg-how-icon"><i class="fa-solid fa-users"></i></div>
+            <div class="lpg-how-content">
+              <h4>Differentiation Strategies</h4>
+              <p>Automatic scaffolding, extension, and support suggestions for diverse learner profiles.</p>
+            </div>
+          </div>
+          <div class="lpg-how-item">
+            <div class="lpg-how-icon"><i class="fa-solid fa-globe"></i></div>
+            <div class="lpg-how-content">
+              <h4>Global Citizenship</h4>
+              <p>Incorporates UN SDGs, cultural awareness, and global perspectives in lesson design.</p>
+            </div>
+          </div>
+          <div class="lpg-how-item">
+            <div class="lpg-how-icon"><i class="fa-solid fa-rotate-left"></i></div>
+            <div class="lpg-how-content">
+              <h4>Teacher Reflection Prompts</h4>
+              <p>Post-lesson reflection questions designed for continuous professional growth.</p>
+            </div>
+          </div>
+          <div class="lpg-how-item">
+            <div class="lpg-how-icon"><i class="fa-solid fa-file-export"></i></div>
+            <div class="lpg-how-content">
+              <h4>Export &amp; Share</h4>
+              <p>Download as PDF, Word document, or share via link with colleagues and administrators.</p>
+            </div>
+          </div>
+          <div class="lpg-how-item">
+            <div class="lpg-how-icon"><i class="fa-solid fa-language"></i></div>
+            <div class="lpg-how-content">
+              <h4>Multi-Language Support</h4>
+              <p>Available in English, Kinyarwanda, and French for the Rwandan educational context.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Creators -->
+  <section class="lpg-section lpg-creators">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="lpg-section-title" style="color:#fff">Created by Educators, for Educators</h2>
+        <p class="mt-2" style="max-width:560px;margin:0 auto;color:rgba(255,255,255,.75);line-height:1.6">Developed with deep understanding of classroom realities and modern pedagogical research</p>
+      </div>
+      <div class="row g-4 justify-content-center">
+        <div class="col-md-5 col-lg-4">
+          <div class="lpg-creator-card">
+            <div class="lpg-creator-avatar">HT</div>
+            <h4>Honore Tuyishime</h4>
+            <div class="lpg-creator-role">Lead Developer &amp; Educational Technologist</div>
+            <p>Passionate about leveraging technology to transform education in Rwanda and across Africa. Expert in LMS development, digital pedagogy, and EdTech innovation.</p>
+          </div>
+        </div>
+        <div class="col-md-5 col-lg-4">
+          <div class="lpg-creator-card">
+            <div class="lpg-creator-avatar">RH</div>
+            <h4>Roger Hodali</h4>
+            <div class="lpg-creator-role">Co-Developer &amp; Curriculum Specialist</div>
+            <p>Specialist in competency-based curriculum design and 21st century skills integration. Dedicated to empowering teachers with practical, research-based tools.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Generator Embed -->
+  <section id="embed-section" class="lpg-section lpg-embed">
+    <div class="container">
+      <div class="text-center mb-4">
+        <h2 class="lpg-section-title">Try the Generator</h2>
+        <p class="lpg-section-sub">The full interactive generator is embedded below. For the best experience, open it in a new tab.</p>
+      </div>
+      <div class="lpg-embed-wrapper">
+        <div class="lpg-embed-overlay" id="embedLoader">
+          <div class="lpg-embed-spinner"></div>
+          <p class="text-muted fw-semibold mb-2">Loading generator...</p>
+          <small class="text-muted">This may take a moment on first load</small>
+        </div>
+        <iframe class="lpg-embed-frame" id="embedFrame" src="https://digitallessonplan.vercel.app/" title="21st Century Lesson Plan Generator" allow="clipboard-write; fullscreen"></iframe>
+      </div>
+      <div class="text-center mt-4">
+        <a href="https://digitallessonplan.vercel.app/" target="_blank" rel="noopener" class="lpg-btn lpg-btn-accent">
+          <i class="fa-solid fa-up-right-from-square"></i> Open Full Screen Version
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section class="lpg-cta-banner">
+    <div class="container">
+      <h3>Ready to Transform Your Lesson Planning?</h3>
+      <p>Join educators who are building 21st century classrooms with competency-based lesson plans.</p>
+      <div class="lpg-cta-group">
+        <a href="https://digitallessonplan.vercel.app/" target="_blank" rel="noopener" class="lpg-btn lpg-btn-primary">
+          <i class="fa-solid fa-rocket"></i> Start Creating Now
+        </a>
+        <a href="subjects.html" class="lpg-btn lpg-btn-outline">
+          <i class="fa-solid fa-book-open"></i> Browse Subjects
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer"></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+    var frame = document.getElementById('embedFrame');
+    var loader = document.getElementById('embedLoader');
+    if (frame && loader) {
+      frame.addEventListener('load', function() {
+        loader.classList.add('hidden');
+      });
+      frame.addEventListener('error', function() {
+        loader.innerHTML =
+          '<i class="fa-solid fa-triangle-exclamation" style="font-size:2.5rem;color:#f59e0b;margin-bottom:1rem;"></i>' +
+          '<h4 style="color:#1e293b;margin-bottom:.5rem;">Unable to load generator</h4>' +
+          '<p class="text-muted mb-3" style="font-size:.9rem;">The embedded generator could not be loaded. You can still open it in a new tab.</p>' +
+          '<a href="https://digitallessonplan.vercel.app/" target="_blank" rel="noopener" class="lpg-btn lpg-btn-primary">' +
+          '<i class="fa-solid fa-up-right-from-square"></i> Open in New Tab</a>';
+      });
+    }
+  </script>
+</body>
+</html>

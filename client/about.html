@@ -18,6 +18,74 @@
   .facility-item i{color:#1e3a8a;font-size:1rem;width:24px;text-align:center}
   .level-card{border:1px solid #e9ecef;border-radius:1rem;padding:1.5rem;background:#fff;transition:.25s;height:100%}
   .level-card:hover{box-shadow:0 8px 24px rgba(26,60,123,.1)}
+  /* ── Sub Nav ── */
+  .about-subnav{background:#fff;border-radius:16px;padding:8px 12px;box-shadow:0 4px 20px rgba(0,0,0,.08);display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:2rem;position:sticky;top:10px;z-index:1020}
+  .about-subnav .nav-btn{padding:8px 16px;border-radius:10px;border:none;background:transparent;color:#475569;font-size:.8rem;font-weight:600;transition:.2s;cursor:pointer;white-space:nowrap}
+  .about-subnav .nav-btn:hover{background:#f1f5f9;color:#0f172a}
+  .about-subnav .nav-btn.active{background:#1e3a8a;color:#fff;box-shadow:0 2px 8px rgba(30,58,138,.3)}
+  .about-section{display:none}
+  .about-section.active{display:block}
+  /* ── Org Chart ── */
+  .org-tree{display:flex;flex-direction:column;align-items:center;gap:0;padding-top:10px}
+  /* vertical line between levels */
+  .org-vline{width:3px;height:28px;background:linear-gradient(180deg,#94a3b8,#64748b);border-radius:2px}
+  /* horizontal bar that spans children */
+  .org-hbar{position:relative;width:100%;display:flex;justify-content:center;align-items:flex-start}
+  .org-hbar::before{content:'';position:absolute;top:0;left:10%;right:10%;height:3px;background:linear-gradient(90deg,transparent,#94a3b8 10%,#94a3b8 90%,transparent);border-radius:2px}
+  .org-hbar.narrow::before{left:20%;right:20%}
+  /* shared child connector (T-shape) */
+  .org-tconn{position:relative;width:100%;display:flex;justify-content:center;padding-top:14px}
+  .org-tconn::before{content:'';position:absolute;top:0;left:50%;width:3px;height:14px;background:#94a3b8;border-radius:2px;transform:translateX(-50%)}
+  .org-tconn::after{content:'';position:absolute;top:0;left:15%;right:15%;height:3px;background:#94a3b8;border-radius:2px}
+  .org-tconn.narrow::after{left:25%;right:25%}
+  .org-tconn.triple::after{left:5%;right:5%}
+  /* node wrapper */
+  .org-nwrap{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;position:relative}
+  .org-nwrap.tight{gap:12px}
+  /* leaf branch — vertical stem then card */
+  .org-leaf{display:flex;flex-direction:column;align-items:center;position:relative}
+  .org-leaf::before{content:'';width:3px;height:14px;background:#94a3b8;border-radius:2px}
+  .org-card,.org-mini{transition:transform .25s,box-shadow .25s}
+  .org-card:hover,.org-mini:hover{transform:translateY(-4px)}
+  /* Level colors */
+  .org-card.board{background:linear-gradient(135deg,#1e3a8a,#312e81);border:none;border-radius:14px;padding:14px 28px;min-width:220px;box-shadow:0 6px 20px rgba(30,58,138,.3)}
+  .org-card.board:hover{box-shadow:0 10px 30px rgba(30,58,138,.4)}
+  .org-card.board .name{color:#fff;font-size:.95rem;font-weight:800;letter-spacing:.5px}
+  .org-card.board .title{color:#a5b4fc;font-size:.72rem;font-weight:600}
+  .org-card.principal{background:linear-gradient(135deg,#0f172a,#1e293b);border:none;border-radius:14px;padding:16px 32px;min-width:240px;box-shadow:0 6px 20px rgba(15,23,42,.3)}
+  .org-card.principal:hover{box-shadow:0 10px 30px rgba(15,23,42,.4)}
+  .org-card.principal .name{color:#fff;font-size:1rem;font-weight:800;letter-spacing:.3px}
+  .org-card.principal .title{color:#94a3b8;font-size:.75rem;font-weight:600}
+  .org-mini{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:10px 16px;text-align:center;min-width:110px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+  .org-mini:hover{box-shadow:0 8px 24px rgba(0,0,0,.1)}
+  .org-mini .name{font-weight:700;font-size:.82rem;color:#0f172a}
+  .org-mini .title{font-size:.65rem;color:#64748b;margin-top:2px}
+  .org-mini.deputy{border-left:4px solid #3b82f6}
+  .org-mini.bursar{border-left:4px solid #10b981}
+  .org-mini.secretary{border-left:4px solid #f59e0b}
+  .org-mini.dos{border-left:4px solid #8b5cf6}
+  .org-mini.dod{border-left:4px solid #ef4444}
+  .org-mini.guidance{border-left:4px solid #06b6d4}
+  .org-mini.coordinator{border-left:4px solid #ec4899}
+  .org-mini.exam{border-left:4px solid #f97316}
+  .org-mini.hod{border-left:4px solid #6366f1;padding:7px 10px;min-width:85px}
+  .org-mini.hod .name{font-size:.72rem}
+  .org-mini.hod .title{font-size:.58rem}
+  .org-mini.hr{border-left:4px solid #14b8a6}
+  .org-mini.ict{border-left:4px solid #8b5cf6}
+  .org-mini.pref{border-left:4px solid #f59e0b;min-width:90px}
+  .org-mini.pref .name{font-size:.72rem}
+  .org-mini.pref .title{font-size:.58rem}
+  .org-section-label{background:#f1f5f9;border-radius:20px;padding:6px 18px;font-size:.72rem;font-weight:700;color:#475569;display:inline-block;margin:0 0 10px;text-transform:uppercase;letter-spacing:.5px}
+  .org-allstudents{background:linear-gradient(135deg,#1e3a8a,#0f172a);border:none;border-radius:16px;padding:20px 40px;min-width:320px;box-shadow:0 8px 30px rgba(30,58,138,.25);text-align:center}
+  .org-allstudents .name{color:#fff;font-size:1.2rem;font-weight:800}
+  .org-allstudents .title{color:#a5b4fc;font-size:.8rem;font-weight:500;margin-top:4px;max-width:500px;line-height:1.5}
+  .org-mini.bottom{border-left:4px solid #94a3b8;background:#f8fafc;min-width:130px}
+  .org-mini.bottom .name{font-size:.78rem;color:#334155}
+  .org-mini.bottom .title{font-size:.62rem}
+  /* row group — wraps around children with T-connector */
+  .org-children{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;position:relative;width:100%}
+  .org-children.tight{gap:10px}
 </style>
 </head>
 <body class="animate-fade-in">
@@ -32,8 +100,20 @@
 
 <main class="container my-5">
 
-  <!-- Our Story -->
-  <section class="mb-5">
+  <!-- Sub Navigation -->
+  <nav class="about-subnav" id="about-subnav">
+    <button class="nav-btn active" data-section="story">Our Story</button>
+    <button class="nav-btn" data-section="principal">Principal</button>
+    <button class="nav-btn" data-section="levels">Levels</button>
+    <button class="nav-btn" data-section="methodology">Methodologies</button>
+    <button class="nav-btn" data-section="leadership">Leadership</button>
+    <button class="nav-btn" data-section="admin">Administration</button>
+    <button class="nav-btn" data-section="teachers">Teachers</button>
+    <button class="nav-btn" data-section="facilities">Facilities</button>
+  </nav>
+
+  <!-- Section: Story -->
+  <section class="about-section active" data-section="story">
     <div class="row align-items-center g-5">
       <div class="col-lg-7">
         <h3 class="font-bold text-dark mb-3" id="story-title">Our Story</h3>
@@ -43,17 +123,14 @@
         <div class="card bg-primary text-white border-0 p-4 shadow-sm">
           <div class="card-body text-center">
             <i class="fa-solid fa-quote-left mb-3" style="font-size:2rem;opacity:.5"></i>
-            <h5 class="font-bold mb-3" id="about-motto">"Excellence in Education, Success in Life."</h5>
+            <h5 class="font-bold mb-3" id="about-motto">"Excellence &bull; Innovation &bull; Leadership"</h5>
             <p class="small mb-0 opacity-75" id="about-motto-sub">Our guiding principle since establishment.</p>
           </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Vision & Mission -->
-  <section class="mb-5">
-    <div class="row g-4">
+    <div class="row g-4 mt-3">
       <div class="col-md-6">
         <div class="card border-0 p-4 shadow-sm h-100" style="border-left:4px solid #3b82f6 !important">
           <div class="d-flex align-items-start gap-3">
@@ -77,50 +154,128 @@
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- Core Values -->
-  <section class="mb-5">
-    <h3 class="text-center font-bold text-dark mb-4">Core Values</h3>
+    <h3 class="text-center font-bold text-dark mt-5 mb-4">Core Values</h3>
     <div class="row g-3" id="values-grid"></div>
   </section>
 
-  <!-- Principal's Message -->
-  <section class="mb-5">
+  <!-- Section: Principal -->
+  <section class="about-section" data-section="principal">
     <div class="card border-0 p-4 shadow-sm">
       <div class="row align-items-center g-4">
-        <div class="col-md-3 text-center">
-          <img src="https://ui-avatars.com/api/?name=Principal&background=1e3a8a&color=fff&size=150" alt="Principal" class="rounded-circle border shadow" style="width:140px;height:140px;object-fit:cover">
+        <div class="col-md-4 text-center">
+          <div style="background:#fff;border-radius:20px;padding:1rem;box-shadow:0 12px 40px rgba(0,0,0,0.15);max-width:280px;margin:0 auto;transition:transform 0.3s ease,box-shadow 0.3s ease" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 20px 60px rgba(0,0,0,0.2)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <div style="border-radius:14px;overflow:hidden;background:#f1f5f9">
+              <img src="IMAGES/WhatsApp Image 2025-12-22 at 11.27.40 AM.jpeg" alt="NSENGIYUMVA Emmanuel" style="width:100%;height:300px;object-fit:cover;display:block;transition:transform 0.4s ease" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform=''">
+            </div>
+            <div style="padding:1rem 0.5rem 0.5rem;text-align:center">
+              <h6 style="font-weight:700;color:#0f172a;margin-bottom:2px"><i class="fa-solid fa-certificate text-primary me-1"></i>NSENGIYUMVA Emmanuel</h6>
+              <small style="color:#64748b"><i class="fa-solid fa-gavel text-muted me-1"></i>Principal, HON-ACADEMY</small>
+            </div>
+          </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-8">
           <h4 class="font-bold text-dark mb-2"><i class="fa-solid fa-quote-left text-primary me-2"></i>Principal's Message</h4>
           <div id="principal-message" style="white-space:pre-line;line-height:1.8" class="text-muted"></div>
-          <p class="mt-3 font-bold text-primary mb-0" id="principal-name">The Principal, HON-ACADEMY</p>
+          <p class="mt-3 font-bold text-primary mb-0" id="principal-name">NSENGIYUMVA Emmanuel</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Educational Levels -->
-  <section class="mb-5">
+  <!-- Section: Levels -->
+  <section class="about-section" data-section="levels">
     <h3 class="text-center font-bold text-dark mb-4">Educational Levels</h3>
     <div class="row g-4" id="about-levels"></div>
   </section>
 
-  <!-- Teaching Methodology -->
-  <section class="mb-5">
-    <h3 class="text-center font-bold text-dark mb-4">Teaching Methodology</h3>
+  <!-- Section: Methodology -->
+  <section class="about-section" data-section="methodology">
+    <h3 class="text-center font-bold text-dark mb-4"><i class="fa-solid fa-chalkboard-user text-primary me-2"></i>21st-Century Teaching Methodologies</h3>
+    <p class="text-center text-muted mb-4" style="max-width:800px;margin:0 auto 1.5rem">Learner-centered approaches that help students develop critical thinking, creativity, communication, collaboration, digital literacy, and problem-solving skills.</p>
+
+    <!-- Methodology Cards -->
     <div class="row g-3" id="methodology-grid"></div>
+
+    <!-- Recommended for CBC -->
+    <div class="card border-0 bg-white p-4 shadow-sm rounded-4 mt-4">
+      <h5 class="font-bold text-dark mb-3"><i class="fa-solid fa-star text-warning me-2"></i>Most Important Methodologies for CBC in Rwanda</h5>
+      <div class="row g-2">
+        <div class="col-md-6"><ul class="list-unstyled mb-0" id="cbc-recommended-list"></ul></div>
+        <div class="col-md-6"><ul class="list-unstyled mb-0" id="cbc-recommended-list-2"></ul></div>
+      </div>
+    </div>
+
+    <!-- Example Lesson -->
+    <div class="card border-0 bg-white p-4 shadow-sm rounded-4 mt-4">
+      <h5 class="font-bold text-dark mb-3"><i class="fa-solid fa-flask text-success me-2"></i>Example Lesson: Primary Science (SET) — Materials That Float or Sink</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered table-sm align-middle mb-0">
+          <thead class="table-light"><tr><th style="width:20%">Stage</th><th style="width:20%">Methodology</th><th>Activity</th></tr></thead>
+          <tbody id="lesson-example-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Skills Developed -->
+    <div class="card border-0 bg-white p-4 shadow-sm rounded-4 mt-4">
+      <h5 class="font-bold text-dark mb-3"><i class="fa-solid fa-brain text-info me-2"></i>Skills Developed</h5>
+      <div class="row g-3" id="skills-grid"></div>
+    </div>
+
+    <!-- Exam Answer -->
+    <div class="card border-0 bg-white p-4 shadow-sm rounded-4 mt-4">
+      <h5 class="font-bold text-dark mb-3"><i class="fa-solid fa-pencil text-danger me-2"></i>Good Exam Answer</h5>
+      <div class="p-3 bg-light border rounded-3" id="exam-answer-box">
+        <p class="mb-0 text-muted" style="line-height:1.8">21st-century teaching methodologies are learner-centered approaches that promote active participation, critical thinking, collaboration, creativity, and the effective use of ICT. Examples include Inquiry-Based Learning, Problem-Based Learning, Project-Based Learning, Collaborative Learning, Flipped Classroom, Blended Learning, Differentiated Instruction, STEM/STEAM, ICT-Integrated Teaching, and the 5Es Model (Engage, Explore, Explain, Elaborate, Evaluate). These methodologies help learners develop competencies needed for the modern world and support the implementation of the Competence-Based Curriculum (CBC).</p>
+      </div>
+    </div>
+
+    <!-- Short List -->
+    <div class="card border-0 bg-white p-4 shadow-sm rounded-4 mt-4">
+      <h5 class="font-bold text-dark mb-3"><i class="fa-solid fa-list-check text-secondary me-2"></i>Short List to Memorize for Exams</h5>
+      <div class="row g-2" id="short-list-grid"></div>
+    </div>
   </section>
 
-  <!-- School Leadership -->
-  <section class="mb-5">
-    <h3 class="text-center font-bold text-dark mb-4">School Leadership</h3>
-    <div class="row g-4" id="leadership-grid"></div>
+  <!-- Section: Leadership -->
+  <section class="about-section" data-section="leadership">
+    <h3 class="text-center font-bold text-dark mb-4"><i class="fa-solid fa-sitemap text-primary me-2"></i>School Leadership Structure</h3>
+    <p class="text-center text-muted mb-4">Our experienced leadership team ensures effective management and a positive learning environment.</p>
+    <div class="org-tree" id="org-chart"></div>
   </section>
 
-  <!-- School Facilities -->
-  <section class="mb-5">
+  <!-- Section: Administration -->
+  <section class="about-section" data-section="admin">
+    <h3 class="text-center font-bold text-dark mb-2"><i class="fa-solid fa-user-tie text-primary me-2"></i>School Administration</h3>
+    <p class="text-center text-muted mb-4">Our dedicated administrative team ensures smooth school operations.</p>
+    <div class="row g-4" id="admin-staff-grid"></div>
+  </section>
+
+  <!-- Section: Teachers -->
+  <section class="about-section" data-section="teachers">
+    <h3 class="text-center font-bold text-dark mb-2"><i class="fa-solid fa-chalkboard-user text-success me-2"></i>Our Teachers</h3>
+    <p class="text-center text-muted mb-4">Meet our qualified and experienced teaching staff.</p>
+    <div class="d-flex flex-wrap gap-2 justify-content-center mb-4" id="teacher-level-tabs">
+      <button class="btn btn-sm rounded-pill px-3 level-filter active" data-level="all" style="background:#1e3a8a;color:#fff;border:none;font-weight:600">All</button>
+      <button class="btn btn-sm rounded-pill px-3 level-filter" data-level="Nursery" style="background:#e2e8f0;color:#475569;border:none;font-weight:600">Nursery</button>
+      <button class="btn btn-sm rounded-pill px-3 level-filter" data-level="Primary" style="background:#e2e8f0;color:#475569;border:none;font-weight:600">Primary</button>
+      <button class="btn btn-sm rounded-pill px-3 level-filter" data-level="Secondary" style="background:#e2e8f0;color:#475569;border:none;font-weight:600">Secondary</button>
+    </div>
+    <div class="row mb-3">
+      <div class="col-md-6 mx-auto">
+        <div class="input-group">
+          <span class="input-group-text bg-white border-end-0"><i class="fa-solid fa-search text-muted"></i></span>
+          <input type="text" class="form-control border-start-0 ps-0" id="teacher-search" placeholder="Search by name, subject, or specialization..." style="font-size:.9rem">
+        </div>
+      </div>
+    </div>
+    <div class="row g-4" id="teachers-grid"></div>
+    <div id="teachers-empty" class="text-center py-5 d-none"><i class="fa-solid fa-users-slash fs-1 text-muted mb-3 d-block"></i><p class="text-muted">No teachers found matching your criteria.</p></div>
+  </section>
+
+  <!-- Section: Facilities -->
+  <section class="about-section" data-section="facilities">
     <h3 class="text-center font-bold text-dark mb-4">Our Facilities</h3>
     <div class="row g-4">
       <div class="col-md-6">
@@ -138,6 +293,8 @@
     </div>
   </section>
 
+  </section>
+
   <!-- CTA -->
   <section class="text-center p-5 bg-primary text-white rounded-4">
     <h3 class="font-bold mb-3">Join Our Growing Family</h3>
@@ -153,6 +310,9 @@
 <footer class="site-footer"></footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/data.js"></script>
+<script src="js/rbac.js"></script>
+<script src="js/assessments.js"></script>
+<script src="js/db-extension.js"></script>
 <script src="js/components.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -191,17 +351,167 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('about-levels').innerHTML = levels.map(l => '<div class="col-sm-6"><div class="level-card"><div class="d-flex align-items-center gap-3 mb-2"><div class="rounded-3 d-flex align-items-center justify-content-center" style="width:44px;height:44px;background:'+l.color+'15;color:'+l.color+'"><i class="fa-solid '+l.icon+' fs-5"></i></div><h6 class="font-bold mb-0">'+l.title+'</h6></div><p class="small text-muted mb-0">'+l.desc+'</p></div></div>').join('');
 
   // Teaching Methodology
-  const methods = school.teachingMethodology || ['Student-Centered Learning','Inquiry-Based Learning','Project-Based Learning','Practical Experiments','ICT Integration','Continuous Assessment'];
-  const methIcons = ['fa-user-graduate','fa-magnifying-glass','fa-diagram-project','fa-flask','fa-laptop','fa-clipboard-check'];
-  document.getElementById('methodology-grid').innerHTML = methods.map((m,i) => '<div class="col-sm-6 col-lg-4"><div class="d-flex align-items-center gap-3 p-3 bg-white border rounded-3 shadow-sm h-100"><div class="bg-primary bg-opacity-10 text-primary rounded-3 d-flex align-items-center justify-content-center" style="width:44px;height:44px;flex-shrink:0"><i class="fa-solid '+(methIcons[i%methIcons.length])+'"></i></div><span class="font-bold small">'+m+'</span></div></div>').join('');
+  const allMethods = [
+    {name:'Learner-Centered Learning',desc:'Students actively participate while the teacher becomes a facilitator.',icon:'fa-user-graduate',clr:'#1e3a8a',bg:'#e0e7ff'},
+    {name:'Inquiry-Based Learning',desc:'Students investigate questions, explore ideas, and discover answers.',icon:'fa-magnifying-glass',clr:'#059669',bg:'#d1fae5'},
+    {name:'Problem-Based Learning',desc:'Students solve real-life problems in groups.',icon:'fa-triangle-exclamation',clr:'#dc2626',bg:'#fee2e2'},
+    {name:'Project-Based Learning',desc:'Students create a product, model, report, or presentation over time.',icon:'fa-diagram-project',clr:'#7c3aed',bg:'#ede9fe'},
+    {name:'Collaborative Learning',desc:'Students work together to achieve a common goal.',icon:'fa-people-group',clr:'#f59e0b',bg:'#fef3c7'},
+    {name:'Cooperative Learning',desc:'Structured group work where every learner has a specific role.',icon:'fa-handshake',clr:'#0891b2',bg:'#cffafe'},
+    {name:'Flipped Classroom',desc:'Students study content before class; class time for practice and discussion.',icon:'fa-arrows-rotate',clr:'#d97706',bg:'#fef3c7'},
+    {name:'Blended Learning',desc:'Combines face-to-face teaching with online learning.',icon:'fa-laptop',clr:'#6366f1',bg:'#e0e7ff'},
+    {name:'Differentiated Instruction',desc:'Teaching adjusted according to learners\u2019 abilities and needs.',icon:'fa-layer-group',clr:'#ec4899',bg:'#fce7f3'},
+    {name:'Personalized Learning',desc:'Each learner progresses at an appropriate pace and pathway.',icon:'fa-user-gear',clr:'#14b8a6',bg:'#ccfbf1'},
+    {name:'Competency-Based Learning',desc:'Focuses on mastering skills and competencies.',icon:'fa-clipboard-check',clr:'#1d4ed8',bg:'#dbeafe'},
+    {name:'Experiential Learning',desc:'Learning through direct experience, experiments, and practical activities.',icon:'fa-flask',clr:'#0d9488',bg:'#d1fae5'},
+    {name:'Discovery Learning',desc:'Students discover concepts themselves through guided exploration.',icon:'fa-compass',clr:'#9333ea',bg:'#f3e8ff'},
+    {name:'Gamification / Game-Based Learning',desc:'Uses games, points, badges, and challenges to increase engagement.',icon:'fa-gamepad',clr:'#e11d48',bg:'#ffe4e6'},
+    {name:'STEM / STEAM Approach',desc:'Integrates Science, Technology, Engineering, Arts, and Mathematics.',icon:'fa-microchip',clr:'#2563eb',bg:'#dbeafe'},
+    {name:'Design Thinking',desc:'Empathize, define, ideate, prototype, and test solutions.',icon:'fa-pen-ruler',clr:'#ca8a04',bg:'#fefce8'},
+    {name:'5Es Instructional Model',desc:'Engage \u2192 Explore \u2192 Explain \u2192 Elaborate \u2192 Evaluate',icon:'fa-list-ol',clr:'#16a34a',bg:'#dcfce7'},
+    {name:'ICT-Integrated Teaching',desc:'Uses digital tools: simulations, videos, Google Classroom, interactive platforms.',icon:'fa-computer',clr:'#4f46e5',bg:'#eef2ff'},
+    {name:'Universal Design for Learning (UDL)',desc:'Multiple ways of engagement, representation, and expression for all learners.',icon:'fa-universal-access',clr:'#0891b2',bg:'#ecfeff'},
+    {name:'Reflective Learning',desc:'Students think about what they learned and how to improve.',icon:'fa-rotate-left',clr:'#be185d',bg:'#fdf2f8'}
+  ];
+  document.getElementById('methodology-grid').innerHTML = allMethods.map(m => '<div class="col-sm-6 col-lg-4 col-xl-3"><div class="card border-0 h-100 p-3" style="border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,0.06);transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform=\'translateY(-3px)\';this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.1)\'" onmouseout="this.style.transform=\'\';this.style.boxShadow=\'\'"><div class="d-flex align-items-center gap-3 mb-2"><div style="width:40px;height:40px;border-radius:12px;background:'+m.bg+';display:flex;align-items:center;justify-content:center;color:'+m.clr+';flex-shrink:0"><i class="fa-solid '+m.icon+'"></i></div><h6 class="mb-0 font-bold" style="font-size:.9rem;color:#0f172a">'+m.name+'</h6></div><p class="text-muted mb-0" style="font-size:.8rem;line-height:1.5">'+m.desc+'</p></div></div>').join('');
 
-  // Leadership
-  const leaderGrid = document.getElementById('leadership-grid');
-  if (leadership.length) {
-    leaderGrid.innerHTML = leadership.map(l => '<div class="col-sm-6 col-lg-3"><div class="card border-0 text-center p-4 shadow-sm h-100"><img src="'+(l.avatar||'https://ui-avatars.com/api/?name='+encodeURIComponent(l.name)+'&background=1e3a8a&color=fff')+'" alt="'+l.name+'" class="rounded-circle mb-3 border" style="width:90px;height:90px;object-fit:cover"><h6 class="font-bold mb-1">'+l.name+'</h6><p class="small text-primary mb-1">'+l.title+'</p><p class="small text-muted mb-0">'+(l.bio||'')+'</p></div></div>').join('');
-  } else {
-    leaderGrid.innerHTML = '<div class="col-12 text-center text-muted p-4"><i class="fa-solid fa-users fs-2 mb-2 d-block"></i><p>Leadership information will be available soon.</p></div>';
-  }
+  // CBC Recommended
+  const cbcRecs = ['Learner-Centered Learning','Inquiry-Based Learning','Problem-Based Learning','Collaborative Learning','Project-Based Learning','5Es Model','Differentiated Instruction','ICT Integration','STEM/STEAM','UDL (Universal Design for Learning)'];
+  document.getElementById('cbc-recommended-list').innerHTML = cbcRecs.slice(0,5).map(r => '<li class="mb-2"><i class="fa-solid fa-circle-check text-success me-2"></i><span class="fw-semibold">'+r+'</span></li>').join('');
+  document.getElementById('cbc-recommended-list-2').innerHTML = cbcRecs.slice(5).map(r => '<li class="mb-2"><i class="fa-solid fa-circle-check text-success me-2"></i><span class="fw-semibold">'+r+'</span></li>').join('');
+
+  // Lesson Example
+  const lessonSteps = [
+    {stage:'Engage',method:'Inquiry-Based Learning',activity:'Ask: Why do some objects float while others sink?'},
+    {stage:'Explore',method:'Experiential Learning',activity:'Learners test stones, wood, leaves, and plastic in water.'},
+    {stage:'Explain',method:'Collaborative Learning',activity:'Groups discuss their observations.'},
+    {stage:'Elaborate',method:'Problem-Based Learning',activity:'Challenge: Design a small boat that can carry five bottle tops.'},
+    {stage:'Evaluate',method:'Competency-Based Assessment',activity:'Learners demonstrate and explain their boat design.'}
+  ];
+  document.getElementById('lesson-example-body').innerHTML = lessonSteps.map(s => '<tr><td class="fw-bold">'+s.stage+'</td><td>'+s.method+'</td><td>'+s.activity+'</td></tr>').join('');
+
+  // Skills
+  const skills = [
+    {name:'Critical Thinking',desc:'Analyze information and make reasoned decisions.',icon:'fa-brain',clr:'#7c3aed',bg:'#ede9fe'},
+    {name:'Creativity',desc:'Generate new ideas and innovative solutions.',icon:'fa-lightbulb',clr:'#f59e0b',bg:'#fef3c7'},
+    {name:'Communication',desc:'Express ideas clearly through speaking and writing.',icon:'fa-comments',clr:'#2563eb',bg:'#dbeafe'},
+    {name:'Collaboration',desc:'Work effectively with others toward a shared goal.',icon:'fa-people-group',clr:'#059669',bg:'#d1fae5'},
+    {name:'Digital Literacy',desc:'Use technology responsibly and effectively.',icon:'fa-laptop-code',clr:'#dc2626',bg:'#fee2e2'},
+    {name:'Problem Solving',desc:'Identify challenges and develop practical solutions.',icon:'fa-puzzle-piece',clr:'#0891b2',bg:'#cffafe'},
+    {name:'Self-Management',desc:'Plan, organize, and take responsibility for learning.',icon:'fa-clock',clr:'#d97706',bg:'#fef3c7'},
+    {name:'Lifelong Learning',desc:'Continue learning and adapting throughout life.',icon:'fa-infinity',clr:'#6366f1',bg:'#e0e7ff'}
+  ];
+  document.getElementById('skills-grid').innerHTML = skills.map(s => '<div class="col-sm-6 col-lg-3"><div class="d-flex align-items-start gap-3 p-3 bg-white border rounded-3 h-100 shadow-sm"><div style="width:40px;height:40px;border-radius:10px;background:'+s.bg+';display:flex;align-items:center;justify-content:center;color:'+s.clr+';flex-shrink:0"><i class="fa-solid '+s.icon+'"></i></div><div><h6 class="font-bold mb-1 small">'+s.name+'</h6><p class="text-muted mb-0" style="font-size:.8rem">'+s.desc+'</p></div></div></div>').join('');
+
+  // Short List
+  const shortList = ['Learner-Centered Learning','Inquiry-Based Learning','Problem-Based Learning','Project-Based Learning','Collaborative Learning','Blended Learning','Differentiated Instruction','STEM/STEAM Approach','ICT-Integrated Teaching','5Es Instructional Model'];
+  document.getElementById('short-list-grid').innerHTML = shortList.map((s,i) => '<div class="col-sm-6 col-md-4 col-lg-3"><div class="d-flex align-items-center gap-2 p-2 bg-white border rounded-3 h-100"><div style="width:28px;height:28px;border-radius:8px;background:#1e3a8a;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;font-size:12px;font-weight:700">'+(i+1)+'</div><span class="small fw-semibold">'+s+'</span></div></div>').join('');
+
+  // Leadership Org Chart
+  document.getElementById('org-chart').innerHTML =
+
+    /* ── Level 1: Principal ── */
+    '<div class="org-card principal"><div class="name">HEAD TEACHER / PRINCIPAL</div><div class="title">Mr. Emmanuel Nsengiyumva</div></div>' +
+
+    '<div class="org-vline"></div>' +
+
+    /* ── Level 2: 4 Deputies + Bursar ── */
+    '<div class="org-tconn triple"></div>' +
+    '<div class="org-nwrap" style="gap:24px">' +
+
+      /* Deputy Primary */
+      '<div class="org-leaf">' +
+        '<div class="org-mini deputy"><div class="name">Deputy Head Teacher</div><div class="title">Primary \u2013 In Charge of Studies</div></div>' +
+        '<div class="org-vline" style="height:16px"></div>' +
+        '<div class="org-tconn narrow"></div>' +
+        '<div class="org-nwrap tight">' +
+          '<div class="org-mini dos"><div class="name">Director of Studies</div><div class="title">Primary</div></div>' +
+        '</div>' +
+      '</div>' +
+
+      /* Deputy Secondary */
+      '<div class="org-leaf">' +
+        '<div class="org-mini deputy"><div class="name">Deputy Head Teacher</div><div class="title">Secondary \u2013 In Charge of Studies</div></div>' +
+        '<div class="org-vline" style="height:16px"></div>' +
+        '<div class="org-tconn narrow"></div>' +
+        '<div class="org-nwrap tight">' +
+          '<div class="org-mini dos"><div class="name">Director of Studies</div><div class="title">Secondary</div></div>' +
+        '</div>' +
+      '</div>' +
+
+      /* Deputy Admin */
+      '<div class="org-leaf">' +
+        '<div class="org-mini deputy"><div class="name">Deputy Head Teacher</div><div class="title">Administration</div></div>' +
+        '<div class="org-vline" style="height:16px"></div>' +
+        '<div class="org-tconn narrow"></div>' +
+        '<div class="org-nwrap tight">' +
+          '<div class="org-mini hr" style="min-width:110px"><div class="name">Human Resource Officer</div><div class="title">HR &amp; Staff Affairs</div></div>' +
+          '<div class="org-mini ict" style="min-width:110px"><div class="name">ICT Coordinator</div><div class="title">Digital Systems</div></div>' +
+          '<div class="org-mini secretary" style="min-width:110px"><div class="name">School Secretary</div><div class="title">Administrative Support</div></div>' +
+        '</div>' +
+      '</div>' +
+
+      /* Bursar */
+      '<div class="org-leaf">' +
+        '<div class="org-mini bursar"><div class="name">School Bursar</div><div class="title">Finance Manager</div></div>' +
+      '</div>' +
+
+    '</div>' +
+
+    '<div class="org-vline"></div>' +
+
+    /* ── Level 3: Student Welfare (under all deputies) ── */
+    '<div class="org-tconn" style="margin-bottom:6px"></div>' +
+    '<div class="org-nwrap" style="gap:16px">' +
+      '<div class="org-mini dod" style="min-width:140px"><div class="name">Director of Discipline</div><div class="title">Student Conduct</div></div>' +
+      '<div class="org-mini guidance" style="min-width:140px"><div class="name">Guidance &amp; Counselling</div><div class="title">Coordinator</div></div>' +
+    '</div>' +
+
+    '<div class="org-vline"></div>' +
+
+    /* ── Level 4: HODs ── */
+    '<div style="text-align:center;margin:8px 0 4px"><span class="org-section-label"><i class="fa-solid fa-chalkboard me-1"></i>Heads of Departments (HODs)</span></div>' +
+    '<div class="org-tconn"></div>' +
+    '<div class="org-children tight" style="max-width:800px">' +
+      '<div class="org-mini hod"><div class="name">Mathematics</div><div class="title">Head of Department</div></div>' +
+      '<div class="org-mini hod"><div class="name">Science</div><div class="title">Head of Department</div></div>' +
+      '<div class="org-mini hod"><div class="name">Languages</div><div class="title">Head of Department</div></div>' +
+      '<div class="org-mini hod"><div class="name">Social Studies</div><div class="title">Head of Department</div></div>' +
+      '<div class="org-mini hod"><div class="name">ICT</div><div class="title">Head of Department</div></div>' +
+      '<div class="org-mini hod"><div class="name">Creative Arts</div><div class="title">Head of Department</div></div>' +
+      '<div class="org-mini hod"><div class="name">Physical Education</div><div class="title">Head of Department</div></div>' +
+      '<div class="org-mini hod"><div class="name">Early Childhood Ed.</div><div class="title">Head of Department</div></div>' +
+    '</div>' +
+
+    '<div class="org-vline"></div>' +
+
+    /* ── Level 5: Teachers ── */
+    '<div class="org-tconn narrow"></div>' +
+    '<div class="org-nwrap tight">' +
+      '<div class="org-mini bottom" style="min-width:140px"><div class="name">Subject Teachers</div><div class="title">Specialist Educators</div></div>' +
+      '<div class="org-mini bottom" style="min-width:140px"><div class="name">Class Teachers</div><div class="title">Homeroom Educators</div></div>' +
+    '</div>' +
+
+    '<div class="org-vline"></div>' +
+
+    /* ── Level 6: Student Leadership ── */
+    '<div style="text-align:center;margin:8px 0 4px"><span class="org-section-label"><i class="fa-solid fa-users me-1"></i>Student Leadership</span></div>' +
+    '<div class="org-tconn"></div>' +
+    '<div class="org-children tight" style="max-width:750px">' +
+      '<div class="org-mini pref"><div class="name">Head Prefect</div><div class="title">Student Leader</div></div>' +
+      '<div class="org-mini pref"><div class="name">Deputy Head Prefect</div><div class="title">Assistant Leader</div></div>' +
+      '<div class="org-mini pref"><div class="name">Academic Prefect</div><div class="title">Studies Oversight</div></div>' +
+      '<div class="org-mini pref"><div class="name">Discipline Prefect</div><div class="title">Student Conduct</div></div>' +
+      '<div class="org-mini pref"><div class="name">Health Prefect</div><div class="title">Wellness &amp; Hygiene</div></div>' +
+      '<div class="org-mini pref"><div class="name">Environment Prefect</div><div class="title">Green Campus</div></div>' +
+      '<div class="org-mini pref"><div class="name">Sports Prefect</div><div class="title">Athletics &amp; Games</div></div>' +
+      '<div class="org-mini pref"><div class="name">ICT Prefect</div><div class="title">Digital Support</div></div>' +
+    '</div>' +
+
+    '<div class="org-vline"></div>' +
+
+    /* ── Level 7: All Students ── */
+    '<div class="org-allstudents"><div class="name"><i class="fa-solid fa-school me-2"></i>ALL STUDENTS</div><div class="title">Active participation in learning, leadership, discipline, innovation, collaboration, and community service to achieve academic excellence and holistic development.</div></div>';
 
   // Facilities
   const facList = document.getElementById('facilities-list');
@@ -212,6 +522,78 @@ document.addEventListener("DOMContentLoaded", () => {
   const progList = document.getElementById('programs-list');
   const progs = ['Primary Education','Lower Secondary Education','Upper Secondary Education','TVET Programmes','ICT & Digital Literacy','STEM Education','Entrepreneurship Education','Leadership Development'];
   progList.innerHTML = progs.map(p => '<div class="facility-item"><i class="fa-solid fa-book"></i><span>'+p+'</span></div>').join('');
+
+  // Administration Staff
+  const adminStaff = window.db.getAdminStaff();
+  const adminGrid = document.getElementById('admin-staff-grid');
+  if (adminGrid) {
+    adminGrid.innerHTML = adminStaff.length ? adminStaff.map(a => {
+      const avatar = a.avatarUrl || 'https://ui-avatars.com/api/?name='+encodeURIComponent(a.name)+'&background=1e3a8a&color=fff&size=150';
+      const bio = a.bio ? '<p class="small text-muted mb-3" style="line-height:1.5;font-size:.78rem">'+a.bio+'</p>' : '';
+      return '<div class="col-sm-6 col-lg-4"><div class="card border-0 h-100 p-3 shadow-sm" style="border-radius:14px;border-top:4px solid #1e3a8a;transition:transform 0.2s,box-shadow 0.2s" onmouseover="this.style.transform=\'translateY(-3px)\';this.style.boxShadow=\'0 8px 24px rgba(0,0,0,0.1)\'" onmouseout="this.style.transform=\'\';this.style.boxShadow=\'\'"><div class="text-center mb-3"><img src="'+avatar+'" alt="'+a.name+'" class="rounded-circle border shadow-sm" style="width:80px;height:80px;object-fit:cover"></div><h6 class="font-bold text-center mb-0" style="font-size:.95rem">'+a.name+'</h6><p class="text-center small fw-semibold mb-2" style="color:#1e3a8a">'+(a.subjectSpecialty||'Administrator')+'</p>'+bio+'<div class="small text-muted d-flex flex-column gap-2 border-top pt-3"><span><i class="fa-solid fa-graduation-cap me-2" style="width:16px;color:#1e3a8a"></i>'+(a.qualification||'N/A')+'</span><span><i class="fa-solid fa-microscope me-2" style="width:16px;color:#1e3a8a"></i>'+(a.specialization||'N/A')+'</span><span><i class="fa-solid fa-clock me-2" style="width:16px;color:#1e3a8a"></i>'+(a.experience||0)+' years experience</span><span><i class="fa-solid fa-phone me-2" style="width:16px;color:#1e3a8a"></i>'+(a.phone||'N/A')+'</span><span><i class="fa-solid fa-envelope me-2" style="width:16px;color:#1e3a8a"></i>'+a.email+'</span></div></div></div>';
+    }).join('') : '<div class="col-12 text-center text-muted py-5"><i class="fa-solid fa-user-tie fs-1 d-block mb-3"></i><p>No administration staff records found.</p></div>';
+  }
+
+  // Teachers
+  const teachersGrid = document.getElementById('teachers-grid');
+  const teachersEmpty = document.getElementById('teachers-empty');
+  let allTeachers = [];
+
+  function renderTeachers(level, query) {
+    const t = window.db.getTeachersWithProfiles();
+    let filtered = level === 'all' ? t : t.filter(te => (te.teachingLevel||'').toLowerCase() === level.toLowerCase());
+    if (query) {
+      const q = query.toLowerCase();
+      filtered = filtered.filter(te => te.name.toLowerCase().includes(q) || (te.specialization||'').toLowerCase().includes(q) || te.subjects.some(s => s.toLowerCase().includes(q)));
+    }
+    allTeachers = t;
+    if (filtered.length) {
+      teachersGrid.classList.remove('d-none');
+      teachersEmpty.classList.add('d-none');
+      teachersGrid.innerHTML = filtered.map(te => {
+        const avatar = te.avatarUrl || 'https://ui-avatars.com/api/?name='+encodeURIComponent(te.name)+'&background=10b981&color=fff&size=150';
+        const lvlColor = te.teachingLevel==='Nursery'?'#ec4899':te.teachingLevel==='Primary'?'#10b981':'#3b82f6';
+        return '<div class="col-sm-6 col-lg-4 col-xl-3"><div class="card border-0 h-100 p-3 shadow-sm" style="border-radius:14px;border-top:4px solid '+lvlColor+'"><div class="text-center mb-3"><img src="'+avatar+'" alt="'+te.name+'" class="rounded-circle border shadow-sm" style="width:72px;height:72px;object-fit:cover"><span class="badge mt-2" style="background:'+lvlColor+'">'+(te.teachingLevel||'Staff')+'</span></div><h6 class="font-bold text-center mb-0" style="font-size:.9rem">'+te.name+'</h6><p class="text-center small fw-semibold mb-2" style="color:'+lvlColor+'">'+(te.subjectSpecialty||'Teacher')+'</p><div class="small text-muted d-flex flex-column gap-1 border-top pt-2"><span><i class="fa-solid fa-microscope me-2" style="width:14px;color:'+lvlColor+'"></i>'+(te.specialization||'N/A')+'</span><span><i class="fa-solid fa-book-open me-2" style="width:14px;color:'+lvlColor+'"></i>'+(te.subjects.length?te.subjects.join(', '):'N/A')+'</span><span><i class="fa-solid fa-graduation-cap me-2" style="width:14px;color:'+lvlColor+'"></i>'+(te.qualification||'N/A')+'</span><span><i class="fa-solid fa-clock me-2" style="width:14px;color:'+lvlColor+'"></i>'+(te.experience||0)+' yrs</span><span><i class="fa-solid fa-phone me-2" style="width:14px;color:'+lvlColor+'"></i>'+(te.phone||'N/A')+'</span><span><i class="fa-solid fa-envelope me-2" style="width:14px;color:'+lvlColor+'"></i>'+te.email+'</span></div></div></div>';
+      }).join('');
+    } else {
+      teachersGrid.innerHTML = '';
+      teachersEmpty.classList.remove('d-none');
+    }
+  }
+
+  renderTeachers('all', '');
+
+  // Level filter buttons
+  document.querySelectorAll('.level-filter').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.level-filter').forEach(b => { b.style.background='#e2e8f0';b.style.color='#475569';b.classList.remove('active'); });
+      this.style.background='#1e3a8a'; this.style.color='#fff'; this.classList.add('active');
+      this.style.background='#1e3a8a'; this.style.color='#fff';
+      const q = document.getElementById('teacher-search').value;
+      renderTeachers(this.dataset.level, q);
+    });
+  });
+
+  // Search
+  const searchInput = document.getElementById('teacher-search');
+  if (searchInput) {
+    searchInput.addEventListener('input', function() {
+      const activeLevel = document.querySelector('.level-filter.active')?.dataset?.level || 'all';
+      renderTeachers(activeLevel, this.value);
+    });
+  }
+
+  // Sub-nav tab switching
+  document.querySelectorAll('.about-subnav .nav-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.about-subnav .nav-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      document.querySelectorAll('.about-section').forEach(s => s.classList.remove('active'));
+      const target = document.querySelector('.about-section[data-section="' + this.dataset.section + '"]');
+      if (target) target.classList.add('active');
+      window.scrollTo({top: document.querySelector('.about-subnav').offsetTop - 80, behavior: 'smooth'});
+    });
+  });
 });
 </script>
 </body>

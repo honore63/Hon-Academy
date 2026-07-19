@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Library - HON-ACADEMY</title>
+<meta name="description" content="Browse, preview, and download teaching and learning resources across all subjects, levels, and classes.">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--brand:#1a3c7b;--brand-2:#15803d;--brand-light:#eef3fb;--ink:#1e293b;--muted:#64748b;--line:#e7ecf3}
+body{font-family:'Inter',sans-serif;color:var(--ink);background:#f8fafc}
+h1,h2,h3,h4,h5,h6,.font-bold{font-family:'Poppins',sans-serif}
+.dl-hero{background:linear-gradient(135deg,#0f1f47 0%,#1a3c7b 55%,#15803d 130%);padding:56px 24px 40px;position:relative;overflow:hidden}
+.dl-hero::after{content:'';position:absolute;right:-80px;top:-80px;width:300px;height:300px;border-radius:50%;background:rgba(255,255,255,.05)}
+.dl-hero h1{font-weight:800;font-size:2rem;color:#fff;margin-bottom:6px}
+.dl-hero p{color:rgba(255,255,255,.75);max-width:640px;margin:0 auto 20px}
+.dl-hero .search-wrap{max-width:580px;margin:0 auto;position:relative}
+.dl-hero .search-wrap input{width:100%;padding:13px 20px 13px 46px;border-radius:60px;border:none;font-size:15px;background:rgba(255,255,255,.95);box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.dl-hero .search-wrap input:focus{outline:none;box-shadow:0 8px 32px rgba(0,0,0,.2)}
+.dl-hero .search-wrap i{position:absolute;left:18px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:16px}
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:24px auto;max-width:1280px;padding:0 20px}
+.stat-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;text-align:center;transition:.2s}
+.stat-card:hover{box-shadow:0 4px 12px rgba(26,60,123,.08);border-color:#c7d6ee}
+.stat-card .num{font-family:'Poppins';font-weight:800;font-size:1.5rem;color:var(--brand);line-height:1}
+.stat-card .lbl{font-size:.72rem;color:var(--muted);margin-top:4px;font-weight:500}
+.filter-bar{background:#fff;border:1px solid var(--line);border-radius:1rem;padding:16px 20px;margin:0 auto 24px;max-width:1280px}
+.filter-bar .row{gap:10px 0}
+.filter-bar select,.filter-bar input{width:100%;padding:8px 12px;border:1.5px solid var(--line);border-radius:10px;font-size:.82rem;color:#334155;background:#fff}
+.filter-bar select:focus,.filter-bar input:focus{outline:none;border-color:var(--brand);box-shadow:0 0 0 3px rgba(26,60,123,.1)}
+.filter-bar label{font-size:.72rem;font-weight:600;color:var(--muted);margin-bottom:2px;display:block}
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;max-width:1280px;margin:0 auto;padding:0 20px 40px}
+.res-card{background:#fff;border:1px solid var(--line);border-radius:1rem;overflow:hidden;transition:all .25s;display:flex;flex-direction:column}
+.res-card:hover{border-color:#93c5fd;box-shadow:0 8px 25px rgba(59,130,246,.1);transform:translateY(-3px)}
+.res-card .rc-thumb{height:120px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;background:linear-gradient(135deg,#f1f5f9,#e2e8f0)}
+.res-card .rc-thumb .rc-type-badge{position:absolute;top:10px;right:10px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;background:rgba(0,0,0,.6);color:#fff;backdrop-filter:blur(4px);z-index:2}
+.res-card .rc-thumb .rc-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.res-card .rc-body{padding:14px 16px 12px;flex:1;display:flex;flex-direction:column}
+.res-card .rc-body h6{font-size:.92rem;font-weight:700;margin:0 0 4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.res-card .rc-body .rc-desc{font-size:.78rem;color:var(--muted);margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.5;flex:1}
+.res-card .rc-meta{display:flex;flex-wrap:wrap;gap:4px 8px;margin-bottom:8px}
+.res-card .rc-meta span{font-size:.7rem;color:#94a3b8;display:flex;align-items:center;gap:3px}
+.res-card .rc-footer{display:flex;gap:6px;padding:8px 16px 14px;border-top:1px solid #f1f5f9}
+.res-card .rc-footer button,.res-card .rc-footer a{flex:1;padding:7px 0;border-radius:8px;font-size:.78rem;font-weight:600;border:1px solid var(--line);cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;justify-content:center;gap:5px;text-decoration:none;color:#334155;background:#fff}
+.res-card .rc-footer .btn-preview:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
+.res-card .rc-footer .btn-download:hover{background:var(--brand-2);color:#fff;border-color:var(--brand-2)}
+.rc-level-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:.65rem;font-weight:700;text-transform:uppercase}
+.empty-state{padding:4rem 1rem;text-align:center;color:var(--muted)}
+.empty-state i{font-size:2.5rem;display:block;margin-bottom:.6rem;color:#cbd5e1}
+.pagination-wrap{display:flex;justify-content:center;gap:6px;padding:0 20px 40px}
+.pagination-wrap .page-btn{padding:8px 14px;border:1px solid var(--line);border-radius:8px;background:#fff;cursor:pointer;font-size:.82rem;font-weight:600;color:#334155;transition:.2s}
+.pagination-wrap .page-btn:hover{background:var(--brand);color:#fff;border-color:var(--brand)}
+.pagination-wrap .page-btn.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+.pagination-wrap .page-btn:disabled{opacity:.5;cursor:not-allowed}
+@media(max-width:768px){.dl-hero{padding:36px 16px 32px}.dl-hero h1{font-size:1.5rem}.resource-grid{grid-template-columns:1fr}.stats-row{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header class="site-header"></header>
+
+<section class="dl-hero text-center">
+  <div class="container">
+    <h1><i class="fa-solid fa-book-open me-2"></i>Digital Library</h1>
+    <p>Browse, preview, and download teaching and learning resources across all subjects, levels, and classes.</p>
+    <div style="position:absolute;top:20px;right:24px" id="dl-manage-link">
+      <a href="resources-management.html" class="btn btn-sm btn-light rounded-pill px-3 fw-semibold"><i class="fa-solid fa-gear me-1"></i>Manage</a>
+    </div>
+    <div class="search-wrap">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="dl-search" placeholder="Search by title, subject, description, keywords..." oninput="DL.search()">
+    </div>
+  </div>
+</section>
+
+<div class="stats-row" id="dl-stats"></div>
+
+<div class="filter-bar" id="dl-filters">
+  <div class="row g-2 align-items-end">
+    <div class="col-6 col-md-3 col-lg">
+      <label>Level</label>
+      <select id="f-level" onchange="DL.search()"><option value="">All Levels</option></select>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <label>Class</label>
+      <select id="f-class" onchange="DL.search()"><option value="">All Classes</option></select>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <label>Subject</label>
+      <select id="f-subject" onchange="DL.search()"><option value="">All Subjects</option></select>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <label>Category</label>
+      <select id="f-category" onchange="DL.search()"><option value="">All Categories</option></select>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <label>File Type</label>
+      <select id="f-type" onchange="DL.search()"><option value="">All Types</option></select>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <label>Academic Year</label>
+      <select id="f-year" onchange="DL.search()"><option value="">All Years</option></select>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <label>Term</label>
+      <select id="f-term" onchange="DL.search()"><option value="">All Terms</option></select>
+    </div>
+    <div class="col-6 col-md-3 col-lg">
+      <label>Sort By</label>
+      <select id="f-sort" onchange="DL.search()">
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="downloads">Most Downloaded</option>
+        <option value="views">Most Viewed</option>
+        <option value="alpha">A-Z</option>
+        <option value="size">File Size</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div id="dl-content">
+  <div class="text-center py-5"><div class="spinner-border text-primary" role="status"></div><p class="text-muted mt-2">Loading resources...</p></div>
+</div>
+
+<div class="pagination-wrap" id="dl-pagination"></div>
+
+<footer class="site-footer"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/rbac.js"></script>
+<script src="js/db-extension.js"></script>
+<script src="js/components.js"></script>
+<script>
+(function() {
+  'use strict';
+  var PER_PAGE = 12;
+  var currentPage = 1;
+  var allResources = [];
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return String(s||'').replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+
+  function formatSize(s) {
+    if (!s) return '';
+    var n = parseFloat(s);
+    if (isNaN(n)) return s;
+    if (n >= 1024) return (n/1024).toFixed(1) + ' GB';
+    return n.toFixed(0) + ' MB';
+  }
+
+  function fileIcon(ft) {
+    var map = {pdf:'fa-file-pdf text-danger',ppt:'fa-file-powerpoint text-warning',pptx:'fa-file-powerpoint text-warning',doc:'fa-file-word text-primary',docx:'fa-file-word text-primary',xls:'fa-file-excel text-success',xlsx:'fa-file-excel text-success',mp4:'fa-video text-info',mp3:'fa-music text-purple',zip:'fa-file-zipper text-secondary',jpg:'fa-image',jpeg:'fa-image',png:'fa-image',gif:'fa-image',txt:'fa-file-lines text-muted'};
+    return map[ft] || 'fa-file text-secondary';
+  }
+
+  function thumbBg(ft) {
+    var map = {pdf:'#fde8ec',ppt:'#fff3e0',pptx:'#fff3e0',doc:'#e3f0fd',docx:'#e3f0fd',xls:'#e6f7e6',xlsx:'#e6f7e6',mp4:'#e0f2fe',mp3:'#f3e8ff',zip:'#f1f5f9',jpg:'#fef3c7',jpeg:'#fef3c7',png:'#fef3c7'};
+    return map[ft] || '#f1f5f9';
+  }
+
+  function levelColor(level) {
+    var map = {Nursery:'#f59e0b',Primary:'#3b82f6','Lower Secondary':'#10b981','Upper Secondary':'#8b5cf6',TVET:'#ef4444'};
+    return map[level] || '#64748b';
+  }
+
+  function formatDate(d) { try { return new Date(d).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}); } catch(e) { return d||''; } }
+
+  var downloadResource = window.downloadResource || function(id, type, subjId, label, url, fileName, store) {
+    var uid = (typeof rbac !== 'undefined' && rbac.currentUserId ? rbac.currentUserId() : (window.db.getCurrentUser()||{}).id||0);
+    if (window.db.logResourceDownload) window.db.logResourceDownload(id, type, subjId, uid);
+    if (window.db.logResourceDownload && !type) window.db.logResourceDownload(id);
+    if (url) { window.open(url, '_blank'); return; }
+    var ext = (fileName||'resource.pdf').split('.').pop().toLowerCase();
+    var mime = {pdf:'application/pdf',mp4:'video/mp4',ppt:'application/vnd.ms-powerpoint',pptx:'application/vnd.openxmlformats-officedocument.presentationml.presentation',doc:'application/msword',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',xls:'application/vnd.ms-excel',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',mp3:'audio/mpeg',zip:'application/zip',txt:'text/plain'}[ext] || 'application/octet-stream';
+    var content = label + '\r\nDownloaded from HON-ACADEMY Digital Library\r\n' + new Date().toISOString().slice(0,10);
+    var blob = new Blob([content], { type: mime+';charset=utf-8' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fileName || 'resource.'+ext;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(a.href);
+  };
+
+  var _lastFiltered = [];
+
+  function openPreviewWithNav(idx) {
+    sessionStorage.setItem('dl_preview_list', JSON.stringify(_lastFiltered));
+    var r = _lastFiltered[idx];
+    if (!r) return;
+    var resId = r.id;
+    var resType = r.source || 'library';
+    var subjId = r.subjectId || '';
+    window.location.href = 'document-viewer.html?resId=' + resId + '&type=' + encodeURIComponent(resType) + '&subId=' + subjId + '&from=digital-library&idx=' + idx;
+  }
+
+  var DL = {
+    init: function() {
+      if (!window.db) { $('dl-content').innerHTML = '<div class="empty-state"><i class="fa-solid fa-circle-exclamation text-danger"></i><p>Data system not available.</p></div>'; return; }
+
+      // Show/hide manage link based on role
+      var dlUser = (typeof rbac !== 'undefined' && rbac.getCurrentUser ? rbac.getCurrentUser() : window.db.getCurrentUser()) || null;
+      var dlManageLink = document.getElementById('dl-manage-link');
+      if (dlManageLink) {
+        dlManageLink.style.display = (dlUser && (dlUser.role === 'admin' || dlUser.role === 'teacher')) ? 'block' : 'none';
+      }
+
+      // Ensure sample resources
+      if (window.db.ensureDigitalLibrarySamples) window.db.ensureDigitalLibrarySamples();
+
+      // Ensure sample resources for legacy system too
+      if (window.db.ensureSampleResources) {
+        var existing = window.db.getAllResources();
+        if (existing.length < 15) window.db.ensureSampleResources();
+      }
+
+      // Populate filters
+      this.populateFilters();
+      // Load and render
+      this.loadData();
+    },
+
+    populateFilters: function() {
+      var subjects = window.db.getSubjects() || [];
+      var subjSet = {}, catSet = {}, classSet = {}, levelSet = {}, yearSet = {}, termSet = {}, typeSet = {};
+      var all = (window.db.getDigitalLibraryResources ? window.db.getDigitalLibraryResources(true) : []) || [];
+
+      if (!all.length) {
+        // Fallback to public resources
+        all = (window.db.getAllResources ? window.db.getAllResources() : []) || [];
+        all.forEach(function(r) {
+          if (r.subject) subjSet[r.subject] = 1;
+          if (r.category) catSet[r.category] = 1;
+          if (r.fileType) typeSet[r.fileType.toUpperCase()] = 1;
+        });
+      } else {
+        all.forEach(function(r) {
+          if (r.subject) subjSet[r.subject] = 1;
+          if (r.level) levelSet[r.level] = 1;
+          if (r.className) classSet[r.className] = 1;
+          if (r.category) catSet[r.category] = 1;
+          if (r.fileType) typeSet[r.fileType.toUpperCase()] = 1;
+          if (r.year) yearSet[String(r.year)] = 1;
+          if (r.term) termSet[String(r.term)] = 1;
+        });
+      }
+
+      var append = function(id, arr, allLabel) {
+        var sel = $(id); if (!sel) return;
+        sel.innerHTML = '<option value="">' + allLabel + '</option>' + arr.sort().map(function(v) { return '<option value="' + esc(v) + '">' + esc(v) + '</option>'; }).join('');
+      };
+
+      // Levels
+      append('f-level', Object.keys(levelSet).sort(function(a,b) { var o={Nursery:0,Primary:1,'Lower Secondary':2,'Upper Secondary':3,TVET:4}; return (o[a]||99)-(o[b]||99); }), 'All Levels');
+
+      // Classes
+      var classOrder = [];
+      for (var i = 1; i <= 6; i++) { if (classSet['P'+i]) classOrder.push('P'+i); }
+      for (var i = 1; i <= 6; i++) { if (classSet['S'+i]) classOrder.push('S'+i); }
+      if (classSet['Nursery']) classOrder.unshift('Nursery');
+      if (classSet['TVET']) classOrder.push('TVET');
+      Object.keys(classSet).forEach(function(k) { if (classOrder.indexOf(k)===-1) classOrder.push(k); });
+      append('f-class', classOrder, 'All Classes');
+
+      append('f-subject', Object.keys(subjSet), 'All Subjects');
+      append('f-category', Object.keys(catSet), 'All Categories');
+      append('f-type', Object.keys(typeSet), 'All Types');
+
+      var cy = new Date().getFullYear();
+      var years = [];
+      for (var y = cy + 1; y >= cy - 5; y--) years.push(String(y));
+      if (Object.keys(yearSet).length) {
+        years = Object.keys(yearSet).sort(function(a,b) { return Number(b)-Number(a); });
+      }
+      append('f-year', years, 'All Years');
+      append('f-term', ['1','2','3'], 'All Terms');
+    },
+
+    loadData: function() {
+      try {
+        if (window.db.getViewableDigitalLibraryResources) {
+          allResources = window.db.getViewableDigitalLibraryResources();
+        } else if (window.db.getDigitalLibraryResources) {
+          allResources = window.db.getDigitalLibraryResources();
+        } else {
+          allResources = (window.db.getAllResources ? window.db.getAllResources() : []) || [];
+        }
+      } catch(e) { allResources = []; }
+
+      if (!allResources.length) {
+        $('dl-content').innerHTML = '<div class="empty-state"><i class="fa-solid fa-books"></i><p>No resources available yet. Resources will appear here once uploaded by teachers and administrators.</p></div>';
+        $('dl-pagination').innerHTML = '';
+        return;
+      }
+      this.renderStats();
+      this.search();
+    },
+
+    renderStats: function() {
+      var el = $('dl-stats');
+      if (!el) return;
+      var total = allResources.length;
+      var views = allResources.reduce(function(s,r) { return s + (r.views||0); }, 0);
+      var downloads = allResources.reduce(function(s,r) { return s + (r.downloads||0); }, 0);
+      var levels = {};
+      allResources.forEach(function(r) { var l = r.level||'Other'; levels[l] = (levels[l]||0)+1; });
+      var levelHTML = Object.keys(levels).sort().map(function(l) { return '<div class="stat-card"><div class="num" style="color:'+levelColor(l)+'">'+levels[l]+'</div><div class="lbl">'+l+'</div></div>'; }).join('');
+      el.innerHTML = '<div class="stat-card"><div class="num">'+total+'</div><div class="lbl">Total Resources</div></div>' +
+        levelHTML +
+        '<div class="stat-card"><div class="num">'+views+'</div><div class="lbl">Total Views</div></div>' +
+        '<div class="stat-card"><div class="num">'+downloads+'</div><div class="lbl">Downloads</div></div>';
+    },
+
+    search: function() {
+      currentPage = 1;
+      this._filterAndRender();
+    },
+
+    _filterAndRender: function() {
+      var q = ($('dl-search') ? $('dl-search').value : '').trim();
+      var filters = {
+        level: ($('f-level')||{}).value,
+        className: ($('f-class')||{}).value,
+        subject: ($('f-subject')||{}).value,
+        category: ($('f-category')||{}).value,
+        fileType: ($('f-type')||{}).value,
+        academicYear: ($('f-year')||{}).value,
+        term: ($('f-term')||{}).value,
+        sort: ($('f-sort')||{}).value || 'newest'
+      };
+
+      var filtered = allResources;
+
+      // Keyword search
+      if (q) {
+        var ql = q.toLowerCase();
+        filtered = filtered.filter(function(r) {
+          return (r.title||'').toLowerCase().includes(ql) ||
+                 (r.subject||'').toLowerCase().includes(ql) ||
+                 (r.description||'').toLowerCase().includes(ql) ||
+                 (r.category||'').toLowerCase().includes(ql) ||
+                 (r.className||'').toLowerCase().includes(ql) ||
+                 (r.uploadedBy||'').toLowerCase().includes(ql) ||
+                 (r.tags||'').toLowerCase().includes(ql);
+        });
+      }
+
+      // Filter by level
+      if (filters.level) {
+        filtered = filtered.filter(function(r) { return (r.level||'') === filters.level; });
+      }
+
+      // Filter by class
+      if (filters.className) {
+        filtered = filtered.filter(function(r) { return (r.className||'') === filters.className; });
+      }
+
+      // Filter by subject
+      if (filters.subject) {
+        filtered = filtered.filter(function(r) { return (r.subject||'') === filters.subject; });
+      }
+
+      // Filter by category
+      if (filters.category) {
+        filtered = filtered.filter(function(r) { return (r.category||'') === filters.category; });
+      }
+
+      // Filter by file type
+      if (filters.fileType) {
+        filtered = filtered.filter(function(r) { return (r.fileType||'').toUpperCase() === filters.fileType.toUpperCase(); });
+      }
+
+      // Filter by year
+      if (filters.academicYear) {
+        filtered = filtered.filter(function(r) { return String(r.year||r.academicYear||'') === filters.academicYear; });
+      }
+
+      // Filter by term
+      if (filters.term) {
+        filtered = filtered.filter(function(r) { return String(r.term||'') === filters.term; });
+      }
+
+      // Sort
+      var sort = filters.sort;
+      var sorters = {
+        newest: function(a,b) { return new Date(b.createdAt||b.uploadedAt||0) - new Date(a.createdAt||a.uploadedAt||0); },
+        oldest: function(a,b) { return new Date(a.createdAt||a.uploadedAt||0) - new Date(b.createdAt||b.uploadedAt||0); },
+        downloads: function(a,b) { return (b.downloads||0) - (a.downloads||0); },
+        views: function(a,b) { return (b.views||0) - (a.views||0); },
+        alpha: function(a,b) { return (a.title||'').localeCompare(b.title||''); },
+        size: function(a,b) {
+          var an = parseFloat((a.fileSize||'0').replace(/[^0-9.]/g,'')) || 0;
+          var bn = parseFloat((b.fileSize||'0').replace(/[^0-9.]/g,'')) || 0;
+          return bn - an;
+        }
+      };
+      filtered.sort(sorters[sort] || sorters.newest);
+      _lastFiltered = filtered;
+
+      this._render(filtered);
+    },
+
+    _render: function(filtered) {
+      var container = $('dl-content');
+      var pagination = $('dl-pagination');
+      var total = filtered.length;
+      var pages = Math.ceil(total / PER_PAGE) || 1;
+      if (currentPage > pages) currentPage = pages;
+      var start = (currentPage - 1) * PER_PAGE;
+      var pageItems = filtered.slice(start, start + PER_PAGE);
+
+      if (!pageItems.length) {
+        container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-search"></i><p>No resources match your search criteria. Try adjusting your filters.</p></div>';
+        pagination.innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = '<div class="resource-grid">' + pageItems.map(function(r) {
+        var ft = (r.fileType||'pdf').toLowerCase();
+        var icon = fileIcon(ft);
+        var bg = thumbBg(ft);
+        var lvl = r.level || '';
+        var lvlClr = levelColor(lvl);
+        var resId = r.id;
+        var resType = r.source || 'library';
+        var subjId = r.subjectId || '';
+        var idx = filtered.indexOf(r);
+        var previewUrl = 'document-viewer.html?resId=' + resId + '&type=' + encodeURIComponent(resType || 'book') + '&subId=' + subjId + '&from=digital-library&idx=' + idx;
+        var label = esc((r.title||'Resource').replace(/'/g,"").replace(/"/g,""));
+        var fileName = esc(r.fileName || 'resource.' + ft);
+        var fileUrl = r.fileUrl || '';
+        var dlArgs = resId + ",'" + (resType||'library') + "'," + subjId + ",'" + label + "','" + esc(fileUrl) + "','" + fileName + "'";
+
+        return '<div class="res-card"><div class="rc-thumb" style="background:'+bg+'"><span class="rc-type-badge">'+esc(ft).toUpperCase()+'</span><div class="rc-icon"><i class="fa-solid '+icon+'" style="font-size:22px"></i></div></div><div class="rc-body"><h6 title="'+esc(r.title)+'">'+esc(r.title)+'</h6>' +
+          (r.description ? '<div class="rc-desc">'+esc(r.description)+'</div>' : '') +
+          '<div class="rc-meta">' +
+            (lvl ? '<span style="color:'+lvlClr+'"><i class="fa-solid fa-layer-group"></i>'+esc(lvl)+'</span>' : '') +
+            (r.className ? '<span><i class="fa-solid fa-users"></i>'+esc(r.className)+'</span>' : '') +
+            (r.subject ? '<span><i class="fa-solid fa-book"></i>'+esc(r.subject)+'</span>' : '') +
+            (r.category ? '<span><i class="fa-solid fa-tag"></i>'+esc(r.category)+'</span>' : '') +
+            (r.fileSize ? '<span><i class="fa-solid fa-database"></i>'+esc(r.fileSize)+'</span>' : '') +
+            '</div><div class="rc-meta">' +
+            (r.uploadedBy ? '<span><i class="fa-solid fa-user"></i>'+esc(r.uploadedBy)+'</span>' : '') +
+            (r.uploadedAt || r.createdAt ? '<span><i class="fa-regular fa-calendar"></i>'+formatDate(r.uploadedAt||r.createdAt)+'</span>' : '') +
+            '<span><i class="fa-regular fa-eye"></i>'+(r.views||0)+'</span>' +
+            '<span><i class="fa-solid fa-download"></i>'+(r.downloads||0)+'</span>' +
+          '</div></div><div class="rc-footer"><a href="#" class="btn-preview" onclick="event.preventDefault();openPreviewWithNav('+idx+')"><i class="fa-solid fa-eye"></i> Preview</a>' +
+          '<a href="#" class="btn-download" onclick="event.preventDefault();downloadResource('+dlArgs+')"><i class="fa-solid fa-download"></i> Download</a></div></div>';
+      }).join('') + '</div>';
+
+      // Pagination
+      if (pages <= 1) { pagination.innerHTML = ''; return; }
+      var phtml = '<button class="page-btn" onclick="DL.page('+(currentPage-1)+')" '+(currentPage<=1?'disabled':'')+'><i class="fa-solid fa-chevron-left"></i></button>';
+      for (var i = 1; i <= pages; i++) {
+        if (i === 1 || i === pages || Math.abs(i - currentPage) <= 2) {
+          phtml += '<button class="page-btn'+(i===currentPage?' active':'')+'" onclick="DL.page('+i+')">'+i+'</button>';
+        } else if (phtml.slice(-8) !== '...') {
+          phtml += '<span class="page-btn" style="border:none;background:transparent;cursor:default">...</span>';
+        }
+      }
+      phtml += '<button class="page-btn" onclick="DL.page('+(currentPage+1)+')" '+(currentPage>=pages?'disabled':'')+'><i class="fa-solid fa-chevron-right"></i></button>';
+      pagination.innerHTML = phtml;
+    },
+
+    page: function(n) {
+      if (n < 1) return;
+      currentPage = n;
+      this._filterAndRender();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  window.DL = DL;
+  DL.init();
+})();
+</script>
+</body>
+</html>

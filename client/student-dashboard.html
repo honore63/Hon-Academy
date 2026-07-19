@@ -15,6 +15,7 @@
     .nav-brand-icon { width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #22c55e, #15803d); display: flex; align-items: center; justify-content: center; font-size: 20px; color: #fff; margin-bottom: 24px; box-shadow: 0 4px 12px rgba(34,197,94,0.2); }
     .nav-main-item { width: 64px; height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: rgba(255,255,255,0.5); text-decoration: none; border-radius: 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; border: none; background: transparent; }
     .nav-main-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .nav-main-item:focus-visible { outline: 2px solid #22c55e; outline-offset: 2px; }
     .nav-main-item.active { background: rgba(34,197,94,0.15); color: var(--portal-accent); }
     .nav-main-item i { font-size: 18px; margin-bottom: 4px; }
     .nav-main-item span { font-size: 10px; font-weight: 600; line-height: 1.1; text-align: center; }
@@ -27,6 +28,7 @@
     .sub-nav-list { list-style: none; padding: 0; margin: 0; }
     .sub-nav-list li a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: #475569; font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.2s; margin-bottom: 4px; border: none; background: transparent; width: 100%; text-align: left; cursor: pointer; }
     .sub-nav-list li a:hover { background: #f8fafc; color: #0f172a; }
+    .sub-nav-list li a:focus-visible { outline: 2px solid #22c55e; outline-offset: -2px; border-radius: 8px; }
     .sub-nav-list li a.active { background: #f0fdf4; color: #166534; font-weight: 600; border-left: 3px solid #22c55e; }
     .sub-nav-list li a i { font-size: 14px; width: 16px; text-align: center; }
     .portal-main { margin-left: calc(var(--nav-main-w) + var(--nav-sub-w)); min-height: 100vh; display: flex; flex-direction: column; }
@@ -65,6 +67,7 @@
     .doc-card{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid #f1f5f9;border-radius:12px;transition:all .2s;cursor:default;background:#fff}
     .doc-card:hover{border-color:#dbeafe;box-shadow:0 2px 8px rgba(59,130,246,.08)}
     .mobile-toggle { display: none; position: fixed; bottom: 20px; left: 20px; z-index: 1060; width: 48px; height: 48px; border-radius: 50%; background: #166534; color: #fff; border: none; box-shadow: 0 4px 16px rgba(22,101,52,0.4); cursor: pointer; align-items: center; justify-content: center; font-size: 18px; }
+    .mobile-toggle:focus-visible { outline: 2px solid #4ade80; outline-offset: 2px; }
     .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1045; }
     .sidebar-open .portal-sidebar-main, .sidebar-open .portal-sidebar-sub { display: flex !important; }
     .sidebar-open .sidebar-overlay { display: block; }
@@ -108,6 +111,7 @@
       <div class="sub-nav-title">Results</div>
       <ul class="sub-nav-list">
         <li><a href="#" onclick="setActiveSub(event, 'my-marks')"><i class="fa-solid fa-pen-to-square"></i> My Marks</a></li>
+        <li><a href="#" onclick="setActiveSub(event, 'my-assessment-results')"><i class="fa-solid fa-clipboard-check"></i> Assessment Results</a></li>
         <li><a href="#" onclick="setActiveSub(event, 'report-cards')"><i class="fa-solid fa-file-pdf"></i> Report Cards</a></li>
       </ul>
     </div>
@@ -230,6 +234,18 @@
       </div>
     </div>
 
+    <!-- MY ASSESSMENT RESULTS -->
+    <div id="section-my-assessment-results" class="d-none">
+      <div class="section-card">
+        <div class="section-card-header"><h5 class="section-card-title"><i class="fa-solid fa-clipboard-check text-primary me-2"></i>My Assessment Results</h5></div>
+        <div class="section-card-body">
+          <div id="my-assessment-results-content">
+            <div class="text-center py-4 text-muted">Loading your assessment results...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- MY ATTENDANCE -->
     <div id="section-my-attendance" class="d-none">
       <div class="section-card">
@@ -294,21 +310,24 @@
 <button class="mobile-toggle" onclick="toggleStudentSidebar()" aria-label="Toggle navigation"><i class="fa-solid fa-bars"></i></button>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/data.js"></script>
+<script src="js/rbac.js"></script>
+<script src="js/assessments.js"></script>
 <script src="js/db-extension.js"></script>
 <script src="js/components.js"></script>
 <script>
-  const studentUser = window.db.getCurrentUser();
-  if (!studentUser || studentUser.role !== 'student') { window.location.href = '403.html'; }
+  (function() {
+  if (!window.rbac.guard(['student'])) return;
+  var studentUser = window.rbac.getCurrentUser();
 
   if (studentUser) {
     document.getElementById('topbarName').textContent = studentUser.name;
     if (studentUser.avatarUrl) document.getElementById('topbarAvatar').src = studentUser.avatarUrl;
   }
 
-  const sections = ['home','my-subjects','my-class','my-marks','report-cards','my-attendance','my-timetable','announcements','profile','my-documents'];
+  var sections = ['home','my-subjects','my-class','my-marks','my-assessment-results','report-cards','my-attendance','my-timetable','announcements','profile','my-documents'];
   function showSection(id) {
     sections.forEach(s => { const el = document.getElementById('section-' + s); if (el) el.classList.toggle('d-none', s !== id); });
-    const titles = { home:'Dashboard', 'my-subjects':'My Subjects', 'my-class':'My Class', 'my-marks':'My Marks', 'report-cards':'Report Cards', 'my-attendance':'My Attendance', 'my-timetable':'Timetable', announcements:'Announcements', profile:'My Profile' };
+    const titles = { home:'Dashboard', 'my-subjects':'My Subjects', 'my-class':'My Class', 'my-marks':'My Marks', 'my-assessment-results':'Assessment Results', 'report-cards':'Report Cards', 'my-attendance':'My Attendance', 'my-timetable':'Timetable', announcements:'Announcements', profile:'My Profile', 'my-documents':'My Documents' };
     document.getElementById('topbarTitle').textContent = titles[id] || 'Student Portal';
   }
 
@@ -321,6 +340,7 @@
     if (section === 'my-subjects') loadMySubjects();
     if (section === 'my-class') loadMyClass();
     if (section === 'my-marks') loadMyMarks();
+    if (section === 'my-assessment-results') loadMyAssessmentResults();
     if (section === 'report-cards') loadReportCards();
     if (section === 'my-attendance') loadMyAttendance();
     if (section === 'my-timetable') loadMyTimetable();
@@ -329,9 +349,10 @@
     if (section === 'my-documents') loadStudentDocuments();
   }
 
-  function switchNav(group) {
+  function switchNav(group, evt) {
+    var e = evt || window.event;
     document.querySelectorAll('.nav-main-item').forEach(n => n.classList.remove('active'));
-    event.currentTarget.classList.add('active');
+    if (e && e.currentTarget) e.currentTarget.classList.add('active');
     document.querySelectorAll('.sub-nav-group').forEach(g => g.classList.remove('active'));
     const subGroup = document.getElementById('sub-group-' + group);
     if (subGroup) subGroup.classList.add('active');
@@ -390,12 +411,63 @@
   }
 
   function loadMyMarks() {
-    const subjects = ['Mathematics','Science','English','Kinyarwanda','Social Studies','ICT'];
-    document.getElementById('all-marks-tbody').innerHTML = subjects.map((s,i) => {
-      const m = Math.floor(Math.random() * 40) + 60;
-      const grade = m >= 80 ? 'A' : m >= 70 ? 'B' : m >= 55 ? 'C' : m >= 40 ? 'D' : 'F';
-      return `<tr><td><strong>${s}</strong></td><td>${m}</td><td><span class="role-pill" style="background:#dcfce7;color:#166534;">${grade}</span></td><td>Term ${i % 3 + 1} Exam</td><td><span class="role-pill" style="background:#dbeafe;color:#1e40af;">Approved</span></td></tr>`;
+    var allMarks = []; try { allMarks = window.rbac.viewableMarks(); } catch(e) {}
+    var subjects = []; try { subjects = window.db.getSubjects(); } catch(e) {}
+    var myMarks = allMarks.filter(function(m){ return Number(m.studentId) === Number(studentUser.id); });
+    var tbody = document.getElementById('all-marks-tbody');
+    if (myMarks.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">No marks recorded yet.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = myMarks.map(function(m){
+      var total = (m.continuousAssessment || 0) + (m.assignment || 0) + (m.exam || 0);
+      var grade = total >= 85 ? 'A' : total >= 70 ? 'B' : total >= 55 ? 'C' : total >= 40 ? 'D' : 'F';
+      var subj = subjects.find(function(s){ return s.id === m.subjectId; });
+      var gradeColors = { A:'#dcfce7,#166534', B:'#dbeafe,#1e40af', C:'#fef9c7,#854d0e', D:'#fce7f3,#9d174d', F:'#fee2e2,#991b1b' };
+      var col = gradeColors[grade] || '#f1f5f9,#475569';
+      return '<tr><td><strong>' + (subj ? subj.title : 'Subject #' + m.subjectId) + '</strong></td><td>' + total + '</td><td><span class="role-pill" style="background:' + col.split(',')[0] + ';color:' + col.split(',')[1] + ';">' + grade + '</span></td><td>' + (m.term || 'N/A') + '</td><td><span class="role-pill" style="background:#dbeafe;color:#1e40af;">Recorded</span></td></tr>';
     }).join('');
+  }
+
+  function loadMyAssessmentResults() {
+    try {
+      var assessments = window.db.Assessment.getByStudent(studentUser.id);
+      var results = []; try { results = window.db.AssessmentResult.getByStudent(studentUser.id); } catch(e) {}
+    } catch(e) {
+      document.getElementById('my-assessment-results-content').innerHTML = '<div class="text-center py-4 text-muted">Assessment module not available.</div>';
+      return;
+    }
+    if (assessments.length === 0) {
+      document.getElementById('my-assessment-results-content').innerHTML = '<div class="text-center py-4"><i class="fa-solid fa-database text-muted mb-3" style="font-size:3rem;"></i><p class="text-muted">No assessment results yet.</p></div>';
+      return;
+    }
+    var html = '';
+    assessments.forEach(function(a){
+      var r = results.find(function(x){ return x.assessmentId === a.id; });
+      var type = window.db.AssessmentType.getById(a.assessmentTypeId);
+      var subject = window.db.getSubject(a.subjectId);
+      var cls = ''; try { var c = window.db.getClass(a.classId); if (c) cls = c.name; } catch(e) {}
+      if (!r) return;
+      var gradeColor = r.percentage >= 85 ? '#dcfce7,#166534' : r.percentage >= 70 ? '#dbeafe,#1e40af' : r.percentage >= 55 ? '#fef9c7,#854d0e' : r.percentage >= 40 ? '#fce7f3,#9d174d' : '#fee2e2,#991b1b';
+      html += '<div class="m-card mb-3" style="padding:1rem;">' +
+        '<div class="d-flex justify-content-between align-items-center flex-wrap gap-2"><div><h6 class="font-bold mb-1"><i class="fa-solid fa-clipboard-check text-primary me-1"></i>' + (a.name || type.name) + '</h6>' +
+        '<small class="text-muted">' + (type ? type.name : '') + ' | ' + (subject ? subject.title : '') + ' | ' + cls + ' | ' + (a.term || '') + '</small></div>' +
+        '<div class="d-flex align-items-center gap-2"><span class="badge bg-primary rounded-pill" style="font-size:1rem;">' + r.percentage + '%</span>' +
+        '<span class="role-pill" style="background:' + gradeColor.split(',')[0] + ';color:' + gradeColor.split(',')[1] + ';font-weight:700;">' + r.grade + '</span></div></div>' +
+        '<div class="row g-2 mt-2"><div class="col-4"><small class="text-muted">Score</small><br><strong>' + r.score + '/' + a.maxMarks + '</strong></div>' +
+        '<div class="col-4"><small class="text-muted">Rank</small><br><strong>' + (r.rank ? '#' + r.rank : '-') + '</strong></div>' +
+        '<div class="col-4 text-end"><button class="btn btn-sm btn-outline-primary rounded-pill asm-std-pdf" data-aid="' + a.id + '" data-sid="' + studentUser.id + '"><i class="fa-solid fa-file-pdf me-1"></i> Report</button></div></div>' +
+        (r.comment ? '<div class="mt-2 p-2" style="background:#f8fafc;border-radius:8px;font-size:13px;"><strong>Comment:</strong> ' + r.comment + '</div>' : '') +
+        '</div>';
+    });
+    if (!html) html = '<div class="text-center py-4 text-muted">No assessment results available.</div>';
+    document.getElementById('my-assessment-results-content').innerHTML = html;
+    document.querySelectorAll('.asm-std-pdf').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        try { window.db.Assessment.Report.exportPDF(parseInt(this.dataset.aid), parseInt(this.dataset.sid)); }
+        catch(e) { alert('Could not generate PDF: ' + e.message); }
+      });
+    });
   }
 
   function loadReportCards() {
@@ -518,12 +590,39 @@
   }
 
   function toggleStudentSidebar() { document.body.classList.toggle('sidebar-open'); }
-  document.addEventListener('click', (e) => { if (e.target.classList.contains('sidebar-overlay')) document.body.classList.remove('sidebar-open'); });
+  document.addEventListener('click', function(e) { if (e.target.classList.contains('sidebar-overlay')) document.body.classList.remove('sidebar-open'); });
+  // Keyboard arrow navigation for main nav items
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      var items = document.querySelectorAll('.nav-main-item:not([style*="flex"])');
+      var focused = document.activeElement;
+      if (focused && focused.classList.contains('nav-main-item')) {
+        e.preventDefault();
+        var idx = Array.prototype.indexOf.call(items, focused);
+        if (e.key === 'ArrowDown') idx = (idx + 1) % items.length;
+        else idx = (idx - 1 + items.length) % items.length;
+        items[idx].focus();
+      }
+    }
+  });
 
   function doLogout() { window.db.logout(); window.location.href = 'index.html'; }
 
+  window.showSection = showSection;
+  window.setActiveSub = setActiveSub;
+  window.switchNav = switchNav;
+  window.doLogout = doLogout;
+  window.loadMyMarks = loadMyMarks;
+  window.loadMyAssessmentResults = loadMyAssessmentResults;
+  window.loadStudentDocuments = loadStudentDocuments;
+  window.studentDownloadDoc = studentDownloadDoc;
+  window.saveStudentProfile = saveStudentProfile;
+  window.toggleStudentSidebar = toggleStudentSidebar;
+  window.populateStudentDocFilter = populateStudentDocFilter;
+
   loadStudentDashboard();
   populateStudentDocFilter();
+  })();
 </script>
 </body>
 </html>

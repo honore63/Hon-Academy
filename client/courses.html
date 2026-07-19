@@ -1,252 +1,281 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Courses - HON-ACADEMY</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            colors: {
-              border: "oklch(var(--border) / <alpha-value>)",
-              background: "oklch(var(--background) / <alpha-value>)",
-              foreground: "oklch(var(--foreground) / <alpha-value>)",
-              primary: {
-                DEFAULT: "#1d4ed8",
-                foreground: "#eff6ff",
-              },
-              secondary: {
-                DEFAULT: "#f4f4f5",
-                foreground: "#18181b",
-              },
-              accent: {
-                DEFAULT: "#f4f4f5",
-                foreground: "#18181b",
-              },
-              muted: {
-                DEFAULT: "#f4f4f5",
-                foreground: "#71717a",
-              }
-            }
-          }
-        }
-      }
-    </script>
-    <!-- Lucide Icons CDN -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Custom Style CSS -->
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
-  <body class="bg-white dark:bg-zinc-950 text-gray-900 dark:text-zinc-100 min-h-screen flex flex-col transition-colors duration-200">
-    <!-- Navigation Header -->
-    <header class="site-header"></header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Courses - HON-ACADEMY</title>
+  <meta name="description" content="Browse all available courses across Primary, Lower Secondary and Upper Secondary levels." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .catalog-filter{background:#fff;border:1px solid #e7ecf3;border-radius:1rem;padding:1.5rem;box-shadow:0 2px 8px rgba(15,23,42,.04)}
+    .catalog-filter label{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#64748b;margin-bottom:.35rem}
+    .catalog-filter .form-control,.catalog-filter .form-select{border:1.5px solid #e7ecf3;border-radius:.65rem;padding:.5rem .85rem;font-size:.88rem;background:#f8fafc}
+    .catalog-filter .form-control:focus,.catalog-filter .form-select:focus{border-color:var(--nca-blue,#1a3c7b);box-shadow:0 0 0 3px rgba(26,60,123,.1)}
 
-    <!-- Main Content -->
-    <main class="flex-1 container mx-auto px-4 py-12 animate-fade-in">
-      
-      <!-- Page Header -->
-      <div class="mb-10 space-y-2">
-        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">Explore Courses</h1>
-        <p class="text-sm md:text-base text-gray-500 dark:text-zinc-400">
-          Discover a wide range of subjects and modules prepared for student excellence.
-        </p>
+    .course-card{border:1px solid #e7ecf3;border-radius:1rem;overflow:hidden;background:#fff;transition:all .25s;height:100%;display:flex;flex-direction:column}
+    .course-card:hover{box-shadow:0 10px 30px -12px rgba(26,60,123,.3);border-color:#c7d6ee;transform:translateY(-3px)}
+    .course-card .card-body{padding:1.35rem;display:flex;flex-direction:column;flex:1}
+    .course-card .course-badge{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:.2rem .7rem;border-radius:2rem;display:inline-block}
+    .course-card h3{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.1rem;margin:.5rem 0 .35rem;color:#1e293b}
+    .course-card p{font-size:.82rem;color:#64748b;line-height:1.5;flex-grow:1}
+    .course-card .meta-row{display:flex;gap:1rem;padding-top:.75rem;border-top:1px solid #f1f5f9;margin-top:auto}
+    .course-card .meta-row span{font-size:.75rem;color:#94a3b8;display:flex;align-items:center;gap:.35rem}
+    .course-card .meta-row strong{color:#1e293b;font-weight:600}
+
+    .level-section h4{font-family:'Poppins',sans-serif;font-weight:700;font-size:1.15rem;color:#1e293b;display:flex;align-items:center;gap:.6rem}
+    .level-section h4 span{font-size:.72rem;font-weight:600;padding:.2rem .7rem;border-radius:2rem}
+
+    .empty-state{text-align:center;padding:3.5rem 1rem;color:#64748b}
+    .empty-state i{font-size:2.5rem;color:#cbd5e1;display:block;margin-bottom:.6rem}
+    @media(max-width:767.98px){.catalog-filter .row{gap:.75rem}}
+  </style>
+</head>
+<body class="animate-fade-in">
+
+  <header class="site-header"></header>
+
+  <section class="page-banner">
+    <div class="container">
+      <div class="breadcrumb-custom">
+        <a href="index.html">Home</a><span>/</span>
+        <a href="subjects.html">Academics</a><span>/</span>
+        <span class="current">Courses</span>
       </div>
+      <h1>Courses</h1>
+      <p id="page-intro">Browse all courses across Primary, Lower Secondary and Upper Secondary levels.</p>
+    </div>
+  </section>
 
-      <!-- Filters Panel -->
-      <div class="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-850 rounded-2xl p-6 shadow-sm mb-8 transition-colors">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <!-- Search Bar -->
-          <div class="space-y-2">
-            <label for="search-input" class="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Search Courses</label>
-            <div class="relative">
-              <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 pointer-events-none">
-                <i data-lucide="search" class="w-4 h-4"></i>
-              </span>
-              <input
-                type="text"
-                id="search-input"
-                placeholder="Search course title or description..."
-                class="w-full pl-9 pr-4 py-2 text-sm bg-gray-50 dark:bg-zinc-850 border border-gray-200 dark:border-zinc-850 rounded-xl focus:border-blue-500 focus:outline-none dark:text-white"
-              />
-            </div>
-          </div>
+  <main class="container my-5">
 
-          <!-- Subject Filter -->
-          <div class="space-y-2">
-            <label for="subject-filter" class="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Filter by Subject</label>
-            <select
-              id="subject-filter"
-              class="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-zinc-850 border border-gray-200 dark:border-zinc-850 rounded-xl focus:border-blue-500 focus:outline-none dark:text-white"
-            >
-              <option value="all">All Subjects</option>
-              <option value="Mathematics">Mathematics</option>
-              <option value="Science">Science</option>
-              <option value="English">English</option>
-              <option value="History">History</option>
-            </select>
-          </div>
-
-          <!-- Grade Level Filter -->
-          <div class="space-y-2">
-            <label for="grade-filter" class="text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">Filter by Grade Level</label>
-            <select
-              id="grade-filter"
-              class="w-full px-3 py-2 text-sm bg-gray-50 dark:bg-zinc-850 border border-gray-200 dark:border-zinc-850 rounded-xl focus:border-blue-500 focus:outline-none dark:text-white"
-            >
-              <option value="all">All Grades</option>
-              <option value="Grade 6">Grade 6</option>
-              <option value="Grade 7">Grade 7</option>
-              <option value="Grade 8">Grade 8</option>
-              <option value="Grade 9">Grade 9</option>
-              <option value="Grade 10">Grade 10</option>
-            </select>
-          </div>
+    <!-- Filters -->
+    <div class="catalog-filter mb-4">
+      <div class="row g-3 align-items-end">
+        <div class="col-md-4">
+          <label for="search-input"><i class="fa-solid fa-search me-1"></i>Search Courses</label>
+          <input type="text" id="search-input" class="form-control" placeholder="Search by title, subject or description..." />
+        </div>
+        <div class="col-md-3">
+          <label for="subject-filter"><i class="fa-solid fa-book me-1"></i>Subject</label>
+          <select id="subject-filter" class="form-select"><option value="all">All Subjects</option></select>
+        </div>
+        <div class="col-md-3">
+          <label for="class-filter"><i class="fa-solid fa-users me-1"></i>Class</label>
+          <select id="class-filter" class="form-select">
+            <option value="all">All Classes</option>
+            <option value="P1">P1</option><option value="P2">P2</option><option value="P3">P3</option>
+            <option value="P4">P4</option><option value="P5">P5</option><option value="P6">P6</option>
+            <option value="S1">S1</option><option value="S2">S2</option><option value="S3">S3</option>
+            <option value="S4">S4</option><option value="S5">S5</option><option value="S6">S6</option>
+          </select>
+        </div>
+        <div class="col-md-2">
+          <label for="level-filter"><i class="fa-solid fa-layer-group me-1"></i>Level</label>
+          <select id="level-filter" class="form-select">
+            <option value="all">All Levels</option>
+            <option value="Primary">Primary</option>
+            <option value="Lower Secondary">Lower Secondary</option>
+            <option value="Upper Secondary">Upper Secondary</option>
+          </select>
         </div>
       </div>
+    </div>
 
-      <!-- Course Count & Feed -->
-      <div class="flex justify-between items-center mb-6">
-        <p id="course-count-text" class="text-xs font-semibold text-gray-400 dark:text-zinc-500 uppercase tracking-wider">
-          Loading catalog...
-        </p>
-      </div>
+    <!-- Count -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <p class="text-muted small" id="course-count">Loading courses...</p>
+      <button class="btn btn-sm btn-outline-primary" onclick="document.querySelector('.catalog-filter').classList.toggle('d-none')"><i class="fa-solid fa-sliders me-1"></i>Toggle Filters</button>
+    </div>
 
-      <!-- Courses Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="catalog-grid">
-        <!-- Dyn pop -->
-      </div>
+    <!-- Loading -->
+    <div id="loading-state" class="text-center py-5">
+      <div class="spinner-border text-primary mb-2" role="status"><span class="visually-hidden">Loading...</span></div>
+      <p class="text-muted small">Loading courses...</p>
+    </div>
 
-      <!-- Empty State -->
-      <div id="empty-state" class="hidden text-center py-20 border border-dashed border-gray-250 dark:border-zinc-800 rounded-3xl space-y-4">
-        <div class="w-12 h-12 bg-gray-100 dark:bg-zinc-900 rounded-full flex items-center justify-center mx-auto text-gray-400">
-          <i data-lucide="book-x" class="w-6 h-6"></i>
+    <!-- Content -->
+    <div id="course-content" class="d-none"></div>
+
+  </main>
+
+  <!-- Preview Modal -->
+  <div class="modal fade" id="previewModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header border-0 pb-0">
+          <h5 class="modal-title font-bold" id="previewModalTitle">Course Preview</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
-        <div>
-          <h3 class="font-bold text-gray-800 dark:text-zinc-200">No courses match filters</h3>
-          <p class="text-sm text-gray-400 max-w-xs mx-auto">Try updating your filters or search keywords to locate specific modules.</p>
+        <div class="modal-body pt-3" id="previewModalBody">
+          <div class="text-center py-4"><div class="spinner-border text-primary" role="status"></div></div>
+        </div>
+        <div class="modal-footer border-0 pt-0" id="previewModalFooter" style="display:none">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-times me-1"></i>Close</button>
+          <button class="btn btn-success" id="previewDownloadBtn"><i class="fa-solid fa-download me-1"></i>Download Syllabus</button>
         </div>
       </div>
+    </div>
+  </div>
 
-    </main>
+  <footer class="site-footer"></footer>
 
-    <!-- Footer -->
-    <footer class="site-footer"></footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/rbac.js"></script>
+  <script src="js/assessments.js"></script>
+  <script src="js/db-extension.js"></script>
+  <script src="js/components.js"></script>
+  <script>
+  (function() {
+    'use strict';
 
-    <!-- Database and Component scripts -->
-    <script src="js/data.js"></script>
-    <script src="js/components.js"></script>
+    var searchVal = '', subjectVal = 'all', classVal = 'all', levelVal = 'all';
 
-    <!-- Page script -->
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        setupCatalogFilters();
-        renderCatalog();
-        window.addEventListener("auth_change", renderCatalog);
+    // Level colors for tag badges
+    var levelColors = { Primary:'success', 'Lower Secondary':'info', 'Upper Secondary':'primary' };
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Populate subject filter
+      var subjects = window.db.getSubjects();
+      var subjectSelect = document.getElementById('subject-filter');
+      subjects.forEach(function(s) {
+        var opt = document.createElement('option');
+        opt.value = s.title;
+        opt.textContent = s.title;
+        subjectSelect.appendChild(opt);
       });
 
-      let searchVal = "";
-      let subjectVal = "all";
-      let gradeVal = "all";
+      // Event listeners
+      document.getElementById('search-input').addEventListener('input', function(e) { searchVal = e.target.value.toLowerCase().trim(); render(); });
+      document.getElementById('subject-filter').addEventListener('change', function(e) { subjectVal = e.target.value; render(); });
+      document.getElementById('class-filter').addEventListener('change', function(e) { classVal = e.target.value; render(); });
+      document.getElementById('level-filter').addEventListener('change', function(e) { levelVal = e.target.value; render(); });
 
-      function setupCatalogFilters() {
-        const searchInput = document.getElementById("search-input");
-        const subjectFilter = document.getElementById("subject-filter");
-        const gradeFilter = document.getElementById("grade-filter");
+      render();
+    });
 
-        searchInput.addEventListener("input", (e) => {
-          searchVal = e.target.value.toLowerCase().trim();
-          renderCatalog();
-        });
+    function render() {
+      var allCourses = window.db.getCourses();
 
-        subjectFilter.addEventListener("change", (e) => {
-          subjectVal = e.target.value;
-          renderCatalog();
-        });
+      var filtered = allCourses.filter(function(c) {
+        if (searchVal && !c.title.toLowerCase().includes(searchVal) && !c.description.toLowerCase().includes(searchVal) && !c.subject.toLowerCase().includes(searchVal)) return false;
+        if (subjectVal !== 'all' && c.subject !== subjectVal) return false;
+        if (classVal !== 'all' && c.className !== classVal) return false;
+        if (levelVal !== 'all' && c.level !== levelVal) return false;
+        return true;
+      });
 
-        gradeFilter.addEventListener("change", (e) => {
-          gradeVal = e.target.value;
-          renderCatalog();
-        });
+      var container = document.getElementById('course-content');
+      var loading = document.getElementById('loading-state');
+      var countEl = document.getElementById('course-count');
+
+      loading.classList.add('d-none');
+      container.classList.remove('d-none');
+      countEl.textContent = 'Showing ' + filtered.length + ' course' + (filtered.length !== 1 ? 's' : '');
+
+      if (!filtered.length) {
+        container.innerHTML = '<div class="empty-state"><i class="fa-solid fa-book-open"></i><h5>No courses found</h5><p class="text-muted">Try adjusting your filters or search terms.</p></div>';
+        return;
       }
 
-      function renderCatalog() {
-        const grid = document.getElementById("catalog-grid");
-        const emptyState = document.getElementById("empty-state");
-        const countText = document.getElementById("course-count-text");
-        
-        let courses = window.db.getCourses();
+      // Group by level (preserve order: Primary → Lower Secondary → Upper Secondary)
+      var levelOrder = ['Primary','Lower Secondary','Upper Secondary'];
+      var grouped = {};
+      filtered.forEach(function(c) {
+        if (!grouped[c.level]) grouped[c.level] = [];
+        grouped[c.level].push(c);
+      });
 
-        // Apply filters
-        courses = courses.filter(c => {
-          const matchesSearch = c.title.toLowerCase().includes(searchVal) || c.description.toLowerCase().includes(searchVal);
-          const matchesSubject = subjectVal === "all" || c.subject === subjectVal;
-          const matchesGrade = gradeVal === "all" || c.gradeLevel === gradeVal;
-          return matchesSearch && matchesSubject && matchesGrade;
+      var html = '';
+      levelOrder.forEach(function(level) {
+        var courses = grouped[level];
+        if (!courses) return;
+        var color = levelColors[level] || 'secondary';
+        html += '<div class="level-section mb-4"><h4><span class="badge bg-' + color + ' bg-opacity-10 text-' + color + ' px-3 py-1">' + level + '</span><small class="fw-normal text-muted" style="font-size:.82rem">' + courses.length + ' course' + (courses.length !== 1 ? 's' : '') + '</small></h4><div class="row g-3">';
+        courses.forEach(function(c) {
+          var ins = window.db.getUser(c.instructorId);
+          var insName = ins ? (ins.fullName || ins.name || 'Instructor') : 'Staff';
+          html += '<div class="col-sm-6 col-lg-4"><div class="course-card"><div class="card-body">';
+          html += '<div class="d-flex justify-content-between align-items-start"><span class="course-badge bg-' + color + ' bg-opacity-10 text-' + color + '"><i class="fa-solid fa-book me-1"></i>' + escHtml(c.subject) + '</span><span class="badge bg-light text-muted px-2 py-1" style="font-size:.68rem">' + escHtml(c.className) + '</span></div>';
+          html += '<h3>' + escHtml(c.title) + '</h3>';
+          html += '<p>' + escHtml(c.description) + '</p>';
+          html += '<div class="meta-row"><span><i class="fa-regular fa-clock"></i><strong>' + (c.duration || 0) + '</strong> min</span><span><i class="fa-regular fa-user"></i><strong>' + escHtml(insName) + '</strong></span><span><i class="fa-regular fa-users"></i><strong>' + (c.enrollmentCount || 0) + '</strong></span></div>';
+          html += '<div class="mt-3 d-flex gap-2"><button class="btn btn-sm btn-outline-primary flex-grow-1" onclick="previewCourse(' + c.id + ')"><i class="fa-solid fa-eye me-1"></i>Preview</button><button class="btn btn-sm btn-outline-success" onclick="downloadCourse(' + c.id + ')" title="Download Syllabus"><i class="fa-solid fa-download"></i></button></div>';
+          html += '</div></div></div>';
         });
+        html += '</div></div>';
+      });
 
-        // Update count text
-        countText.innerText = `Showing ${courses.length} course${courses.length === 1 ? "" : "s"}`;
+      container.innerHTML = html;
+    }
 
-        if (courses.length === 0) {
-          grid.innerHTML = "";
-          emptyState.classList.remove("hidden");
-          return;
-        }
+    function escHtml(str) {
+      return String(str||'').replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+    }
 
-        emptyState.classList.add("hidden");
+  })();
 
-        grid.innerHTML = courses.map(course => {
-          const ins = window.db.getUser(course.instructorId);
-          const insName = ins ? ins.name : "TBD";
-          
-          return `
-            <a href="course-detail.html?id=${course.id}" class="bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-850 rounded-2xl shadow-sm hover:shadow-lg hover:border-blue-500/30 transition-all overflow-hidden flex flex-col group">
-              <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
-                <div class="space-y-2">
-                  <div class="flex justify-between items-start">
-                    <span class="inline-block px-2.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-50 text-blue-600 dark:bg-blue-950/80 dark:text-blue-400">
-                      ${course.subject}
-                    </span>
-                    <span class="inline-block px-2 py-0.5 rounded text-[10px] font-semibold bg-gray-100 text-gray-600 dark:bg-zinc-850 dark:text-zinc-400">
-                      ${course.gradeLevel}
-                    </span>
-                  </div>
-                  <h3 class="font-extrabold text-gray-900 dark:text-white text-xl line-clamp-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    ${course.title}
-                  </h3>
-                  <p class="text-sm text-gray-500 dark:text-zinc-400 line-clamp-2 leading-relaxed">
-                    ${course.description}
-                  </p>
-                </div>
+  // ── Preview Course (global, called from onclick) ──
+  window.previewCourse = function(courseId) {
+    var course = window.db.getCourse(courseId);
+    if (!course) { alert('Course not found'); return; }
+    var syllabus = window.db.getCourseSyllabus(course);
+    var ins = window.db.getUser(course.instructorId);
+    var insName = ins ? (ins.fullName || ins.name || 'Instructor') : 'Staff';
 
-                <div class="space-y-3">
-                  <div class="flex items-center gap-2 text-xs font-medium text-gray-400">
-                    <i data-lucide="user" class="w-3.5 h-3.5"></i>
-                    <span>Instructor: <strong class="text-gray-600 dark:text-zinc-300 font-semibold">${insName}</strong></span>
-                  </div>
+    document.getElementById('previewModalTitle').textContent = course.title;
+    var body = document.getElementById('previewModalBody');
+    var footer = document.getElementById('previewModalFooter');
+    footer.style.display = '';
+    document.getElementById('previewDownloadBtn').onclick = function() { downloadCourse(courseId); };
 
-                  <div class="flex items-center gap-6 pt-4 border-t border-gray-100 dark:border-zinc-800 text-xs font-medium text-gray-400">
-                    <div class="flex items-center gap-1">
-                      <i data-lucide="clock" class="w-3.5 h-3.5"></i>
-                      <span>${course.duration || 0} min</span>
-                    </div>
-                    <div class="flex items-center gap-1">
-                      <i data-lucide="users" class="w-3.5 h-3.5"></i>
-                      <span>${course.enrollmentCount || 0} enrolled</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </a>
-          `;
-        }).join("");
+    body.innerHTML =
+      '<div class="row g-4">' +
+        '<div class="col-md-7">' +
+          '<div class="mb-3"><span class="badge bg-primary bg-opacity-10 text-primary me-2">' + escHtml(course.subject) + '</span><span class="badge bg-light text-muted">' + escHtml(course.className) + '</span></div>' +
+          '<h6 class="font-bold mb-2">About This Course</h6>' +
+          '<p class="text-muted small" style="line-height:1.7">' + escHtml(course.description) + '</p>' +
+          '<h6 class="font-bold mt-4 mb-2"><i class="fa-solid fa-list me-2 text-primary"></i>Syllabus Outline</h6>' +
+          '<div class="syllabus-list">' +
+            syllabus.map(function(s) {
+              return '<div class="d-flex align-items-start gap-2 mb-2 pb-2 border-bottom"><span class="badge bg-primary rounded-circle" style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.7rem;flex-shrink:0">' + s.week + '</span><div><div class="fw-semibold small">' + escHtml(s.topic) + '</div><div class="text-muted" style="font-size:.75rem">' + escHtml(s.description) + '</div></div></div>';
+            }).join('') +
+          '</div>' +
+        '</div>' +
+        '<div class="col-md-5">' +
+          '<div class="bg-light rounded-3 p-3 mb-3"><h6 class="font-bold small text-uppercase mb-2"><i class="fa-solid fa-circle-info me-2"></i>Course Info</h6>' +
+            '<div class="d-flex justify-content-between py-1 border-bottom small"><span class="text-muted">Duration</span><strong>' + (course.duration || 0) + ' min</strong></div>' +
+            '<div class="d-flex justify-content-between py-1 border-bottom small"><span class="text-muted">Level</span><strong>' + escHtml(course.level) + '</strong></div>' +
+            '<div class="d-flex justify-content-between py-1 border-bottom small"><span class="text-muted">Class</span><strong>' + escHtml(course.className) + '</strong></div>' +
+            '<div class="d-flex justify-content-between py-1 border-bottom small"><span class="text-muted">Subject</span><strong>' + escHtml(course.subject) + '</strong></div>' +
+            '<div class="d-flex justify-content-between py-1 small"><span class="text-muted">Instructor</span><strong>' + escHtml(insName) + '</strong></div>' +
+          '</div>' +
+          '<div class="bg-light rounded-3 p-3 text-center"><i class="fa-solid fa-chalkboard-user text-primary" style="font-size:1.5rem"></i><h6 class="font-bold mt-2 mb-1 small">' + escHtml(insName) + '</h6><p class="text-muted mb-0" style="font-size:.72rem">Course Instructor</p></div>' +
+        '</div>' +
+      '</div>';
 
-        lucide.createIcons();
-      }
-    </script>
-  </body>
+    var modal = new bootstrap.Modal(document.getElementById('previewModal'));
+    modal.show();
+  };
+
+  window.downloadCourse = function(courseId) {
+    var course = window.db.getCourse(courseId);
+    if (!course) { alert('Course not found'); return; }
+    var content = window.db.generateCourseDownload(course);
+    var blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = (course.title || 'course').replace(/[^a-zA-Z0-9]/g, '_') + '_syllabus.txt';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+  </script>
+</body>
 </html>
