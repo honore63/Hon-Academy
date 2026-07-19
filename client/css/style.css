@@ -1832,20 +1832,20 @@ h1, h2, h3, h4, h5, h6, .nca-font-title {
   .cta-banner .btn-lg { font-size: 0.85rem; padding: 0.5rem 1rem; }
 }
 
-/* Section headings scale */
+/* Section headings scale (home page only) */
 @media (max-width: 575.98px) {
-  section h2 { font-size: 1.3rem; }
-  section .lead { font-size: 0.88rem; }
+  .home-page section h2 { font-size: 1.3rem; }
+  .home-page section .lead { font-size: 0.88rem; }
 }
 
-/* Books / resources grid: reduce card padding */
+/* Books / resources grid: reduce card padding (home page only) */
 @media (max-width: 575.98px) {
-  .card-body.p-4 { padding: 1rem !important; }
+  .home-page .card-body.p-4 { padding: 1rem !important; }
 }
 
-/* Testimonials: reduce quote padding */
+/* Testimonials: reduce quote padding (home page only) */
 @media (max-width: 575.98px) {
-  .card.p-4 { padding: 1.25rem !important; }
+  .home-page .card.p-4 { padding: 1.25rem !important; }
 }
 
 /* Newsletter on mobile should stack */
