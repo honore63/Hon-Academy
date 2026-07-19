@@ -224,24 +224,22 @@
     });
 
     var lastScroll = 0;
-    var header = document.querySelector('.site-header');
-    var navbar = document.querySelector('.nca-navbar');
-    var spacer = document.createElement('div');
-    spacer.className = 'nca-navbar-spacer';
-    if (navbar) navbar.parentNode.insertBefore(spacer, navbar.nextSibling);
-
     window.addEventListener('scroll', function() {
       var st = window.pageYOffset || document.documentElement.scrollTop;
       var topbar = document.getElementById('nca-topbar');
+      var navbar = document.querySelector('.nca-navbar');
       if (st > 60) {
         navbar.classList.add('nca-navbar-scrolled');
-        navbar.classList.add('nca-sticky-fixed');
-        spacer.classList.add('show');
-        if (topbar) topbar.style.marginTop = '-34px';
       } else {
         navbar.classList.remove('nca-navbar-scrolled');
-        navbar.classList.remove('nca-sticky-fixed');
-        spacer.classList.remove('show');
+      }
+      if (st > 150) {
+        if (st > lastScroll + 5) {
+          if (topbar) topbar.style.marginTop = '-34px';
+        } else if (st < lastScroll - 5) {
+          if (topbar) topbar.style.marginTop = '0';
+        }
+      } else {
         if (topbar) topbar.style.marginTop = '0';
       }
       lastScroll = st;
