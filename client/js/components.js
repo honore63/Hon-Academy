@@ -237,18 +237,11 @@
         navbar.classList.add('nca-navbar-scrolled');
         navbar.classList.add('nca-sticky-fixed');
         spacer.classList.add('show');
+        if (topbar) topbar.style.marginTop = '-34px';
       } else {
         navbar.classList.remove('nca-navbar-scrolled');
         navbar.classList.remove('nca-sticky-fixed');
         spacer.classList.remove('show');
-      }
-      if (st > 150) {
-        if (st > lastScroll + 5) {
-          if (topbar) topbar.style.marginTop = '-34px';
-        } else if (st < lastScroll - 5) {
-          if (topbar) topbar.style.marginTop = '0';
-        }
-      } else {
         if (topbar) topbar.style.marginTop = '0';
       }
       lastScroll = st;
