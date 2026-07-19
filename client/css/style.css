@@ -1737,9 +1737,13 @@ h1, h2, h3, h4, h5, h6, .nca-font-title {
 .nca-fsocial { display: flex; gap: 0.6rem; }
 .nca-fsocial a { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); border-radius: 50%; font-size: 0.75rem; transition: all 0.2s; text-decoration: none; }
 .nca-fsocial a:hover { background: #1e3a8a; color: #fff; transform: translateY(-2px); }
-.nca-fcontact li { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 0.7rem; font-size: 0.78rem; }
-.nca-fcontact li i { color: #60a5fa; font-size: 0.65rem; margin-top: 3px; width: 14px; }
-.nca-fcontact li span { color: rgba(255,255,255,0.6); }
+.nca-fcontact { display: flex; flex-direction: column; gap: 0.6rem; }
+.nca-fcontact li { display: flex; align-items: center; gap: 10px; margin: 0; padding: 0.6rem 0.75rem; background: rgba(255,255,255,0.04); border-radius: 10px; border: 1px solid rgba(255,255,255,0.06); transition: background 0.2s, border-color 0.2s, transform 0.2s; }
+.nca-fcontact li:hover { background: rgba(255,255,255,0.07); border-color: rgba(96,165,250,0.25); transform: translateX(3px); }
+.nca-fcontact li i { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: rgba(96,165,250,0.12); color: #60a5fa; border-radius: 8px; font-size: 0.75rem; flex-shrink: 0; }
+.nca-fcontact li span, .nca-fcontact li a { color: rgba(255,255,255,0.65); font-size: 0.78rem; line-height: 1.4; text-decoration: none; transition: color 0.2s; }
+.nca-fcontact li a:hover { color: #60a5fa; }
+.nca-fcontact li .nca-fcontact-label { display: block; font-size: 0.6rem; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 1px; }
 
 /* Partners */
 .nca-fpartners { padding: 1rem 0; border-top: 1px solid rgba(255,255,255,0.06); border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap; font-size: 0.75rem; color: rgba(255,255,255,0.5); }

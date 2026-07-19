@@ -375,12 +375,12 @@
               '<li><a href="subjects.html"><i class="fa-solid fa-wrench"></i> TVET Programmes</a></li>' +
               '<li><a href="digital-library.html"><i class="fa-solid fa-book"></i> Digital Library</a></li>' +
             '</ul></div>' +
-            '<div class="nca-fcol"><h5>Contact</h5><ul class="nca-fcontact">' +
-              '<li><i class="fa-solid fa-location-dot"></i><span>' + (school.address || 'KG 7 Avenue, Kigali, Rwanda') + '</span></li>' +
-              '<li><i class="fa-solid fa-phone"></i><span>' + (school.phone || '+250 791 684 429') + '</span></li>' +
-              '<li><i class="fa-solid fa-envelope"></i><span>' + (school.email || 'info@hon-academy.rw') + '</span></li>' +
-              '<li><i class="fa-solid fa-clock"></i><span>' + (site.officeHours || school.officeHours || 'Mon-Fri 8AM-5PM') + '</span></li>' +
-            '</ul></div>' +
+'<div class="nca-fcol"><h5>Contact</h5><ul class="nca-fcontact">' +
+  '<li><i class="fa-solid fa-location-dot"></i><div><span class="nca-fcontact-label">Address</span><span>' + (school.address || 'KG 7 Avenue, Kigali, Rwanda') + '</span></div></li>' +
+  '<li><i class="fa-solid fa-phone"></i><div><span class="nca-fcontact-label">Phone</span><a href="tel:' + ((school.phone || '+250 791 684 429').replace(/\s+/g, '')) + '">' + (school.phone || '+250 791 684 429') + '</a></div></li>' +
+  '<li><i class="fa-solid fa-envelope"></i><div><span class="nca-fcontact-label">Email</span><a href="mailto:' + (school.email || 'info@hon-academy.rw') + '">' + (school.email || 'info@hon-academy.rw') + '</a></div></li>' +
+  '<li><i class="fa-solid fa-clock"></i><div><span class="nca-fcontact-label">Office Hours</span><span>' + (site.officeHours || school.officeHours || 'Mon-Fri 8AM-5PM') + '</span></div></li>' +
+'</ul></div>' +
           '</div>' +
           (partnerHTML ? '<div class="nca-fpartners"><span>Our Partners:</span>' + partnerHTML + '</div>' : '') +
           '<div class="nca-fnewsletter">' +
