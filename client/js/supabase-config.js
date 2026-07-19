@@ -1,16 +1,19 @@
-// Supabase Initialization
-const SUPABASE_URL = 'https://hzojspnsbfeifkzzqdtk.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh6b2pzcG5zYmZlaWZrenpxZHRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM2MTU4NzIsImV4cCI6MjA5OTE5MTg3Mn0.ro_mpet9UdlY_uZPvBy5NVVMR2wkNKj_u8UvMzlRuAk';
+// Supabase Initialization — NCA School Platform
+// Anon key is safe for client-side use (restricted by RLS)
+const SUPABASE_URL = 'https://bkvjozijixispwqcyppr.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJrdmpvemlqaXhpc3B3cWN5cHByIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ0MzkxNjcsImV4cCI6MjEwMDAxNTE2N30.UF-gYMbpTozq9PcoSRZkpA4sUaTjrIO60GlPuRBm2YI';
 
-// Initialize the Supabase Client
-// We load the script dynamically or assume it's loaded in HTML <head> via CDN
 let supabaseClient = null;
 
 if (window.supabase) {
-  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  console.log("Supabase client initialized successfully!");
+  supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true
+    }
+  });
 } else {
-  console.error("Supabase CDN not loaded. Please ensure the library is included in the HTML file.");
+  console.warn('[Supabase] CDN not loaded. Falling back to localStorage.');
 }
 
 window.supabaseClient = supabaseClient;

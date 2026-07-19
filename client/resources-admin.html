@@ -131,7 +131,10 @@ body{font-family:'Inter',sans-serif;background:#f0f4f8;margin:0;padding:0;overfl
 <!-- Audit Modal -->
 <div class="modal-overlay" id="audit-modal"><div class="modal-box" style="max-width:700px;max-height:85vh;"><h5><i class="fa-solid fa-clock-rotate-left text-primary me-2"></i>Resource Audit Log</h5><div style="max-height:60vh;overflow-y:auto;" id="audit-content"></div><button class="portal-btn portal-btn-outline mt-3" onclick="document.getElementById('audit-modal').classList.remove('show')">Close</button></div></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/supabase-data.js"></script>
     <script src="js/db-extension.js"></script>
     <script src="js/components.js"></script>
 <script>
