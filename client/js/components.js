@@ -526,7 +526,14 @@
         { name:"Settings", icon:"fa-gears", href:"admin-dashboard.html?tab=settings", id:"settings" }
       ];
     }
+    var schoolInfo = window.db ? window.db.getSchoolInfo() : null;
     sidebar.innerHTML =
+      '<div class="d-flex align-items-center gap-2 pb-2 mb-2 border-bottom">' +
+        (schoolInfo && schoolInfo.logoUrl
+          ? '<img src="' + schoolInfo.logoUrl + '" alt="' + (schoolInfo.name || 'School') + '" style="width:36px;height:36px;border-radius:8px;object-fit:cover;">'
+          : '<div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#1e3a8a,#15803d);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;"><i class="fa-solid fa-graduation-cap"></i></div>') +
+        '<div><h6 class="mb-0 text-dark fw-bold" style="font-size:13px;">' + (schoolInfo && schoolInfo.shortName ? schoolInfo.shortName : 'HON-ACADEMY') + '</h6></div>' +
+      '</div>' +
       '<div class="d-flex align-items-center gap-3 pb-3 mb-3 border-bottom">' +
         '<img src="' + user.avatarUrl + '" alt="' + user.name + '" class="rounded-circle border" style="width:42px;height:42px;object-fit:cover;">' +
         '<div><h6 class="mb-0 text-dark fw-bold" style="font-size:14px;">' + user.name + '</h6>' +

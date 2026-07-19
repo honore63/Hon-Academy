@@ -9,6 +9,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" id="login-favicon" href="IMAGES/WhatsApp Image 2026-07-18 at 9.51.59 AM.jpeg" type="image/jpeg" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -522,6 +523,9 @@
             logoIcon.style.background = 'none';
             logoIcon.style.boxShadow = 'none';
           }
+          // Update favicon
+          const favicon = document.getElementById('login-favicon');
+          if (favicon) favicon.href = school.logoUrl;
         }
       } catch(e) {}
       // Check for role URL parameter
