@@ -1618,16 +1618,14 @@
       const info = localStorage.getItem('cms_school_info');
       if (!info) { save('cms_school_info', db.DEFAULT_SCHOOL_INFO); return db.DEFAULT_SCHOOL_INFO; }
       const parsed = JSON.parse(info);
+      // Merge with defaults so every field has a fallback
       let changed = false;
-      if (!parsed.logoUrl || parsed.logoUrl.indexOf('WhatsApp Image 2026-07-18') === -1) {
-        parsed.logoUrl = db.DEFAULT_SCHOOL_INFO.logoUrl;
-        changed = true;
-      }
-      // Sync motto if it still has the old value
-      if (!parsed.motto || parsed.motto === 'Excellence in Education, Success in Life.') {
-        parsed.motto = db.DEFAULT_SCHOOL_INFO.motto;
-        changed = true;
-      }
+      Object.keys(db.DEFAULT_SCHOOL_INFO).forEach(function(k) {
+        if (parsed[k] === undefined || parsed[k] === null) {
+          parsed[k] = db.DEFAULT_SCHOOL_INFO[k];
+          changed = true;
+        }
+      });
       if (changed) save('cms_school_info', parsed);
       return parsed;
     },
