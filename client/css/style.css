@@ -897,7 +897,7 @@ h1, h2, h3, h4, h5, h6, .nca-font-title {
   color: white;
   font-size: 0.75rem;
   font-weight: 600;
-  padding: 8px 0;
+  padding: 12px 0 11px;
   overflow: hidden;
   position: relative;
   border-top: 1px solid rgba(255,255,255,0.1);
@@ -945,6 +945,7 @@ h1, h2, h3, h4, h5, h6, .nca-font-title {
 .nca-ticker span {
   flex-shrink: 0;
   color: rgba(255,255,255,0.92);
+  line-height: 1.6;
 }
 .nca-ticker span::before {
   content: '●';
@@ -955,7 +956,7 @@ h1, h2, h3, h4, h5, h6, .nca-font-title {
 }
 @keyframes ticker-scroll {
   0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(-100%); }
 }
 
 /* ============================================================
@@ -1055,7 +1056,7 @@ h1, h2, h3, h4, h5, h6, .nca-font-title {
 .nca-notify-dropdown {
   position: absolute; top: calc(100% + 8px); right: 0;
   width: 380px; max-height: 480px;
-  background: #fff; border-radius: 14px;
+  background: rgba(255,255,255,0.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-radius: 14px;
   box-shadow: 0 20px 60px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.05);
   opacity: 0; visibility: hidden; transform: translateY(-8px);
   transition: all 0.2s cubic-bezier(0.16,1,0.3,1);

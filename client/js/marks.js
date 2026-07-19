@@ -1,0 +1,517 @@
+document.addEventListener("DOMContentLoaded", function() {
+  var user = window.db.getCurrentUser();
+  if (!user) {
+    document.getElementById("student-marks-view").classList.add("d-none");
+    document.getElementById("guest-marks-view").classList.remove("d-none");
+    return;
+  }
+  if (user.role === "teacher" || user.role === "admin") {
+    document.getElementById("student-marks-view").classList.add("d-none");
+    document.getElementById("teacher-marks-view").classList.remove("d-none");
+    loadTeacherDashboard(user);
+    return;
+  }
+  loadStudentView(user);
+});
+
+/* ===================== STUDENT VIEW ===================== */
+function getGrade(total) {
+  if (total >= 85) return { letter: "A", color: "success" };
+  if (total >= 70) return { letter: "B", color: "primary" };
+  if (total >= 55) return { letter: "C", color: "info" };
+  if (total >= 40) return { letter: "D", color: "warning" };
+  return { letter: "F", color: "danger" };
+}
+
+function loadStudentView(user) {
+  var marks = window.db.getMarks().filter(function(m) { return m.studentId === user.id; });
+  var subjects = window.db.getSubjects();
+
+  if (marks.length === 0) {
+    document.getElementById("student-marks-view").innerHTML =
+      '<div class="text-center py-5"><i class="fa-solid fa-database text-muted mb-3" style="font-size:3rem;"></i><p class="text-muted"><i class="fa-regular fa-face-meh me-1"></i>No marks recorded yet for your account.</p></div>';
+    return;
+  }
+
+  var totals = marks.map(function(m) { return m.continuousAssessment + m.assignment + m.exam; });
+  var avg = Math.round(totals.reduce(function(a,b){return a+b},0) / totals.length);
+  var best = Math.max.apply(null, totals);
+  var grade = getGrade(avg);
+
+  document.getElementById("marks-summary-cards").innerHTML =
+    '<div class="col-md-3 col-6"><div class="m-card text-center p-3"><div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width:44px;height:44px;"><i class="fa-solid fa-book fs-5"></i></div><h3 class="font-extrabold mb-0"><i class="fa-solid fa-bookmark text-primary me-1" style="font-size:.9rem;"></i>' + marks.length + '</h3><p class="small text-muted mb-0"><i class="fa-regular fa-copy me-1"></i>Subjects</p></div></div>' +
+    '<div class="col-md-3 col-6"><div class="m-card text-center p-3"><div class="bg-success bg-opacity-10 text-success rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width:44px;height:44px;"><i class="fa-solid fa-chart-line fs-5"></i></div><h3 class="font-extrabold mb-0"><i class="fa-solid fa-percent text-success me-1" style="font-size:.9rem;"></i>' + avg + '%</h3><p class="small text-muted mb-0"><i class="fa-regular fa-chart-bar me-1"></i>Average</p></div></div>' +
+    '<div class="col-md-3 col-6"><div class="m-card text-center p-3"><div class="bg-warning bg-opacity-10 text-warning rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width:44px;height:44px;"><i class="fa-solid fa-trophy fs-5"></i></div><h3 class="font-extrabold mb-0"><i class="fa-solid fa-star text-warning me-1" style="font-size:.9rem;"></i>' + best + '%</h3><p class="small text-muted mb-0"><i class="fa-regular fa-gem me-1"></i>Best Score</p></div></div>' +
+    '<div class="col-md-3 col-6"><div class="m-card text-center p-3"><div class="bg-' + grade.color + ' bg-opacity-10 text-' + grade.color + ' rounded-circle d-flex align-items-center justify-content-center mx-auto mb-2" style="width:44px;height:44px;"><i class="fa-solid fa-award fs-5"></i></div><h3 class="font-extrabold mb-0"><i class="fa-solid fa-medal me-1" style="font-size:.9rem;"></i>' + grade.letter + '</h3><p class="small text-muted mb-0"><i class="fa-regular fa-flag me-1"></i>Grade</p></div></div>';
+
+  var tbody = document.getElementById("marks-tbody");
+  tbody.innerHTML = marks.map(function(m) {
+    var total = m.continuousAssessment + m.assignment + m.exam;
+    var g = getGrade(total);
+    var subj = subjects.find(function(s) { return s.id === m.subjectId; });
+    return '<tr><td class="font-bold"><i class="fa-solid fa-book-open text-primary me-1"></i>' + (subj ? subj.title : 'N/A') + '</td><td class="text-center">' + m.continuousAssessment + '</td><td class="text-center">' + m.assignment + '</td><td class="text-center">' + m.exam + '</td><td class="text-center font-bold">' + total + '</td><td class="text-center"><span class="badge bg-primary rounded-pill"><i class="fa-solid fa-ranking-star me-1"></i>' + (m.position || '-') + '</span></td><td class="text-center"><span class="badge bg-' + g.color + ' rounded-pill"><i class="fa-solid fa-award me-1"></i>' + g.letter + '</span></td></tr>';
+  }).join("");
+
+  var labels = marks.map(function(m) { var s = subjects.find(function(sub) { return sub.id === m.subjectId; }); return s ? s.code : 'N/A'; });
+  var chartTotals = marks.map(function(m) { return m.continuousAssessment + m.assignment + m.exam; });
+
+  new Chart(document.getElementById("performanceChart"), {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [{ label: "Total Marks (%)", data: chartTotals, borderColor: "#1e3a8a", backgroundColor: "rgba(30,58,138,0.1)", fill: true, tension: 0.4, pointBackgroundColor: "#1e3a8a", pointRadius: 5 }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, max: 100, title: { display: true, text: "Score (%)" } }, x: { title: { display: true, text: "Subject" } } }
+    }
+  });
+}
+
+/* ===================== TEACHER DASHBOARD ===================== */
+var teacherChart = null;
+
+function loadTeacherDashboard(user) {
+  document.querySelectorAll("#teacher-tabs button").forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      document.querySelectorAll("#teacher-tabs button").forEach(function(b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      document.querySelectorAll(".tab-panel").forEach(function(p) { p.classList.add("d-none"); });
+      var panel = document.getElementById("tab-" + btn.getAttribute("data-tab"));
+      if (panel) panel.classList.remove("d-none");
+    });
+  });
+
+  var allMarks = window.rbac.viewableMarks();
+  var subjects = window.rbac.viewableSubjects();
+  var users = window.db.getUsers();
+  var students = window.rbac.viewableStudents();
+
+  var totalSubjects = subjects.length;
+  var totalStudents = students.length;
+  var totalMarks = allMarks.length;
+  var completionPct = totalStudents > 0 ? Math.round((totalMarks / (totalStudents * totalSubjects)) * 100) : 0;
+  if (completionPct > 100) completionPct = 100;
+
+  document.getElementById("teacher-stats-cards").innerHTML =
+    '<div class="col-md-3 col-6"><div class="m-card p-3"><div class="d-flex align-items-center gap-3"><div class="m-stat-icon bg-primary bg-opacity-10 text-primary"><i class="fa-solid fa-book"></i></div><div><h4 class="font-extrabold mb-0"><i class="fa-solid fa-bookmark text-primary me-1" style="font-size:.8rem;"></i>' + totalSubjects + '</h4><p class="small text-muted mb-0"><i class="fa-regular fa-bookmark me-1"></i>Subjects</p></div></div></div></div>' +
+    '<div class="col-md-3 col-6"><div class="m-card p-3"><div class="d-flex align-items-center gap-3"><div class="m-stat-icon bg-success bg-opacity-10 text-success"><i class="fa-solid fa-user-graduate"></i></div><div><h4 class="font-extrabold mb-0"><i class="fa-solid fa-users text-success me-1" style="font-size:.8rem;"></i>' + totalStudents + '</h4><p class="small text-muted mb-0"><i class="fa-regular fa-user me-1"></i>Students</p></div></div></div></div>' +
+    '<div class="col-md-3 col-6"><div class="m-card p-3"><div class="d-flex align-items-center gap-3"><div class="m-stat-icon bg-warning bg-opacity-10 text-warning"><i class="fa-solid fa-file-pen"></i></div><div><h4 class="font-extrabold mb-0"><i class="fa-solid fa-pen text-warning me-1" style="font-size:.8rem;"></i>' + totalMarks + '</h4><p class="small text-muted mb-0"><i class="fa-regular fa-pen-to-square me-1"></i>Marks Entered</p></div></div></div></div>' +
+    '<div class="col-md-3 col-6"><div class="m-card p-3"><div class="d-flex align-items-center gap-3"><div class="m-stat-icon bg-info bg-opacity-10 text-info"><i class="fa-solid fa-chart-pie"></i></div><div><h4 class="font-extrabold mb-0"><i class="fa-solid fa-percent text-info me-1" style="font-size:.8rem;"></i>' + completionPct + '%</h4><p class="small text-muted mb-0"><i class="fa-regular fa-circle-check me-1"></i>Completion</p></div></div></div></div>';
+
+  var completionHTML = "";
+  subjects.slice(0, 10).forEach(function(sub) {
+    var count = allMarks.filter(function(m) { return m.subjectId === sub.id; }).length;
+    var pct = totalStudents > 0 ? Math.round((count / totalStudents) * 100) : 0;
+    var barColor = pct >= 80 ? "green" : pct >= 40 ? "yellow" : "red";
+    completionHTML +=
+      '<div class="mb-3"><div class="d-flex justify-content-between align-items-center mb-1"><span class="small fw-semibold"><i class="fa-solid fa-book text-primary me-1"></i>' + sub.title + '</span><span class="small text-muted"><i class="fa-solid fa-check-circle me-1"></i>' + count + '/' + totalStudents + ' (' + pct + '%)</span></div><div class="m-progress"><div class="m-progress-bar ' + barColor + '" style="width:' + pct + '%"></div></div></div>';
+  });
+  if (subjects.length > 10) completionHTML += '<p class="text-muted small mb-0 text-center"><i class="fa-solid fa-ellipsis me-1"></i>+ ' + (subjects.length - 10) + ' more subjects</p>';
+  if (!completionHTML) completionHTML = '<p class="text-muted small mb-0"><i class="fa-regular fa-folder-open me-1"></i>No subjects found.</p>';
+  document.getElementById("completion-list").innerHTML = completionHTML;
+
+  var recent = allMarks.slice(-5).reverse();
+  var recentHTML = recent.length > 0 ? "" : '<p class="text-muted small mb-0"><i class="fa-regular fa-circle me-1"></i> No recent marks recorded.</p>';
+  recent.forEach(function(m) {
+    var s = users.find(function(u) { return u.id === m.studentId; });
+    var sub = subjects.find(function(x) { return x.id === m.subjectId; });
+    var total = m.continuousAssessment + m.assignment + m.exam;
+    recentHTML +=
+      '<div class="d-flex align-items-center gap-2 mb-2 pb-2" style="border-bottom:1px solid #f1f5f9"><div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width:32px;height:32px;font-size:.75rem;"><i class="fa-solid fa-check"></i></div><div class="flex-grow-1"><div class="small fw-semibold"><i class="fa-solid fa-user-graduate text-muted me-1"></i>' + (s ? s.name : 'N/A') + '</div><div class="text-muted" style="font-size:.75rem;"><i class="fa-solid fa-book text-muted me-1"></i>' + (sub ? sub.title : 'N/A') + ' <span class="mx-1">&mdash;</span> <i class="fa-solid fa-percent text-muted me-1"></i>Total: ' + total + '%</div></div></div>';
+  });
+  document.getElementById("recent-activity-list").innerHTML = recentHTML;
+
+  var coursesTbody = document.getElementById("courses-tbody");
+  coursesTbody.innerHTML = subjects.slice(0, 8).map(function(sub, idx) {
+    var count = students.length;
+    return '<tr><td>' + (idx + 1) + '</td><td class="font-bold"><i class="fa-solid fa-book text-primary me-1"></i>' + sub.title + ' (' + sub.code + ')</td><td><i class="fa-solid fa-layer-group text-muted me-1"></i>' + (sub.level || 'All') + '</td><td><i class="fa-solid fa-user-graduate text-muted me-1"></i>' + count + '</td><td><span class="m-status submitted"><i class="fa-solid fa-circle-check"></i> Verified</span></td><td class="text-center"><button class="btn btn-sm btn-outline-primary rounded-pill" onclick="switchToRecording(' + sub.id + ')"><i class="fa-solid fa-pen me-1"></i>Record Marks</button></td></tr>';
+  }).join("") || '<tr><td colspan="6" class="text-center text-muted py-3"><i class="fa-regular fa-folder-open me-1"></i>No courses assigned.</td></tr>';
+
+  renderStudentsList(students);
+
+  document.getElementById("student-search").addEventListener("input", function() {
+    renderStudentsList(students.filter(function(s) { return s.name.toLowerCase().includes(this.value.toLowerCase()) || (s.email && s.email.toLowerCase().includes(this.value.toLowerCase())); }.bind(this)));
+  });
+
+  var studentSelect = document.getElementById("entry-student");
+  students.forEach(function(s) {
+    var opt = document.createElement("option");
+    opt.value = s.id;
+    opt.textContent = s.name;
+    studentSelect.appendChild(opt);
+  });
+  var subjectSelect = document.getElementById("entry-subject");
+  subjects.forEach(function(s) {
+    var opt = document.createElement("option");
+    opt.value = s.id;
+    opt.textContent = s.title + " (" + s.code + ")";
+    subjectSelect.appendChild(opt);
+  });
+
+  renderTeacherMarksTable(allMarks, users, subjects);
+
+  document.getElementById("marks-entry-form").addEventListener("submit", function(e) {
+    e.preventDefault();
+    var studentId = parseInt(document.getElementById("entry-student").value);
+    var subjectId = parseInt(document.getElementById("entry-subject").value);
+    var ca = parseInt(document.getElementById("entry-ca").value);
+    var assign = parseInt(document.getElementById("entry-assign").value);
+    var exam = parseInt(document.getElementById("entry-exam").value);
+
+    if (!studentId || !subjectId) { window.showToast && window.showToast("<i class='fa-regular fa-circle-exclamation me-1'></i> Please select student and subject.", "error"); return; }
+    if (ca > 30 || assign > 20 || exam > 50) { window.showToast && window.showToast("<i class='fa-regular fa-circle-exclamation me-1'></i> Marks exceed maximum allowed values!", "error"); return; }
+
+    var existing = window.db.getMarks().find(function(m) { return m.studentId === studentId && m.subjectId === subjectId; });
+    if (existing) {
+      if (!confirm("Marks already exist for this student and subject. Overwrite?")) return;
+    }
+    window.db.addMark({
+      studentId: studentId,
+      subjectId: subjectId,
+      ca: ca,
+      assignment: assign,
+      exam: exam,
+      term: document.getElementById("entry-term").value
+    });
+    window.showToast && window.showToast("<i class='fa-regular fa-circle-check me-1'></i> Marks saved successfully!", "success");
+    var u = window.db.getCurrentUser();
+    loadTeacherDashboard(u);
+    e.target.reset();
+  });
+
+  initAssessmentManager(user, students, subjects);
+
+  window.generateReportCards = function() {
+    var data = generateReportData(students, subjects, allMarks);
+    if (!data || data.length === 0) {
+      window.showToast && window.showToast("<i class='fa-regular fa-database me-1'></i> No marks data available to generate reports.", "error");
+      return;
+    }
+    var reportHTML = buildReportHTML(data, users);
+    var win = window.open("", "_blank");
+    if (!win) { window.showToast && window.showToast("<i class='fa-regular fa-window-restore me-1'></i> Pop-up blocked. Please allow pop-ups for this site.", "error"); return; }
+    win.document.write(reportHTML);
+    win.document.close();
+    win.focus();
+    setTimeout(function() { win.print(); }, 500);
+  };
+}
+
+function renderStudentsList(list) {
+  var tbody = document.getElementById("students-tbody");
+  tbody.innerHTML = list.length > 0 ? list.map(function(s, i) {
+    var totalMarks = window.db.getMarks().filter(function(m) { return m.studentId === s.id; }).length;
+    return '<tr><td>' + (i + 1) + '</td><td class="font-bold"><i class="fa-solid fa-user text-primary me-1"></i>' + s.name + '</td><td><i class="fa-solid fa-id-card text-muted me-1"></i>' + (s.admissionNo || '-') + '</td><td><i class="fa-solid fa-layer-group text-muted me-1"></i>' + (s.class || '-') + '</td><td><i class="fa-solid fa-envelope text-muted me-1"></i>' + (s.email || '-') + '</td><td class="text-center"><span class="badge bg-primary rounded-pill"><i class="fa-solid fa-chart-simple me-1"></i>' + totalMarks + '</span></td></tr>';
+  }).join("") : '<tr><td colspan="6" class="text-center text-muted py-3"><i class="fa-regular fa-users-slash me-1"></i>No students enrolled.</td></tr>';
+}
+
+function renderTeacherMarksTable(allMarks, users, subjects) {
+  var tbody = document.getElementById("teacher-marks-tbody");
+  tbody.innerHTML = allMarks.length > 0 ? allMarks.map(function(m) {
+    var student = users.find(function(u) { return u.id === m.studentId; });
+    var subj = subjects.find(function(s) { return s.id === m.subjectId; });
+    var total = m.continuousAssessment + m.assignment + m.exam;
+    var status = total > 0 ? 'submitted' : 'pending';
+    var statusLabel = total > 0 ? 'Submitted' : 'Pending';
+    return '<tr><td class="font-bold"><i class="fa-solid fa-user-graduate text-primary me-1"></i>' + (student ? student.name : 'N/A') + '</td><td><i class="fa-solid fa-book text-muted me-1"></i>' + (subj ? subj.title : 'N/A') + '</td><td class="text-center">' + m.continuousAssessment + '</td><td class="text-center">' + m.assignment + '</td><td class="text-center">' + m.exam + '</td><td class="text-center font-bold"><i class="fa-solid fa-percent text-muted me-1"></i>' + total + '</td><td class="text-center"><span class="m-status ' + status + '"><i class="fa-solid fa-circle"></i> ' + statusLabel + '</span></td></tr>';
+  }).join("") : '<tr><td colspan="7" class="text-center text-muted py-3"><i class="fa-regular fa-database me-1"></i>No marks recorded yet.</td></tr>';
+}
+
+function switchToRecording(subjectId) {
+  document.querySelectorAll("#teacher-tabs button").forEach(function(b) { b.classList.remove("active"); });
+  document.querySelector("#teacher-tabs button[data-tab='recording']").classList.add("active");
+  document.querySelectorAll(".tab-panel").forEach(function(p) { p.classList.add("d-none"); });
+  document.getElementById("tab-recording").classList.remove("d-none");
+  document.getElementById("entry-subject").value = subjectId;
+}
+
+function generateReportData(students, subjects, allMarks) {
+  var data = [];
+  students.forEach(function(s) {
+    var studentMarks = allMarks.filter(function(m) { return m.studentId === s.id; });
+    if (studentMarks.length === 0) return;
+    var entries = studentMarks.map(function(m) {
+      var sub = subjects.find(function(x) { return x.id === m.subjectId; });
+      var total = m.continuousAssessment + m.assignment + m.exam;
+      var g = getGrade(total);
+      return { subject: sub ? sub.title : 'N/A', ca: m.continuousAssessment, assign: m.assignment, exam: m.exam, total: total, grade: g.letter };
+    });
+    var totals = entries.map(function(e) { return e.total; });
+    var avg = Math.round(totals.reduce(function(a,b){return a+b},0) / totals.length);
+    var overallGrade = getGrade(avg);
+    data.push({ student: s, entries: entries, average: avg, overallGrade: overallGrade.letter });
+  });
+  return data;
+}
+
+function buildReportHTML(data, users) {
+  var school = window.db.getSchoolInfo ? window.db.getSchoolInfo() : {};
+  var schoolName = school.name || "HON-ACADEMY";
+  var motto = school.motto || "Excellence \u2022 Innovation \u2022 Leadership";
+  var today = new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  var rows = "";
+  data.forEach(function(d) {
+    rows +=
+      '<div class="report-card">' +
+      '<div class="report-header"><h2>' + schoolName + '</h2><p class="motto">' + motto + '</p></div>' +
+      '<div class="student-info"><strong>Student:</strong> ' + d.student.name + ' &nbsp;|&nbsp; <strong>Admission:</strong> ' + (d.student.admissionNo || 'N/A') + ' &nbsp;|&nbsp; <strong>Date:</strong> ' + today + '</div>' +
+      '<table><thead><tr><th>Subject</th><th>CA (30)</th><th>Assign (20)</th><th>Exam (50)</th><th>Total (100)</th><th>Grade</th></tr></thead><tbody>';
+    d.entries.forEach(function(e) {
+      rows += '<tr><td>' + e.subject + '</td><td>' + e.ca + '</td><td>' + e.assign + '</td><td>' + e.exam + '</td><td>' + e.total + '</td><td>' + e.grade + '</td></tr>';
+    });
+    rows +=
+      '</tbody></table>' +
+      '<div class="summary">Average: <strong>' + d.average + '%</strong> &nbsp;|&nbsp; Overall Grade: <strong>' + d.overallGrade + '</strong></div>' +
+      '<div class="signatures"><div class="sig-line">Class Teacher: ___________________</div><div class="sig-line">Head Teacher: ___________________</div><div class="sig-line">Parent Signature: ___________________</div></div>' +
+      '<div class="report-footer">Generated on ' + today + ' &mdash; ' + schoolName + ' &bull; Academic Report</div></div><div class="page-break"></div>';
+  });
+  return '<!doctype html><html><head><meta charset="UTF-8"><title>Academic Report - ' + schoolName + '</title><style>body{font-family:Arial,sans-serif;padding:20px;color:#0f172a}.report-card{max-width:800px;margin:0 auto 20px;padding:25px;border:2px solid #1e3a8a;border-radius:10px;page-break-inside:avoid}.report-header{text-align:center;border-bottom:2px solid #1e3a8a;padding-bottom:12px;margin-bottom:14px}.report-header h2{color:#1e3a8a;margin:0;font-size:1.5rem}.report-header .motto{color:#64748b;font-size:.85rem;margin:4px 0 0}.student-info{font-size:.9rem;margin-bottom:12px;color:#334155}table{width:100%;border-collapse:collapse;margin-bottom:12px}th{background:#1e3a8a;color:#fff;padding:8px 10px;text-align:center;font-size:.8rem}td{padding:7px 10px;border:1px solid #e2e8f0;text-align:center;font-size:.85rem}td:first-child{text-align:left;font-weight:600}.summary{text-align:center;font-size:1rem;padding:10px;background:#f8fafc;border-radius:6px;margin-bottom:14px}.signatures{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:20px}.sig-line{font-size:.85rem;color:#475569;min-width:180px}.report-footer{text-align:center;font-size:.75rem;color:#94a3b8;margin-top:16px;padding-top:10px;border-top:1px solid #e2e8f0}.page-break{page-break-after:always}@media print{body{padding:0}.report-card{border:1.5px solid #1e3a8a;box-shadow:none}}</style></head><body>' + rows + '<\/body><\/html>';
+}
+
+/* ===================== ASSESSMENT MANAGER ===================== */
+var _asmState = { selectedType: null, currentAssessment: null };
+
+function initAssessmentManager(user, students, subjects) {
+  _asmState.selectedType = null;
+  _asmState.currentAssessment = null;
+  renderAsmStep1(user, students, subjects);
+}
+
+function renderAsmStep1(user, students, subjects) {
+  var types = [];
+  try { types = window.db.AssessmentType.getList(); } catch(e) { types = []; }
+  var html = '<div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">' +
+    '<h5 class="font-bold mb-0"><i class="fa-solid fa-clipboard-list me-2 text-primary"></i>Step 1: Select Assessment Type</h5>' +
+    '<span class="text-muted small"><i class="fa-regular fa-circle-info me-1"></i>Choose the type of assessment you want to create and record marks for.</span></div>';
+  if (types.length === 0) {
+    html += '<div class="text-center py-4"><i class="fa-solid fa-database text-muted mb-2" style="font-size:2.5rem;"></i><p class="text-muted">No assessment types configured. Contact the administrator.</p></div>';
+    document.getElementById("asm-content").innerHTML = html;
+    return;
+  }
+  html += '<div class="row g-3">';
+  types.forEach(function(t){
+    var icons = { test: "fa-file-pen", exam: "fa-file-lines", ca: "fa-chart-simple", project: "fa-diagram-project", practical: "fa-flask", assignment: "fa-pen-ruler", oral: "fa-microphone" };
+    var ico = icons[t.category] || "fa-clipboard";
+    html += '<div class="col-md-4 col-sm-6"><div class="asm-type-card" data-id="' + t.id + '" style="cursor:pointer;border:2px solid #e2e8f0;border-radius:12px;padding:1.25rem;text-align:center;transition:all .2s;height:100%;background:#fff">' +
+      '<div style="width:48px;height:48px;border-radius:12px;background:#eef2ff;color:#1e3a8a;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-size:1.3rem;"><i class="fa-solid ' + ico + '"></i></div>' +
+      '<h6 class="font-bold mb-1">' + t.name + '</h6>' +
+      '<p class="small text-muted mb-0">Max: ' + t.defaultMaxMarks + ' | Weight: ' + (t.weight || "-") + '%</p>' +
+      '<p class="small text-muted mb-0">' + (t.hasRanking ? "Ranked" : "No ranking") + '</p></div></div>';
+  });
+  html += '</div>';
+  document.getElementById("asm-content").innerHTML = html;
+  document.querySelectorAll(".asm-type-card").forEach(function(card){
+    card.addEventListener("click", function(){
+      var id = parseInt(this.dataset.id);
+      _asmState.selectedType = id;
+      renderAsmStep2(user, students, subjects);
+    });
+  });
+}
+
+function renderAsmStep2(user, students, subjects) {
+  var type = window.db.AssessmentType.getById(_asmState.selectedType);
+  if (!type) { renderAsmStep1(user, students, subjects); return; }
+  var classes = []; try { classes = window.db.getClasses(); } catch(e) {}
+  var years = ["2024","2025","2026","2027","2028"];
+  var terms = ["Term 1","Term 2","Term 3"];
+  var teacherSubjects = subjects;
+  var assessments = []; try { assessments = window.db.Assessment.getList().filter(function(a){ return a.teacherId === user.id && a.assessmentTypeId === type.id; }); } catch(e) {}
+
+  var html = '<div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">' +
+    '<h5 class="font-bold mb-0"><i class="fa-solid fa-gear me-2 text-primary"></i>Step 2: Configure <span class="text-primary">' + type.name + '</span></h5>' +
+    '<button class="btn btn-sm btn-outline-secondary rounded-pill" id="asm-back-step1"><i class="fa-solid fa-arrow-left me-1"></i>Back to Types</button></div>' +
+    '<div class="row g-4"><div class="col-lg-7"><div class="m-card p-3">' +
+    '<h6 class="font-bold mb-3"><i class="fa-solid fa-square-plus me-1 text-primary"></i>Create New Assessment</h6>' +
+    '<form id="asm-create-form">' +
+    '<div class="row g-2 mb-2"><div class="col-sm-6"><label class="form-label small fw-bold">Academic Year</label><select class="form-select form-select-sm" id="asm-year">' + years.map(function(y){ return '<option value="' + y + '"' + (y==="2026"?" selected":"") + '>' + y + '</option>'; }).join("") + '</select></div>' +
+    '<div class="col-sm-6"><label class="form-label small fw-bold">Term</label><select class="form-select form-select-sm" id="asm-term">' + terms.map(function(t){ return '<option value="' + t + '"' + (t==="Term 1"?" selected":"") + '>' + t + '</option>'; }).join("") + '</select></div></div>' +
+    '<div class="row g-2 mb-2"><div class="col-sm-6"><label class="form-label small fw-bold">Class</label><select class="form-select form-select-sm" id="asm-class"><option value="">Select class...</option>' + classes.map(function(c){ return '<option value="' + c.id + '">' + c.name + '</option>'; }).join("") + '</select></div>' +
+    '<div class="col-sm-6"><label class="form-label small fw-bold">Subject</label><select class="form-select form-select-sm" id="asm-subject"><option value="">Select subject...</option>' + teacherSubjects.map(function(s){ return '<option value="' + s.id + '">' + s.title + '</option>'; }).join("") + '</select></div></div>' +
+    '<div class="row g-2 mb-2"><div class="col-sm-8"><label class="form-label small fw-bold">Assessment Name</label><input type="text" class="form-control form-control-sm" id="asm-name" placeholder="e.g. Week 3 - Fractions" required></div>' +
+    '<div class="col-sm-4"><label class="form-label small fw-bold">Date</label><input type="date" class="form-control form-control-sm" id="asm-date" value="' + new Date().toISOString().slice(0,10) + '"></div></div>' +
+    '<div class="row g-2 mb-2"><div class="col-sm-4"><label class="form-label small fw-bold">Max Marks</label><input type="number" class="form-control form-control-sm" id="asm-max" value="' + type.defaultMaxMarks + '" min="1"></div>' +
+    '<div class="col-sm-4"><label class="form-label small fw-bold">Weight (%)</label><input type="number" class="form-control form-control-sm" id="asm-weight" value="' + (type.weight || 0) + '" min="0" max="100"></div>' +
+    '<div class="col-sm-4"><label class="form-label small fw-bold">Stream (optional)</label><input type="text" class="form-control form-control-sm" id="asm-stream" placeholder="e.g. A or B"></div></div>' +
+    '<div class="mb-2"><label class="form-label small fw-bold">Remarks (optional)</label><input type="text" class="form-control form-control-sm" id="asm-remarks" placeholder="Additional notes about this assessment"></div>' +
+    '<button type="submit" class="btn btn-primary rounded-pill w-100"><i class="fa-solid fa-plus-circle me-2"></i>Create &amp; Record Marks</button></form></div></div>' +
+    '<div class="col-lg-5"><div class="m-card p-3"><h6 class="font-bold mb-3"><i class="fa-solid fa-clock-rotate-left me-1 text-muted"></i>Existing ' + type.name + ' Assessments</h6><div id="asm-existing-list">';
+  if (assessments.length === 0) {
+    html += '<p class="text-muted small mb-0"><i class="fa-regular fa-folder-open me-1"></i>No existing assessments of this type by you.</p>';
+  } else {
+    html += '<div class="list-group list-group-flush" style="max-height:320px;overflow-y:auto;">';
+    assessments.forEach(function(a){
+      var s = teacherSubjects.find(function(x){ return x.id === a.subjectId; });
+      var c = classes.find(function(x){ return x.id === a.classId; });
+      var subjName = s ? s.title : "Subject #"+a.subjectId;
+      var clsName = c ? c.name : "Class #"+a.classId;
+      var st = a.status || "draft";
+      var badgeColor = st === "published" ? "success" : st === "archived" ? "secondary" : "warning";
+      html += '<a href="#" class="list-group-item list-group-item-action asm-select-existing" data-id="' + a.id + '"><div class="d-flex w-100 justify-content-between"><strong>' + a.name + '</strong><span class="badge bg-' + badgeColor + ' rounded-pill">' + st + '</span></div><small class="text-muted">' + subjName + ' \u00b7 ' + clsName + ' \u00b7 ' + (a.term||"") + '</small></a>';
+    });
+    html += '</div>';
+  }
+  html += '</div></div></div></div>';
+  document.getElementById("asm-content").innerHTML = html;
+
+  document.getElementById("asm-back-step1").addEventListener("click", function(){ renderAsmStep1(user, students, subjects); });
+  document.getElementById("asm-create-form").addEventListener("submit", function(e){
+    e.preventDefault();
+    var data = {
+      assessmentTypeId: type.id, academicYear: document.getElementById("asm-year").value,
+      term: document.getElementById("asm-term").value, classId: parseInt(document.getElementById("asm-class").value),
+      stream: document.getElementById("asm-stream").value || null,
+      subjectId: parseInt(document.getElementById("asm-subject").value),
+      name: document.getElementById("asm-name").value,
+      date: document.getElementById("asm-date").value,
+      maxMarks: parseInt(document.getElementById("asm-max").value),
+      weight: parseFloat(document.getElementById("asm-weight").value) || null,
+      remarks: document.getElementById("asm-remarks").value || null,
+      teacherId: user.id, createdBy: user.id
+    };
+    if (!data.classId || !data.subjectId || !data.name) { window.showToast && window.showToast("Please fill Class, Subject, and Name.", "error"); return; }
+    var result = window.db.Assessment.create(data);
+    if (result.error) { window.showToast && window.showToast(result.error, "error"); return; }
+    window.showToast && window.showToast("Assessment created! Now record marks.", "success");
+    _asmState.currentAssessment = result;
+    renderAsmStep3(user, students, subjects);
+  });
+  document.querySelectorAll(".asm-select-existing").forEach(function(a){
+    a.addEventListener("click", function(e){ e.preventDefault();
+      var id = parseInt(this.dataset.id);
+      _asmState.currentAssessment = window.db.Assessment.getById(id);
+      renderAsmStep3(user, students, subjects);
+    });
+  });
+}
+
+function renderAsmStep3(user, students, subjects) {
+  var assessment = _asmState.currentAssessment;
+  if (!assessment) { renderAsmStep2(user, students, subjects); return; }
+  var type = window.db.AssessmentType.getById(assessment.assessmentTypeId);
+  var clsStudents = students;
+  var maxMarks = assessment.maxMarks;
+  var results = []; try { results = window.db.AssessmentResult.getByAssessment(assessment.id); } catch(e) {}
+  var subject = subjects.find(function(s){ return s.id === assessment.subjectId; });
+
+  var existingByStudent = {};
+  results.forEach(function(r){ existingByStudent[r.studentId] = r; });
+
+  var html = '<div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">' +
+    '<div><h5 class="font-bold mb-0"><i class="fa-solid fa-pen-to-square me-2 text-primary"></i>Step 3: Record Marks</h5>' +
+    '<p class="small text-muted mb-0"><strong>' + (assessment.name || type.name) + '</strong> \u2014 <span class="text-primary">' + (subject ? subject.title : "") + '</span> \u2014 Max: ' + maxMarks + ' marks</p></div>' +
+    '<button class="btn btn-sm btn-outline-secondary rounded-pill" id="asm-back-step2"><i class="fa-solid fa-arrow-left me-1"></i>Back</button></div>' +
+    '<div class="table-responsive"><table class="table table-hover align-middle m-table"><thead><tr><th style="width:40px">#</th><th>Student</th><th style="width:130px">Score (max ' + maxMarks + ')</th><th style="width:200px">Comment</th><th style="width:80px">Status</th></tr></thead><tbody>';
+  clsStudents.forEach(function(s, idx){
+    var existing = existingByStudent[s.id];
+    var scoreVal = existing ? existing.score : "";
+    var commentVal = existing ? (existing.comment || "") : "";
+    var statusHtml = existing ? '<span class="m-status submitted"><i class="fa-solid fa-check-circle"></i> Saved</span>' : '<span class="m-status pending"><i class="fa-regular fa-clock"></i> Pending</span>';
+    html += '<tr><td>' + (idx + 1) + '</td><td class="font-bold"><i class="fa-solid fa-user-graduate text-primary me-1"></i>' + s.name + '</td>' +
+      '<td><input type="number" class="form-control form-control-sm asm-score" data-sid="' + s.id + '" value="' + scoreVal + '" min="0" max="' + maxMarks + '" step="0.5" style="max-width:120px"></td>' +
+      '<td><input type="text" class="form-control form-control-sm asm-comment" data-sid="' + s.id + '" value="' + commentVal.replace(/"/g,"&quot;") + '" placeholder="Optional comment" style="max-width:100%"></td>' +
+      '<td>' + statusHtml + '</td></tr>';
+  });
+  html += '</tbody></table></div>' +
+    '<div class="d-flex gap-2 flex-wrap">' +
+    '<button class="btn btn-primary rounded-pill" id="asm-save-marks"><i class="fa-solid fa-save me-2"></i>Save All Marks</button>' +
+    '<button class="btn btn-outline-success rounded-pill" id="asm-view-results"' + (results.length === 0 ? ' disabled' : '') + '><i class="fa-solid fa-chart-bar me-2"></i>View Results</button></div>';
+  document.getElementById("asm-content").innerHTML = html;
+
+  document.getElementById("asm-back-step2").addEventListener("click", function(){ renderAsmStep2(user, students, subjects); });
+  document.getElementById("asm-save-marks").addEventListener("click", function(){
+    var entries = [];
+    var hasError = false;
+    document.querySelectorAll(".asm-score").forEach(function(inp){
+      var sid = parseInt(inp.dataset.sid);
+      var val = inp.value.trim();
+      if (val === "") return;
+      var score = parseFloat(val);
+      if (isNaN(score) || score < 0 || score > maxMarks) {
+        inp.classList.add("is-invalid");
+        hasError = true; return;
+      }
+      inp.classList.remove("is-invalid");
+      var comment = "";
+      var commentInp = document.querySelector('.asm-comment[data-sid="' + sid + '"]');
+      if (commentInp) comment = commentInp.value.trim();
+      entries.push({ studentId: sid, score: score, comment: comment });
+    });
+    if (hasError) { window.showToast && window.showToast("Some scores are invalid. Check highlighted fields.", "error"); return; }
+    if (entries.length === 0) { window.showToast && window.showToast("No scores entered. Please fill at least one score.", "error"); return; }
+    var res = window.db.AssessmentResult.batchRecord(assessment.id, entries, maxMarks);
+    if (res.errors.length > 0) { window.showToast && window.showToast("Saved with " + res.errors.length + " errors.", "warning"); }
+    else { window.showToast && window.showToast("All marks saved successfully!", "success"); }
+    window.db.Assessment.update(assessment.id, { status: "published" });
+    _asmState.currentAssessment = window.db.Assessment.getById(assessment.id);
+    renderAsmStep4(user, students, subjects);
+  });
+  document.getElementById("asm-view-results").addEventListener("click", function(){
+    renderAsmStep4(user, students, subjects);
+  });
+}
+
+function renderAsmStep4(user, students, subjects) {
+  var assessment = _asmState.currentAssessment;
+  if (!assessment) { renderAsmStep3(user, students, subjects); return; }
+  var type = window.db.AssessmentType.getById(assessment.assessmentTypeId);
+  try { var results = window.db.Assessment.Report.getResultsWithDetails(assessment.id); } catch(e) { results = []; }
+
+  var total = results.length;
+  var avgPct = total > 0 ? Math.round(results.reduce(function(a,r){ return a + r.percentage; }, 0) / total) : 0;
+  var topGrade = results.length > 0 ? results.sort(function(a,b){ return b.percentage - a.percentage; })[0].grade : "-";
+
+  var html = '<div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">' +
+    '<h5 class="font-bold mb-0"><i class="fa-solid fa-chart-bar me-2 text-success"></i>Results: ' + (assessment.name || type.name) + '</h5>' +
+    '<button class="btn btn-sm btn-outline-secondary rounded-pill" id="asm-new-assess-btn"><i class="fa-solid fa-plus me-1"></i>New Assessment</button></div>';
+  html += '<div class="row g-2 mb-3"><div class="col-md-3 col-6"><div class="m-card text-center p-2"><h4 class="font-bold mb-0 text-primary">' + total + '</h4><small class="text-muted">Students</small></div></div>' +
+    '<div class="col-md-3 col-6"><div class="m-card text-center p-2"><h4 class="font-bold mb-0 text-success">' + avgPct + '%</h4><small class="text-muted">Average</small></div></div>' +
+    '<div class="col-md-3 col-6"><div class="m-card text-center p-2"><h4 class="font-bold mb-0 text-warning">' + topGrade + '</h4><small class="text-muted">Top Grade</small></div></div>' +
+    '<div class="col-md-3 col-6"><div class="m-card text-center p-2"><h4 class="font-bold mb-0 text-info">' + assessment.maxMarks + '</h4><small class="text-muted">Max Marks</small></div></div></div>';
+  html += '<div class="table-responsive"><table class="table table-hover align-middle m-table"><thead><tr><th>#</th><th>Student</th><th>Score</th><th>%</th><th>Grade</th><th>Rank</th><th>Comment</th><th>Report</th></tr></thead><tbody>';
+  results.sort(function(a,b){ return (a.rank || 999) - (b.rank || 999); });
+  results.forEach(function(r, idx){
+    html += '<tr class="' + (r.percentage >= 85 ? "table-success" : r.percentage >= 40 ? "" : "table-danger") + '"><td>' + (idx + 1) + '</td><td class="font-bold"><i class="fa-solid fa-user-graduate text-primary me-1"></i>' + r.studentName + '</td>' +
+      '<td>' + r.score + '/' + r.maxMarks + '</td><td><span class="badge bg-primary rounded-pill">' + r.percentage + '%</span></td>' +
+      '<td class="font-bold">' + r.grade + '</td><td>' + (r.rank ? '<span class="badge bg-warning rounded-pill">#' + r.rank + '</span>' : "-") + '</td>' +
+      '<td><small>' + (r.comment || "-") + '</small></td>' +
+      '<td><button class="btn btn-sm btn-outline-primary rounded-pill asm-export-pdf" data-sid="' + r.studentId + '"><i class="fa-solid fa-file-pdf me-1"></i>PDF</button></td></tr>';
+  });
+  html += '</tbody></table></div>';
+  html += '<div class="d-flex gap-2 flex-wrap"><button class="btn btn-primary rounded-pill" id="asm-export-all-pdfs"><i class="fa-solid fa-file-pdf me-2"></i>Export All Reports as PDF</button>' +
+    '<button class="btn btn-outline-primary rounded-pill" id="asm-print-all"><i class="fa-solid fa-print me-2"></i>Print All</button></div>';
+  document.getElementById("asm-content").innerHTML = html;
+
+  var newBtn = document.getElementById("asm-new-assess-btn");
+  if (newBtn) newBtn.addEventListener("click", function(){ _asmState.currentAssessment = null; renderAsmStep2(user, students, subjects); });
+  document.querySelectorAll(".asm-export-pdf").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      try { window.db.Assessment.Report.exportPDF(assessment.id, parseInt(this.dataset.sid)); }
+      catch(e) { window.showToast && window.showToast("Error generating PDF: " + e.message, "error"); }
+    });
+  });
+  document.getElementById("asm-export-all-pdfs").addEventListener("click", function(){
+    results.forEach(function(r, idx){
+      setTimeout(function(){
+        try { window.db.Assessment.Report.exportPDF(assessment.id, r.studentId); } catch(e) {}
+      }, idx * 300);
+    });
+    window.showToast && window.showToast("Opening " + results.length + " report PDFs...", "success");
+  });
+  document.getElementById("asm-print-all").addEventListener("click", function(){
+    var printHTML = "";
+    results.forEach(function(r){
+      try { printHTML += window.db.Assessment.Report.buildHTML(assessment.id, r.studentId).replace('<!DOCTYPE html><html>', '').replace('</html>', '') + '<div style="page-break-after:always;"></div>'; } catch(e) {}
+    });
+    if (!printHTML) { window.showToast && window.showToast("No reports to print.", "error"); return; }
+    var w = window.open("", "_blank");
+    if (!w) { window.showToast && window.showToast("Pop-up blocked.", "error"); return; }
+    w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Assessment Reports</title></head><body>' + printHTML + '<\/body><\/html>');
+    w.document.close();
+    w.focus();
+    setTimeout(function(){ w.print(); }, 500);
+  });
+}

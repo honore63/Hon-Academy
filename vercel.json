@@ -4,12 +4,6 @@
   "devCommand": "npx serve client",
   "installCommand": "echo 'No install needed for static client'",
   "framework": "other",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",

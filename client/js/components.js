@@ -54,7 +54,7 @@
       if (a.priority === 'important') return '<i class="fa-solid fa-star me-1" style="color:#fde68a"></i>';
       return '<i class="fa-solid fa-bullhorn me-1"></i>';
     }
-    var tickerHTML = annItems.length ? annItems.map(function(a){ return '<span>' + tickerIcon(a) + a.title + '</span>'; }).join('') + annItems.map(function(a){ return '<span>' + tickerIcon(a) + a.title + '</span>'; }).join('') : '<span>Welcome to ' + school.name + '</span>';
+    var tickerHTML = annItems.length ? annItems.map(function(a){ return '<span>' + tickerIcon(a) + a.title + '</span>'; }).join('') : '<span>Welcome to ' + school.name + '</span>';
 
     var socialHTML = ['facebook','twitter','instagram','linkedin','youtube'].map(function(k){
       var icon = k === 'twitter' ? 'fa-x-twitter' : k === 'youtube' ? 'fa-youtube' : 'fa-' + k;
