@@ -1327,6 +1327,16 @@ h1, h2, h3, h4, h5, h6, .nca-font-title {
   -webkit-backdrop-filter: blur(12px);
 }
 
+/* Sticky/fixed navbar on scroll — makes navbar pinned at top */
+.nca-navbar.nca-sticky-fixed {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1050;
+  animation: slideDown 0.3s ease;
+}
+.nca-navbar-spacer { display: none; height: 0; }
+.nca-navbar-spacer.show { display: block; height: 56px; }
+
 /* Sticky header overall — stays pinned at top while scrolling */
 .site-header {
   position: sticky;
