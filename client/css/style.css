@@ -1798,3 +1798,78 @@ h1, h2, h3, h4, h5, h6, .nca-font-title {
 .empty-state h5 { font-weight: 700; color: #64748b; }
 .empty-state p { font-size: 0.85rem; }
 
+/* ════════════════════════════════════════════════════════════════
+   MOBILE RESPONSIVENESS — HOME PAGE
+   ════════════════════════════════════════════════════════════════ */
+
+/* Hero: reduce excessive p-5 padding on small screens */
+@media (max-width: 575.98px) {
+  .hero-banner { padding: 1.5rem 1rem !important; margin-bottom: 2rem !important; }
+  .hero-banner .display-4 { font-size: 1.6rem !important; }
+  .hero-banner .lead { font-size: 0.9rem !important; }
+  .hero-banner .btn-lg { font-size: 0.85rem; padding: 0.5rem 1rem; }
+}
+
+/* Fix stat cards on xs – tighter padding */
+@media (max-width: 575.98px) {
+  .stat-icon { width: 44px; height: 44px; font-size: 1rem; }
+}
+
+/* Why-cards / Level-cards on xs need col-12 behavior */
+/* (col-sm-6 defaults to full width on xs, OK) */
+
+/* Course combo tags: prevent overflow */
+@media (max-width: 575.98px) {
+  .combo-card .d-flex.flex-wrap.gap-1 { gap: 0.25rem !important; }
+  .combo-card .d-flex.flex-wrap.gap-1 span { font-size: 10px !important; padding: 2px 7px !important; }
+}
+
+/* CTA banner: reduce padding */
+@media (max-width: 575.98px) {
+  .cta-banner { padding: 2rem 1rem !important; }
+  .cta-banner h2 { font-size: 1.3rem; }
+  .cta-banner .btn-lg { font-size: 0.85rem; padding: 0.5rem 1rem; }
+}
+
+/* Section headings scale */
+@media (max-width: 575.98px) {
+  section h2 { font-size: 1.3rem; }
+  section .lead { font-size: 0.88rem; }
+}
+
+/* Books / resources grid: reduce card padding */
+@media (max-width: 575.98px) {
+  .card-body.p-4 { padding: 1rem !important; }
+}
+
+/* Testimonials: reduce quote padding */
+@media (max-width: 575.98px) {
+  .card.p-4 { padding: 1.25rem !important; }
+}
+
+/* Newsletter on mobile should stack */
+@media (max-width: 575.98px) {
+  .nca-fnewsletter-inner > div:first-child { width: 100%; }
+  .nca-fnewsletter-form { width: 100%; }
+  .nca-fnewsletter-input { min-width: 0; width: 100%; }
+  .nca-fnewsletter-btn { width: 100%; justify-content: center; }
+}
+
+/* Page banner mobile */
+@media (max-width: 575.98px) {
+  .page-banner { padding: 2rem 0 1.5rem; }
+  .page-banner h1 { font-size: 1.5rem; }
+  .page-banner p { font-size: 0.85rem; }
+}
+
+/* Touch-friendly: larger tap targets on mobile, remove hover-only effects */
+@media (hover: none) and (pointer: coarse) {
+  .stat-card:hover { transform: none; box-shadow: none; }
+  .why-card:hover { box-shadow: none; transform: none; }
+  .level-card:hover { box-shadow: none; transform: none; }
+  .combo-card:hover { transform: none !important; box-shadow: 0 2px 12px rgba(0,0,0,0.06) !important; }
+  .nca-submenu li a, .nca-nav-list > li > a,
+  .nca-nav-list > li > .nca-drop-toggle { min-height: 44px; }
+  .nca-apply-btn, .nca-login-btn, .nca-user-btn { min-height: 44px; }
+}
+
