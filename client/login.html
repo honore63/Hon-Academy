@@ -634,95 +634,56 @@
       setLoading(true);
 
       try {
-        // Attempt Supabase Login first
-        if (window.supabaseClient) {
-          const authAttempt = async () => {
-            let res = await window.supabaseClient.auth.signInWithPassword({
-              email: email,
-              password: password,
-            });
+        // Attempt Supabase Login via centralized db.login
+        if (window.db && window.db.login) {
+          var result = await window.db.login(email, password);
 
-            // If user doesn't exist, try transparent signup (for seamless demo transition)
-            if (res.error && res.error.message.includes('Invalid login credentials')) {
-               console.log("No Supabase user found. Creating initial user map transparently...");
-               const signUpReq = await window.supabaseClient.auth.signUp({
-                 email: email,
-                 password: password,
-               });
-               
-               if (!signUpReq.error) {
-                  // Now that we have Auth, let's insert into public.users
-                  await window.supabaseClient.from('users').upsert([
-                    { id: signUpReq.data.user.id, email: email, full_name: selectedRole === 'admin' ? 'System Admin' : 'Teacher', role: selectedRole }
-                  ]);
-                  res = signUpReq; // Treat as success
-               } else {
-                  console.warn("Supabase Signup fallback failed:", signUpReq.error.message);
-               }
-            }
-            return res;
-          };
-
-          // Race with 2.5 second timeout to prevent offline hanging
-          const timeoutPromise = new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('Authentication timeout')), 2500)
-          );
-          
-          let authResult = await Promise.race([authAttempt(), timeoutPromise]);
-
-          // Important: check if the session exists or if it requires email confirmation
-          if (!authResult.error && authResult.data.user && authResult.data.session) {
-            // Success via Supabase!
-            // Sync local DB session so synchronous RBAC guards in portals allow access
-            let finalRole = selectedRole;
-            const users = window.db.getUsers();
-            let matchedUser = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-            
-            if (matchedUser) {
-              window.db.setCurrentUser(matchedUser);
-              finalRole = matchedUser.role; // Use actual verified role, not the selected tab
-            } else {
-              window.db.setCurrentUser({ 
-                id: authResult.data.user.id, 
-                name: 'Authorized User', 
-                email: email, 
-                role: selectedRole 
-              });
-            }
-
+          if (result && result.user) {
+            // Success — redirect
             setLoading(false);
-            finishLoginSuccess(finalRole);
-            return;
-          } else {
-            console.warn("Supabase auth sequence incomplete or email unverified. Falling back to local DB session...");
-          }
-        }
-      } catch (err) {
-        console.error("Critical error in Supabase Authentication step:", err);
-      }
-
-      // Fallback local DB check if Supabase fails or isn't init natively
-      setTimeout(() => {
-        try {
-          const result = window.db.login(email, password);
-          setLoading(false);
-
-          if (result.success) {
             finishLoginSuccess(result.user.role);
-          } else {
-            showError(result.error || 'Invalid credentials. Please try again.');
-            // Shake form
-            const form = document.getElementById('login-form');
-            form.style.animation = 'none';
-            void form.offsetHeight;
-            form.style.animation = 'shake .4s ease';
+            return;
           }
-        } catch(fallbackErr) {
-          setLoading(false);
-          showError("A system error occurred. Please refresh the page.");
-          console.error(fallbackErr);
         }
-      }, 700);
+
+        // Fallback: try creating a new Supabase user (first-time signup)
+        if (window.supabaseAuth && window.supabaseAuth.signUp) {
+          var userData = { name: email.split('@')[0], role: selectedRole };
+          var signup = await window.supabaseAuth.signUp(email, password, userData);
+          if (signup && signup.user) {
+            window.db.setCurrentUser(signup.user);
+            setLoading(false);
+            finishLoginSuccess(signup.user.role);
+            return;
+          }
+        }
+
+        // Final fallback to localStorage
+        setTimeout(function() {
+          try {
+            var fallbackLogin = window.db._origLogin || window.db.login;
+            var result = fallbackLogin(email, password);
+            setLoading(false);
+            if (result && result.user) {
+              finishLoginSuccess(result.user.role);
+            } else {
+              showError(result && result.error ? result.error : 'Invalid credentials. Please try again.');
+              const form = document.getElementById('login-form');
+              form.style.animation = 'none';
+              void form.offsetHeight;
+              form.style.animation = 'shake .4s ease';
+            }
+          } catch(fallbackErr) {
+            setLoading(false);
+            showError('A system error occurred. Please refresh the page.');
+            console.error(fallbackErr);
+          }
+        }, 700);
+      } catch (err) {
+        console.error("Critical error in Authentication step:", err);
+        setLoading(false);
+        showError('Connection error. Check your internet and try again.');
+      }
     }
 
     function finishLoginSuccess(role) {
